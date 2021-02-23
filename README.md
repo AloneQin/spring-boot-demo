@@ -12,7 +12,7 @@
 3. 过滤器上使用`@Component`注解加入容器（不建议在启动类上使用`@ServletComponentScan`注解，`@Order`将失效）；
 4. 使用`@Order`注解设定过滤器顺序（数值越小，越先执行）。
 
-## 修改请求
+## 修改请求内容
 参考`TestFilter`、`TestController#testRequestWrapper`
 
 自定义`HttpServletRequestWrapper`修改请求头或参数列表。
@@ -90,3 +90,33 @@
 ## 业务接口示例
 参考`PhoneController`
 
+## 项目发布
+参考`src/main/resources/scripts`
+
+相关脚本功能如下：
+* `update.sh`：借助`git`拉取最新代码并打包；
+* `start.sh`：启动项目；
+* `stop.sh`：停止项目；
+* `restart.sh`：重启项目；
+* `deploy.sh`：发布项目（通常运行此脚本即可）。
+
+模拟`linux`运行环境目录结构：
+```
++--app                     --应用存放根目录
+  |--deploy.sh    
+  |--start.sh
+  |--start.sh
+  |--stop.sh
+  |--update.sh
+  +--spring-boot-demo      --项目目录
+    ...                 
+  |--spring-boot-demo.jar  --可执行jar
+  |--service.log           --服务日志
+```
+
+模拟项目发布流程：
+1. 服务器安装`git`；
+2. 从远端克隆项目到`app`目录；
+3. 执行`deploy.sh`脚本。
+
+**TODO: 后续考虑借助`docker`完成项目发布**

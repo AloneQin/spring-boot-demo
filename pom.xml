@@ -110,6 +110,8 @@
     </dependencies>
 
     <build>
+        <!--打包后的名称-->
+        <finalName>spring-boot-demo</finalName>
         <plugins>
             <!--maven plugin-->
             <plugin>
