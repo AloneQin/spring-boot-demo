@@ -1,4 +1,4 @@
-package com.example.demo.common.constant;
+package com.example.demo.common.metadata.constant;
 
 /**
  * 常量定义

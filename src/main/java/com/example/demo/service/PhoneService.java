@@ -1,9 +1,9 @@
 package com.example.demo.service;
 
-import com.example.demo.common.constant.Constant;
 import com.example.demo.common.exception.BaseException;
 import com.example.demo.common.exception.ParamError;
 import com.example.demo.common.exception.ParamValidatedException;
+import com.example.demo.common.metadata.constant.Constant;
 import com.example.demo.common.response.ReturnCodeEnum;
 import com.example.demo.dao.PhoneMapper;
 import com.example.demo.domain.entity.Phone;

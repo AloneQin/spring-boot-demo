@@ -19,7 +19,7 @@ public class TestController {
 
     @GetMapping("/index")
     public String index() {
-        log.info("welcome...");
+        log.info("##index, welcome...");
 
         return "index";
     }
@@ -28,20 +28,20 @@ public class TestController {
     public String testRequestWrapper(HttpServletRequest request) {
         // 获取本来就有的请求头
         String name = request.getHeader("name");
-        log.info("header name: {}", name);
+        log.info("##testRequestWrapper, header name: {}", name);
 
         // 获取添加的请求头
         Enumeration<String> from = request.getHeaders("from");
         ArrayList<String> fromList = Collections.list(from);
-        log.info("header from: {}", fromList.toString());
+        log.info("##testRequestWrapper, header from: {}", fromList.toString());
 
         // 获取本来就传的参数
         String param1 = request.getParameter("param1");
-        log.info("parameter param1: {}", param1);
+        log.info("##testRequestWrapper, parameter param1: {}", param1);
 
         // 获取添加的参数
         String[] param2Arr = request.getParameterValues("param2");
-        log.info("parameter param2: {}", Arrays.asList(param2Arr).toString());
+        log.info("##testRequestWrapper, parameter param2: {}", Arrays.asList(param2Arr).toString());
 
         return "SUCCESS";
     }

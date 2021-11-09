@@ -1,5 +1,7 @@
 CREATE SCHEMA `spring-boot-demo` DEFAULT CHARACTER SET utf8 ;
 
+use `spring-boot-demo`;
+
 CREATE TABLE `phone` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键',
   `phone_code` varchar(45) NOT NULL COMMENT '手机编号',

@@ -1,6 +1,6 @@
 package com.example.demo.controller;
 
-import com.example.demo.common.constant.Constant;
+import com.example.demo.common.metadata.constant.Constant;
 import com.example.demo.common.response.DefaultResponse;
 import com.example.demo.domain.vo.PhoneVo;
 import com.example.demo.service.PhoneService;
@@ -11,8 +11,8 @@ import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;

@@ -4,14 +4,15 @@ import com.example.demo.common.exception.BaseException;
 import com.example.demo.common.exception.ParamError;
 import com.example.demo.common.exception.ParamValidatedException;
 import com.example.demo.common.response.DefaultResponse;
+import com.example.demo.common.response.MyReturnCode;
 import com.example.demo.common.response.ReturnCodeEnum;
 import com.example.demo.domain.vo.PeopleVo;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.Range;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.constraints.NotNull;
 import java.util.Arrays;
@@ -74,6 +75,18 @@ public class CommonReturnController {
     public DefaultResponse expectedException(String token) {
         if (token == null) {
             throw new BaseException(ReturnCodeEnum.NEED_LOGIN);
+        }
+
+        return DefaultResponse.success();
+    }
+
+    /**
+     * 子返回码异常返回展示
+     */
+    @GetMapping("/subReturnCodeException")
+    public DefaultResponse subReturnCodeException(String token) {
+        if (token == null) {
+            throw new BaseException(MyReturnCode.ORDER_STATUS_ERROR);
         }
 
         return DefaultResponse.success();

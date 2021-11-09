@@ -61,7 +61,7 @@ public class StringUtils {
 	 * @param password 密码
 	 * @return true or false
 	 */
-	public static boolean isPassowrd(String password) {
+	public static boolean isPassword(String password) {
 		if (password == null) {
 			return false;
 		}
@@ -85,8 +85,9 @@ public class StringUtils {
 	/**
 	 * 格式化sql，去除模板引擎中的制表符\t与换行符\n
 	 */
-	public static String formateSql(String sql) {
+	public static String formatSql(String sql) {
 		return sql.replace("\n", "").replace("\t", "");
 	}
-	
+
+
 }

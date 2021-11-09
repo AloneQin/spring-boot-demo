@@ -8,9 +8,11 @@
 参考`com.example.demo.common.filter`
 
 1. 实现`javax.servlet.Filter`接口；
-2. 使用`@WebFilter`注解；
-3. 过滤器上使用`@Component`注解加入容器（不建议在启动类上使用`@ServletComponentScan`注解，`@Order`将失效）；
-4. 使用`@Order`注解设定过滤器顺序（数值越小，越先执行）。
+2. 建议在配置类中编码配置过滤器，见`FilterConfig`；
+3. 不需要地址正则匹配时可`@WebFilter`注解； 
+   > 3.1 过滤器上使用`@Component`注解加入容器（不建议在启动类上使用`@ServletComponentScan`注解，`@Order`将失效）；
+   
+   > 3.2 使用`@Order`注解设定过滤器顺序（数值越小，越先执行）。
 
 ## 修改请求内容
 参考`TestFilter`、`TestController#testRequestWrapper`
@@ -55,6 +57,8 @@
 1. 定义同一返回结构；
 2. 定义返回码枚举，集中管理所有返回码；
 
+当统一返回结构被依赖应用于多个项目时，可放弃更改中央返回码枚举，可在各自项目中自定义子返回码，避免重复即可，参考`MyReturnCode`。
+
 ## 异常处理
 参考`com.example.demo.common.exception`、`CommonReturnController`
 
@@ -65,6 +69,8 @@
 
 不使用`@ControllerAdvice`做全局异常处理，因为其只能处理`Controller`级别的异常，即请求必须进入控制器中的方法出现异常才能被捕获。
 当异常不发生在控制器内，比如出现在过滤器、拦截器等地方或是一些特殊异常，无法被`@ControllerAdvice`捕获，故选择`ErrorController`做全局异常处理，**真·全局处理**。
+
+为帮助调试，设定调试模式开关，在开关打开时，会将异常堆栈转码后返回给前端，便于快速定位问题，参考`SystemProperties`。
 
 ## 参数校验
 参考`com.example.demo.controller`、`CommonReturnController`

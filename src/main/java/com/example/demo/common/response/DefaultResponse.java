@@ -40,8 +40,12 @@ public class DefaultResponse<T> {
         return success(null);
     }
 
+    public static <T> DefaultResponse<T> fail(String code, String message, T content) {
+        return new DefaultResponse<>(code, message, content);
+    }
+
     public static <T> DefaultResponse<T> fail(ReturnCodeEnum returnCodeEnum, T content) {
-        return new DefaultResponse<>(returnCodeEnum.code, returnCodeEnum.message, content);
+        return fail(returnCodeEnum.code, returnCodeEnum.message, content);
     }
 
     public static <T> DefaultResponse<T> fail(ReturnCodeEnum returnCodeEnum) {

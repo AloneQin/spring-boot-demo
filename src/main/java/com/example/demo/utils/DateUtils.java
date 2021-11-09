@@ -9,7 +9,9 @@ import java.util.Date;
  */
 public class DateUtils {
 
+	public static final String Y_M_D_H_M_S = "yyyy-MM-dd HH:mm:ss";
 	public static final String Y_M_D_H_M_S_S = "yyyy-MM-dd HH:mm:ss.SSS";
+	public static final String E_M_D_H_M_S_Z_Y= "EEE MMM dd HH:mm:ss zzz yyyy";
 
 	/**
 	 * 日期转字符串
