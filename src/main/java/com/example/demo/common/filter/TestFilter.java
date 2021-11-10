@@ -14,7 +14,7 @@ public class TestFilter implements Filter {
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
-        log.info("##doFilter------------------------------------------------------");
+        log.info("#doFilter------------------------------------------------------");
 
         HttpServletRequest request = (HttpServletRequest) servletRequest;
         MapRequestWrapper requestWrapper = new MapRequestWrapper(request);

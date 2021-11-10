@@ -84,7 +84,7 @@ public class GlobalErrorController implements ErrorController {
     public Object error(HttpServletRequest request, HttpServletResponse response) {
         ErrorAttributeInfo errorAttributeInfo = getErrorAttributes(request, systemProperties.getDebugMode());
         if (errorAttributeInfo.getThrowable() != null) {
-//            log.error("catch exception: ", errorAttributeInfo.getThrowable());
+            log.error("catch exception: ", errorAttributeInfo.getThrowable());
         }
 
         // 封装返回结构
@@ -101,15 +101,21 @@ public class GlobalErrorController implements ErrorController {
             defaultResponse = getParamErrorResponse(throwable);
         } else {
             // 其他异常
+            ReturnCodeEnum returnCodeEnum = null;
             switch (errorAttributeInfo.getStatus()) {
                 case HttpServletResponse.SC_NOT_FOUND:
                     // 资源找不到
-                    defaultResponse = DefaultResponse.fail(ReturnCodeEnum.RESOURCE_NOT_FOUND);
+                    returnCodeEnum = ReturnCodeEnum.RESOURCE_NOT_FOUND;
+                    break;
+                case HttpServletResponse.SC_METHOD_NOT_ALLOWED:
+                    // 方法不被允许
+                    returnCodeEnum = ReturnCodeEnum.METHOD_NOT_ALLOWED;
                     break;
                 default:
-                    defaultResponse = DefaultResponse.fail(ReturnCodeEnum.SERVER_ERROR);
+                    returnCodeEnum = ReturnCodeEnum.SERVER_ERROR;
                     break;
             }
+            defaultResponse = DefaultResponse.fail(returnCodeEnum);
         }
 
         // 若开启调试模式展示异常，并且主体空余，则返回异常堆栈信息
@@ -119,12 +125,12 @@ public class GlobalErrorController implements ErrorController {
             try {
                 // 此处可以返回一些关键信息，便于快速定位日志
                 String details = RandomUtils.getUUID(false);
-                log.error("##error, exception details key: {}", details);
+                log.error("#error, exception details key: {}", details);
                 details += System.lineSeparator() + errorAttributeInfo.getTrace();
                 // base64 转码，避免查看明文信息时需要对字符串转义字符进行反转义处理
                 defaultResponse.setContent(Base64Utils.encode(details));
             } catch (UnsupportedEncodingException e) {
-                log.error("##error, fail to base64 encode, can not return exception stack trace");
+                log.error("#error, fail to base64 encode, can not return exception stack trace");
             }
         }
 

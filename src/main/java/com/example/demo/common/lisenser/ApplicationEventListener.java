@@ -23,10 +23,10 @@ public class ApplicationEventListener implements ApplicationListener {
 
     @Override
     public void onApplicationEvent(ApplicationEvent event) {
-        log.info("##onApplicationEvent, listen event: [{}]", event.getClass().getName());
+        log.info("#onApplicationEvent, listen event: [{}]", event.getClass().getName());
         if (event instanceof ApplicationStartedEvent) {
-            List<Phone> byCondition = phoneMapper.findByCondition(null, null, null);
-            System.out.println(byCondition.size());
+            List<Phone> phoneList = phoneMapper.findByCondition(null, null, null);
+            log.info("#onApplicationEvent, phoneList size: {}", phoneList.size());
         }
     }
 }

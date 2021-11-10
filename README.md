@@ -59,6 +59,8 @@
 
 当统一返回结构被依赖应用于多个项目时，可放弃更改中央返回码枚举，可在各自项目中自定义子返回码，避免重复即可，参考`MyReturnCode`。
 
+自定义注解`@ResultFormat`，用于自动封装接口结果，格式化返回`JSON`数据，详见`PhoneController`。
+
 ## 异常处理
 参考`com.example.demo.common.exception`、`CommonReturnController`
 
