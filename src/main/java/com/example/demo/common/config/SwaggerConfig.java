@@ -16,12 +16,17 @@ import java.util.List;
 
 /**
  * swagger 配置类
- * swagger2 主页：http://${IP}:${PORT}/swagger-ui.html
+ * swagger2 主页：http://${IP}:${PORT}/${CONTEXT_PATH}/swagger-ui/index.html
  */
 @Slf4j
 @Configuration
 @EnableSwagger2
 public class SwaggerConfig {
+
+    /**
+     * API 扫描包名
+     */
+    private static final String API_BASE_PACKAGE = "com.example.demo.controller";
 
     /**
      * 允许展示 API 文档的接口列表
@@ -32,7 +37,10 @@ public class SwaggerConfig {
      * **: 匹配多层路径
      *
      */
-    private static final List<String> ALLOW_PATH_LIST = Arrays.asList("/swagger/**", "/phone/**");
+    private static final List<String> ALLOW_PATH_LIST = Arrays.asList(
+            "/swagger/**",
+            "/phone/**"
+    );
 
     @Bean
     public Docket createRestApi() {
@@ -40,7 +48,7 @@ public class SwaggerConfig {
         return new Docket(DocumentationType.SWAGGER_2)
                 .apiInfo(apiInfo())
                 .select()
-                .apis(RequestHandlerSelectors.basePackage("com.example.demo.controller"))
+                .apis(RequestHandlerSelectors.basePackage(API_BASE_PACKAGE))
                 .paths((realPath) -> {
                     for (String regex : ALLOW_PATH_LIST) {
                         if (matcher.match(regex, realPath)) {

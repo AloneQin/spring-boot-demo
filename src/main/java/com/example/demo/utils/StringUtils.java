@@ -75,11 +75,20 @@ public class StringUtils {
 	 * @param str 待判定字符串
 	 * @return
 	 */
-	public static boolean isEmpty(String str) {
+	public static boolean isBlank(String str) {
 		if (str == null || str.length() == 0) {
 			return true;
 		}
 		return false;
+	}
+
+	/**
+	 * 字符串判非空
+	 * @param str 待判定字符串
+	 * @return
+	 */
+	public static boolean nonBlank(String str) {
+		return !isBlank(str);
 	}
 	
 	/**

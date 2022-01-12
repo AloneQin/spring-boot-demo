@@ -1,32 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.example.demo.dao.PhoneMapper">
-  <resultMap id="BaseResultMap" type="com.example.demo.domain.entity.Phone">
-    <!--
-      WARNING - @mbg.generated
-    -->
-    <id column="id" jdbcType="INTEGER" property="id" />
-    <result column="phone_code" jdbcType="VARCHAR" property="phoneCode" />
-    <result column="name" jdbcType="VARCHAR" property="name" />
-    <result column="brand" jdbcType="VARCHAR" property="brand" />
-    <result column="prod_date" jdbcType="DATE" property="prodDate" />
-    <result column="price" jdbcType="DECIMAL" property="price" />
-    <result column="remark" jdbcType="VARCHAR" property="remark" />
-    <result column="created_time" jdbcType="TIMESTAMP" property="createdTime" />
-    <result column="updated_time" jdbcType="TIMESTAMP" property="updatedTime" />
-  </resultMap>
-  
-  <select id="findByCondition" resultMap="BaseResultMap">
-    select * from phone where 1=1
-    <if test="name != null and name != ''">
-        and name like CONCAT('%', #{name}, '%')
-    </if>
-    <if test="brand != null and brand != ''">
-      and brand = #{brand}
-    </if>
-    <if test="remark != null and remark != ''">
-      and remark like CONCAT('%', #{remark}, '%')
-    </if>
-    order by created_time desc
-  </select>
+<mapper namespace="com.example.demo.dao.mapper.PhoneMapper">
+    <resultMap id="BaseResultMap" type="com.example.demo.model.po.PhonePO">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <id column="id" jdbcType="INTEGER" property="id" />
+        <result column="phone_code" jdbcType="VARCHAR" property="phoneCode" />
+        <result column="name" jdbcType="VARCHAR" property="name" />
+        <result column="brand" jdbcType="VARCHAR" property="brand" />
+        <result column="prod_date" jdbcType="DATE" property="prodDate" />
+        <result column="price" jdbcType="DECIMAL" property="price" />
+        <result column="remark" jdbcType="VARCHAR" property="remark" />
+        <result column="created_time" jdbcType="TIMESTAMP" property="createdTime" />
+        <result column="updated_time" jdbcType="TIMESTAMP" property="updatedTime" />
+    </resultMap>
 </mapper>

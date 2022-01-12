@@ -4,15 +4,66 @@
 
 包含`SpringBoot`项目常用使用姿势，供日常参考查阅。
 
+## 项目结构
+```aidl
+spring-boot-demo
+    |-src
+        |-main
+            |-java
+                |-com.example.demo
+                    |-common                                --通用包
+                        |-config                            --配置类
+                        |-exception                         --自定义异常
+                        |-filter                            --过滤器
+                        |-interceptor                       --拦截器
+                        |-lisenser                          --监听器
+                        |-metadata                          --元数据
+                            |-constant                      --常量包
+                            |-enums                         --枚举包
+                        |-response                          --自义定响应
+                    |-controller                            --控制层
+                    |-dao                                   --数据访问层
+                        |-mapper                            --Mapper（CURD）
+                        |-wrapper                           --对Mapper的二次封装
+                    |-model                                 --模型层
+                        |-dto                               --数据传输对象
+                        |-po                                --持久化对象
+                        |-vo                                --视图对象
+                    |-service                               --服务层
+                    |-utils                                 --工具包
+                    --SpringBootDemoApplication.java        --启动类
+            |-resource                                      --资源文件夹
+                |-asciidoc                                  --文档文件夹
+                |-generator                                 --MyBatis生成器配置        
+                |-mapper                                    --MyBatis XML
+                |-scripts                                   --脚本文件夹
+                |-sql                                       --sql文件夹
+                |-static                                    --静态资源文件夹
+                |-templates                                 --动态资源文件夹
+                --application.properties                    --启动配置
+        |-test                                              --测试包
+    |-target                                                --编译输出
+    --pom.xml                                               --Mavne配置
+    --README.md                                             --快速开始
+```
+
+### 分层及调用关系
+调用顺序由上及下，禁止逆序调用，`Service`层允许平级调用。
+```aidl
+                    Controller --> VO
+                        |
+                        |
+  Other Service  --  Service   --> DTO
+                        |
+                        |
+                       DAO     --> PO
+```
+
 ## 过滤器
 参考`com.example.demo.common.filter`
 
 1. 实现`javax.servlet.Filter`接口；
-2. 建议在配置类中编码配置过滤器，见`FilterConfig`；
-3. 不需要地址正则匹配时可`@WebFilter`注解； 
-   > 3.1 过滤器上使用`@Component`注解加入容器（不建议在启动类上使用`@ServletComponentScan`注解，`@Order`将失效）；
-   
-   > 3.2 使用`@Order`注解设定过滤器顺序（数值越小，越先执行）。
+2. 建议在配置类中编码配置过滤器，见`FilterConfig`。
 
 ## 修改请求内容
 参考`TestFilter`、`TestController#testRequestWrapper`
@@ -54,12 +105,10 @@
 
 目的：只要请求到达服务，不管之后是成功还是失败，都返回同一返回结构，方便调用方获取解析。
 
-1. 定义同一返回结构；
-2. 定义返回码枚举，集中管理所有返回码；
-
-当统一返回结构被依赖应用于多个项目时，可放弃更改中央返回码枚举，可在各自项目中自定义子返回码，避免重复即可，参考`MyReturnCode`。
-
-自定义注解`@ResultFormat`，用于自动封装接口结果，格式化返回`JSON`数据，详见`PhoneController`。
+1. 定义同一返回结构：`DefaultResponse`；
+2. 定义返回码枚举，集中管理所有返回码：`ReturnCodeEnum`；
+3. 定义子类返回码，方便在子服务中创建子返回码：`MyReturnCode`；
+4. 定义自动封装接口结果注解，格式化返回`JSON`数据：`@ResultFormat`。
 
 ## 异常处理
 参考`com.example.demo.common.exception`、`CommonReturnController`
@@ -79,6 +128,15 @@
 
 借助`spring-boot-starter-validation`做参数校验，当提供的注解不满足时，可自行编码校验，参考`com.example.demo.controller.CommonReturnController#customValidated()`
 
+## 数据访问
+借助`MyBatis-Plus`完成`ORM`，详见：[官网](https://baomidou.com/)
+
+* 代码生成器：`MyBatisPlusGeneratorUtils`；
+* 基本操作：`PhoneService`；
+
+## 日期转换
+使用`LocalDateTime`取代`Date`，详见`LocalDateTimeSerializerConfig`。
+
 ## 接口文档
 ### 文档管理
 参考`SwaggerConfig`、`SwaggerController`
@@ -95,6 +153,12 @@
 ## 常用工具类
 参考`com.example.demo.utils`
 
+* `Json`转换；
+* `Http`调用；
+* 日期转换；
+* 对象拷贝
+* ...
+
 ## 业务接口示例
 参考`PhoneController`
 
@@ -110,16 +174,16 @@
 
 模拟`linux`运行环境目录结构：
 ```
-+--app                     --应用存放根目录
-  |--deploy.sh    
-  |--start.sh
-  |--start.sh
-  |--stop.sh
-  |--update.sh
-  +--spring-boot-demo      --项目目录
++-app                     --应用存放根目录
+  --deploy.sh    
+  --start.sh
+  --start.sh
+  --stop.sh
+  --update.sh
+  |-spring-boot-demo      --项目目录
     ...                 
-  |--spring-boot-demo.jar  --可执行jar
-  |--service.log           --服务日志
+  --spring-boot-demo.jar  --可执行jar
+  --service.log           --服务日志
 ```
 
 模拟项目发布流程：

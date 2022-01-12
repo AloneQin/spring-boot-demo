@@ -1,4 +1,4 @@
-package com.example.demo.domain.vo;
+package com.example.demo.model.vo;
 
 import com.example.demo.common.metadata.constant.Constant;
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -8,7 +8,8 @@ import lombok.Data;
 
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
-import java.util.Date;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Data
 @ApiModel("手机视图对象")
@@ -47,7 +48,7 @@ public class PhoneVo {
     @JsonFormat(pattern = "yyyy-MM-dd")
     @NotNull(message = Constant.NOT_NULL_MSG)
     @ApiModelProperty(name = "prodDate", value = "生产日期", required = true, example = "2020-10-14")
-    private Date prodDate;
+    private LocalDate prodDate;
 
     /**
      * 售价
@@ -66,12 +67,11 @@ public class PhoneVo {
      * 创建时间
      */
     @ApiModelProperty(name = "createdTime", value = "创建时间", required = false, example = "2020-11-20 15:32:11")
-    private Date createdTime;
+    private LocalDateTime createdTime;
 
     /**
      * 修改时间
      */
     @ApiModelProperty(name = "updatedTime", value = "修改时间", required = false, example = "2020-11-20 15:32:11")
-    private Date updatedTime;
-
+    private LocalDateTime updatedTime;
 }

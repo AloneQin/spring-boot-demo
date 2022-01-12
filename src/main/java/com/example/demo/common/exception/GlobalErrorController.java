@@ -8,6 +8,7 @@ import com.example.demo.utils.RandomUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.validator.internal.engine.path.PathImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.web.error.ErrorAttributeOptions;
 import org.springframework.boot.web.servlet.error.ErrorAttributes;
 import org.springframework.boot.web.servlet.error.ErrorController;
 import org.springframework.stereotype.Controller;
@@ -45,10 +46,10 @@ public class GlobalErrorController implements ErrorController {
     @Autowired
     private ErrorAttributes errorAttributes;
 
-    @Override
-    public String getErrorPath() {
-        return ERROR_PAGE;
-    }
+//    @Override
+//    public String getErrorPath() {
+//        return ERROR_PAGE;
+//    }
 
     /**
      * 返回网页
@@ -82,7 +83,7 @@ public class GlobalErrorController implements ErrorController {
     @ResponseBody
     @RequestMapping
     public Object error(HttpServletRequest request, HttpServletResponse response) {
-        ErrorAttributeInfo errorAttributeInfo = getErrorAttributes(request, systemProperties.getDebugMode());
+        ErrorAttributeInfo errorAttributeInfo = getErrorAttributes(request);
         if (errorAttributeInfo.getThrowable() != null) {
             log.error("catch exception: ", errorAttributeInfo.getThrowable());
         }
@@ -140,12 +141,11 @@ public class GlobalErrorController implements ErrorController {
     /**
      * 获取服务错误信息并进行封装
      * @param request HttpServletRequest
-     * @param includeStackTrace 是否获取异常堆栈
      * @return
      */
-    private ErrorAttributeInfo getErrorAttributes(HttpServletRequest request, boolean includeStackTrace) {
+    private ErrorAttributeInfo getErrorAttributes(HttpServletRequest request) {
         ServletWebRequest servletWebRequest = new ServletWebRequest(request);
-        Map<String, Object> errorAttributeMap = errorAttributes.getErrorAttributes(servletWebRequest, includeStackTrace);
+        Map<String, Object> errorAttributeMap = errorAttributes.getErrorAttributes(servletWebRequest, ErrorAttributeOptions.of(ErrorAttributeOptions.Include.values()));
         String jsonStr = JSON.toJSONString(errorAttributeMap);
         ErrorAttributeInfo errorAttributeInfo = JSON.parseObject(jsonStr, ErrorAttributeInfo.class);
         errorAttributeInfo.setThrowable(errorAttributes.getError(servletWebRequest));

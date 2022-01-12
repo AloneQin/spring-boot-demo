@@ -1,7 +1,7 @@
 package com.example.demo.controller;
 
 import com.example.demo.common.response.DefaultResponse;
-import com.example.demo.domain.vo.CarVo;
+import com.example.demo.model.vo.CarVo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;

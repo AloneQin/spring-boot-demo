@@ -6,7 +6,7 @@ import com.example.demo.common.exception.ParamValidatedException;
 import com.example.demo.common.response.DefaultResponse;
 import com.example.demo.common.response.MyReturnCode;
 import com.example.demo.common.response.ReturnCodeEnum;
-import com.example.demo.domain.vo.PeopleVo;
+import com.example.demo.model.vo.PeopleVo;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.Range;
