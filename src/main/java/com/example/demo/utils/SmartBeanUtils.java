@@ -1,5 +1,6 @@
 package com.example.demo.utils;
 
+import com.alibaba.fastjson.TypeReference;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.springframework.beans.BeanUtils;
 import org.springframework.util.CollectionUtils;
@@ -16,7 +17,8 @@ import java.util.stream.Collectors;
 public class SmartBeanUtils {
 
     /**
-     * 拷贝对象属性
+     * 拷贝对象属性<br/>
+     * 对<code>T<code/>的属性深拷贝，若<code>T<code/>的属性中存在对象嵌套，则嵌套对象的属性为浅拷贝
      * @param source 源对象
      * @param targetSupplier 目标供应者
      * @param <T> 目标泛型
@@ -32,7 +34,8 @@ public class SmartBeanUtils {
     }
 
     /**
-     * 拷贝集合中对象属性
+     * 拷贝集合中对象属性<br/>
+     * 对<code>List<code/>及<code>T<code/>的属性深拷贝，若<code>T<code/>的属性中存在对象嵌套，则嵌套对象的属性为浅拷贝
      * @param sourceList 源集合
      * @param targetSupplier 目标供应者
      * @param <T> 目标泛型
@@ -48,7 +51,8 @@ public class SmartBeanUtils {
     }
 
     /**
-     * 拷贝分页对象中的对象属性
+     * 拷贝分页对象中的对象属性<br/>
+     * 对<code>Page<code/>及<code>T<code/>的属性深拷贝，若<code>T<code/>的属性中存在对象嵌套，则嵌套对象的属性为浅拷贝
      * @param sourcePage 源分页对象
      * @param targetSupplier 目标供应者
      * @param <T> 目标泛型
@@ -60,5 +64,17 @@ public class SmartBeanUtils {
         }
         return copyProperties(sourcePage, Page<T>::new)
                 .setRecords(copyPropertiesList(sourcePage.getRecords(), targetSupplier));
+    }
+
+    /**
+     * 拷贝泛型对象属性<br/>
+     * 支持对象多层嵌套，并且均为深拷贝
+     * @param source 目标对象
+     * @param typeReference 目标泛型类型引用
+     * @param <T> 目标泛型
+     * @return 目标对象
+     */
+    public static <T> T copyPropertiesGeneric(Object source, TypeReference<T> typeReference) {
+        return FastjsonUtils.toObject(FastjsonUtils.toString(source), typeReference);
     }
 }

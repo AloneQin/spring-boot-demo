@@ -53,7 +53,7 @@ spring-boot-demo
                     Controller --> VO
                         |
                         |
-  Other Service  --  Service   --> DTO
+ Other Service  -->  Service   --> DTO
                         |
                         |
                        DAO     --> PO
