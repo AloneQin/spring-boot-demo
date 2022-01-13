@@ -1,9 +1,9 @@
 package com.example.demo.common.metadata.constant;
 
 /**
- * 常量定义
+ * 提示常量定义
  */
-public class Constant {
+public class MsgConst {
 
     public static final String NOT_NULL_MSG     = "不能为空";
     public static final int MIN_1_VAL           = 1;

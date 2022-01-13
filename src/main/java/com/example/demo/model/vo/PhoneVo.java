@@ -1,6 +1,6 @@
 package com.example.demo.model.vo;
 
-import com.example.demo.common.metadata.constant.Constant;
+import com.example.demo.common.metadata.constant.MsgConst;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -24,7 +24,7 @@ public class PhoneVo {
     /**
      * 手机编号
      */
-    @NotNull(message = Constant.NOT_NULL_MSG)
+    @NotNull(message = MsgConst.NOT_NULL_MSG)
     @ApiModelProperty(name = "phoneCode", value = "手机编号", required = true, example = "24d3901c-42a4-4584-92f1-af835e1a2efa")
     private String phoneCode;
 
@@ -32,13 +32,13 @@ public class PhoneVo {
      * 手机名称
      */
     @ApiModelProperty(name = "name", value = "名称", required = true, example = "iphone 12")
-    @NotNull(message = Constant.NOT_NULL_MSG)
+    @NotNull(message = MsgConst.NOT_NULL_MSG)
     private String name;
 
     /**
      * 品牌
      */
-    @NotNull(message = Constant.NOT_NULL_MSG)
+    @NotNull(message = MsgConst.NOT_NULL_MSG)
     @ApiModelProperty(name = "brand", value = "品牌", required = true, example = "apple")
     private String brand;
 
@@ -46,14 +46,14 @@ public class PhoneVo {
      * 生产日期
      */
     @JsonFormat(pattern = "yyyy-MM-dd")
-    @NotNull(message = Constant.NOT_NULL_MSG)
+    @NotNull(message = MsgConst.NOT_NULL_MSG)
     @ApiModelProperty(name = "prodDate", value = "生产日期", required = true, example = "2020-10-14")
     private LocalDate prodDate;
 
     /**
      * 售价
      */
-    @NotNull(message = Constant.NOT_NULL_MSG)
+    @NotNull(message = MsgConst.NOT_NULL_MSG)
     @ApiModelProperty(name = "price", value = "售价", required = true, example = "6299.00")
     private BigDecimal price;
 

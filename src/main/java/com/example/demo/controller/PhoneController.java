@@ -1,7 +1,7 @@
 package com.example.demo.controller;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.example.demo.common.metadata.constant.Constant;
+import com.example.demo.common.metadata.constant.MsgConst;
 import com.example.demo.common.response.ResultFormat;
 import com.example.demo.model.dto.PhoneDTO;
 import com.example.demo.model.vo.PhoneVo;
@@ -41,10 +41,10 @@ public class PhoneController {
             @ApiImplicitParam(name = "brand", value = "手机品牌", required = false, dataType = "string", paramType = "query"),
             @ApiImplicitParam(name = "remark", value = "手机备注（支持模糊搜索）", required = false, dataType = "string", paramType = "query"),
     })
-    public Page<PhoneVo> getPhoneList(@NotNull(message = Constant.NOT_NULL_MSG)
-                                          @Min(value = Constant.MIN_1_VAL, message = Constant.MIN_1_MSG) Integer pageSize,
-                                      @NotNull(message = Constant.NOT_NULL_MSG)
-                                          @Min(value = Constant.MIN_1_VAL, message = Constant.MIN_1_MSG) Integer pageNum,
+    public Page<PhoneVo> getPhoneList(@NotNull(message = MsgConst.NOT_NULL_MSG)
+                                          @Min(value = MsgConst.MIN_1_VAL, message = MsgConst.MIN_1_MSG) Integer pageSize,
+                                      @NotNull(message = MsgConst.NOT_NULL_MSG)
+                                          @Min(value = MsgConst.MIN_1_VAL, message = MsgConst.MIN_1_MSG) Integer pageNum,
                                       String name,
                                       String brand,
                                       String remark) {
@@ -53,8 +53,8 @@ public class PhoneController {
     }
 
     @GetMapping("/phone")
-    public PhoneVo getPhoneById(@NotNull(message = Constant.NOT_NULL_MSG)
-                                    @Min(value = Constant.MIN_1_VAL, message = Constant.MIN_1_MSG) Integer id) {
+    public PhoneVo getPhoneById(@NotNull(message = MsgConst.NOT_NULL_MSG)
+                                    @Min(value = MsgConst.MIN_1_VAL, message = MsgConst.MIN_1_MSG) Integer id) {
         PhoneDTO phoneDTO = phoneService.getPhoneById(id);
         return SmartBeanUtils.copyProperties(phoneDTO, PhoneVo::new);
     }
@@ -75,8 +75,8 @@ public class PhoneController {
 
     @DeleteMapping("/phone")
     @ApiOperation(value = "删除手机")
-    public void removePhone(@NotNull(message = Constant.NOT_NULL_MSG)
-                                @Min(value = Constant.MIN_1_VAL, message = Constant.MIN_1_MSG) Integer id) {
+    public void removePhone(@NotNull(message = MsgConst.NOT_NULL_MSG)
+                                @Min(value = MsgConst.MIN_1_VAL, message = MsgConst.MIN_1_MSG) Integer id) {
         phoneService.removePhone(id);
     }
 }

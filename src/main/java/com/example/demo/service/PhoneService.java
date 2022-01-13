@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.demo.common.exception.BaseException;
 import com.example.demo.common.exception.ParamError;
 import com.example.demo.common.exception.ParamValidatedException;
-import com.example.demo.common.metadata.constant.Constant;
+import com.example.demo.common.metadata.constant.MsgConst;
 import com.example.demo.common.response.ReturnCodeEnum;
 import com.example.demo.dao.wrapper.impl.PhoneDAOImpl;
 import com.example.demo.model.dto.PhoneDTO;
@@ -39,7 +39,7 @@ public class PhoneService {
     @Transactional
     public void addPhone(PhoneDTO phoneDTO) {
         if (Objects.nonNull(phoneDTO.getId())) {
-            throw new ParamValidatedException(Arrays.asList(new ParamError("id", Constant.MUST_NULL)));
+            throw new ParamValidatedException(Arrays.asList(new ParamError("id", MsgConst.MUST_NULL)));
         }
 
         PhonePO phonePO = SmartBeanUtils.copyProperties(phoneDTO, PhonePO::new);
@@ -53,7 +53,7 @@ public class PhoneService {
     @Transactional
     public void modifyPhone(PhoneDTO phoneDTO) {
         if (Objects.isNull(phoneDTO.getId())) {
-            throw new ParamValidatedException(Arrays.asList(new ParamError("id", Constant.MUST_NULL)));
+            throw new ParamValidatedException(Arrays.asList(new ParamError("id", MsgConst.MUST_NULL)));
         }
 
         PhonePO phonePO = SmartBeanUtils.copyProperties(phoneDTO, PhonePO::new);

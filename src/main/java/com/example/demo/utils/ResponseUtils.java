@@ -1,7 +1,5 @@
 package com.example.demo.utils;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.serializer.SerializerFeature;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.servlet.ServletOutputStream;
@@ -34,7 +32,7 @@ public class ResponseUtils {
     }
 
     public static void outputJson(HttpServletResponse response, Integer statusCode, Object object) throws IOException {
-        output(response, statusCode, "application/json;charset=UTF-8", JSON.toJSONString(object, SerializerFeature.WriteMapNullValue));
+        output(response, statusCode, "application/json;charset=UTF-8", FastjsonUtils.toStringExistNull(object));
     }
 
     /**
@@ -94,7 +92,7 @@ public class ResponseUtils {
      * @throws Exception
      */
     public static void fileDownloadByObj(Object obj, String fileName, HttpServletResponse response) throws Exception {
-        String jsonStr = JSON.toJSONString(obj, SerializerFeature.WriteMapNullValue);
+        String jsonStr = FastjsonUtils.toStringExistNull(obj);
         fileDownload(stringToStream(jsonStr), fileName, response);
     }
 }

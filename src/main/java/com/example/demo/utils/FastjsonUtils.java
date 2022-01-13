@@ -7,13 +7,13 @@ import com.alibaba.fastjson.serializer.SerializerFeature;
 import java.util.List;
 
 /**
- * fastjson 工具类
- *      提供常用的 json 转换方法
+ * fastjson 工具类<br/>
+ * 提供常用的 json 转换方法
  */
 public class FastjsonUtils {
 
     /**
-     * 对象转字符串，省略 null
+     * 对象转字符串，省略<code>null</>
      * @param obj 输出对象
      * @return 输出字符串
      */
@@ -22,7 +22,7 @@ public class FastjsonUtils {
     }
 
     /**
-     * 对象转字符串，包含 null
+     * 对象转字符串，包含<code>null</>
      * @param obj 输出对象
      * @return 输出字符串
      */
@@ -33,9 +33,10 @@ public class FastjsonUtils {
     /**
      * 对象转字符串
      * @param obj 输出对象
-     * @param features 序列化参数
-     *                 {@link SerializerFeature.WriteMapNullValue} 是否输出值为 null 字段，默认不输出
-     *                 {@link SerializerFeature.WriteNullListAsEmpty} list字段为 null 输出 []，默认不转换
+     * @param features 序列化参数<br/>
+     *                 {@link SerializerFeature.WriteMapNullValue} 是否输出值为 null 字段，默认不输出<br/>
+     *                 {@link SerializerFeature.WriteNullListAsEmpty} list字段为 null 输出 []，默认不转换<br/>
+     *                 {@link SerializerFeature.PrettyFormat} 格式输出字符串，默认不格式化<br/>
      * @return 输出字符串
      */
     public static String toString(Object obj, SerializerFeature... features) {
