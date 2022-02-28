@@ -13,15 +13,11 @@ import org.springframework.stereotype.Component;
 @Component
 public class ApplicationEventListener implements ApplicationListener {
 
-//    @Autowired
-//    PhoneMapper phoneMapper;
-
     @Override
     public void onApplicationEvent(ApplicationEvent event) {
         log.info("#onApplicationEvent, listen event: [{}]", event.getClass().getName());
         if (event instanceof ApplicationStartedEvent) {
-//            List<Phone> phoneList = phoneMapper.findByCondition(null, null, null);
-//            log.info("#onApplicationEvent, phoneList size: {}", phoneList.size());
+            log.info("#onApplicationEvent, application init completed.");
         }
     }
 }

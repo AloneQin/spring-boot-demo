@@ -192,7 +192,7 @@ public class CompletableFutureTest {
 
     /**
      * 异步-OR ANY
-     * A || B || C 任何一刻完成即可
+     * A || B || C 任何一个完成即可
      * @throws ExecutionException
      * @throws InterruptedException
      */

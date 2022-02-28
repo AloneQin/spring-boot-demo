@@ -5,7 +5,7 @@
 包含`SpringBoot`项目常用使用姿势，供日常参考查阅。
 
 ## 项目结构
-```aidl
+```
 spring-boot-demo
     |-src
         |-main
@@ -17,6 +17,7 @@ spring-boot-demo
                         |-filter                            --过滤器
                         |-interceptor                       --拦截器
                         |-lisenser                          --监听器
+                            |-event                         --自定义事件
                         |-metadata                          --元数据
                             |-constant                      --常量包
                             |-enums                         --枚举包
@@ -49,7 +50,7 @@ spring-boot-demo
 
 ### 分层及调用关系
 调用顺序由上及下，禁止逆序调用，`Service`层允许平级调用。
-```aidl
+```
                     Controller --> VO
                         |
                         |
@@ -76,7 +77,7 @@ spring-boot-demo
 1. 实现`HandlerInterceptor`接口；
 2. 自定义配置`WebMvcConfigurerAdapter`注册拦截器。
 
-## 监听器
+## 监听器&事件驱动
 参考`com.example.demo.common.lisenser`
 
 实现`ApplicationListener`获取监听事件。
@@ -136,6 +137,9 @@ spring-boot-demo
 
 ## 日期转换
 使用`LocalDateTime`取代`Date`，详见`LocalDateTimeSerializerConfig`。
+
+## 重试机制
+参考`com.example.demo.controller#testRetry`
 
 ## 接口文档
 ### 文档管理
