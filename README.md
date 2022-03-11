@@ -22,6 +22,7 @@ spring-boot-demo
                             |-constant                      --常量包
                             |-enums                         --枚举包
                         |-response                          --自义定响应
+                        |-task                              --定时周期任务
                     |-controller                            --控制层
                     |-dao                                   --数据访问层
                         |-mapper                            --Mapper（CURD）
@@ -140,6 +141,12 @@ spring-boot-demo
 
 ## 重试机制
 参考`com.example.demo.controller#testRetry`
+
+## 异步调用
+参考`com.example.demo.CompletableFutureTest`
+
+## 定时任务
+参考`com.example.demo.common.task`
 
 ## 接口文档
 ### 文档管理

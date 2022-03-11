@@ -1,6 +1,7 @@
 package com.example.demo.controller;
 
 import com.example.demo.common.lisenser.event.MyEvent;
+import com.example.demo.common.task.ControllableScheduleTask;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
@@ -27,6 +28,11 @@ public class TestController {
 
     @Autowired
     private ApplicationEventPublisher publisher;
+
+    @Autowired
+    private ControllableScheduleTask controllableScheduleTask;
+
+    private int i = 1;
 
     @GetMapping("/index")
     public String index() {
@@ -81,8 +87,6 @@ public class TestController {
         return "SUCCESS";
     }
 
-    private int i = 1;
-
     /**
      * 重试机制测试
      * 1.{@link Retryable}注解在接口实现类方法上无效，必须使用普通类
@@ -101,11 +105,30 @@ public class TestController {
         return "SUCCESS";
     }
 
+    /**
+     * 模拟调用
+     */
     private void mockCall() {
         log.info("第{}次调用，结果: {}", i, i == 5);
         i++;
         if (i < 6) {
             throw new RuntimeException("调用失败");
         }
+    }
+
+    /**
+     * 开启定时任务
+     */
+    @GetMapping("/startTask")
+    public void startTask() {
+        controllableScheduleTask.startTask();
+    }
+
+    /**
+     * 关闭定时任务
+     */
+    @GetMapping("/stopTask")
+    public void stopTask() {
+        controllableScheduleTask.stopTask();
     }
 }

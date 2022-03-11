@@ -1,14 +1,12 @@
 package com.example.demo.common.response;
 
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 /**
  * 自定义默认返回结构（JSON）
  * @param <T> 内容主体泛型
  */
 @Data
-@NoArgsConstructor
 public class DefaultResponse<T> {
 
     /**
