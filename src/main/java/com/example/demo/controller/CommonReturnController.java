@@ -7,6 +7,7 @@ import com.example.demo.common.response.DefaultResponse;
 import com.example.demo.common.response.MyReturnCode;
 import com.example.demo.common.response.ReturnCodeEnum;
 import com.example.demo.model.vo.PeopleVo;
+import com.example.demo.utils.FastjsonUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.Range;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.constraints.NotNull;
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * 通用返回结构的运用
@@ -30,7 +32,7 @@ public class CommonReturnController {
      * 通用成功返回展示
      */
     @GetMapping("/success")
-    public DefaultResponse success() {
+    public DefaultResponse<Void> success() {
         return DefaultResponse.success();
     }
 
@@ -38,7 +40,7 @@ public class CommonReturnController {
      * 成功并携带数据返回展示
      */
     @GetMapping("/successWithData")
-    public DefaultResponse successWithData() {
+    public DefaultResponse<List<Integer>> successWithData() {
         return DefaultResponse.success(Arrays.asList(1, 2, 3));
     }
 
@@ -47,7 +49,7 @@ public class CommonReturnController {
      * @return
      */
     @GetMapping("/fail")
-    public DefaultResponse fail() {
+    public DefaultResponse<Void> fail() {
         return DefaultResponse.fail();
     }
 
@@ -55,7 +57,7 @@ public class CommonReturnController {
      * 自定义失败返回展示
      */
     @GetMapping("/customFail")
-    public DefaultResponse customFail() {
+    public DefaultResponse<Void> customFail() {
         return DefaultResponse.fail(ReturnCodeEnum.PERMISSION_DENIED);
     }
 
@@ -72,7 +74,7 @@ public class CommonReturnController {
      * 发生可预期异常返回展示
      */
     @GetMapping("/expectedException")
-    public DefaultResponse expectedException(String token) {
+    public DefaultResponse<Void> expectedException(String token) {
         if (token == null) {
             throw new BaseException(ReturnCodeEnum.NEED_LOGIN);
         }
@@ -84,7 +86,7 @@ public class CommonReturnController {
      * 子返回码异常返回展示
      */
     @GetMapping("/subReturnCodeException")
-    public DefaultResponse subReturnCodeException(String token) {
+    public DefaultResponse<Void> subReturnCodeException(String token) {
         if (token == null) {
             throw new BaseException(MyReturnCode.ORDER_STATUS_ERROR);
         }
@@ -96,7 +98,7 @@ public class CommonReturnController {
      * 参数校验返回展示
      */
     @GetMapping("/validated")
-    public DefaultResponse validated(@NotNull(message = "姓名不能为空")
+    public DefaultResponse<Void> validated(@NotNull(message = "姓名不能为空")
                                         @Length(min = 1, max = 10, message = "名称长度必须在1-10之间")  String name,
                                      @NotNull(message = "年龄不能为空")
                                         @Range(min = 1, max = 150, message = "年龄必须在[1-150]之间") Integer age) {
@@ -109,8 +111,8 @@ public class CommonReturnController {
      * 非 JSON 对象传参校验展示
      */
     @GetMapping("/objectValidated")
-    public DefaultResponse objectValidated(@Validated PeopleVo peopleVo) {
-        log.info(peopleVo.toString());
+    public DefaultResponse<Void> objectValidated(@Validated PeopleVo peopleVo) {
+        log.info(FastjsonUtils.toString(peopleVo));
 
         return DefaultResponse.success();
     }
@@ -119,8 +121,8 @@ public class CommonReturnController {
      * JSON 对象传参校验展示
      */
     @PostMapping("/jsonObjectValidated")
-    public DefaultResponse jsonObjectValidated(@RequestBody @Validated PeopleVo peopleVo) {
-        log.info(peopleVo.toString());
+    public DefaultResponse<Void> jsonObjectValidated(@RequestBody @Validated PeopleVo peopleVo) {
+        log.info(FastjsonUtils.toString(peopleVo));
 
         return DefaultResponse.success();
     }
@@ -129,7 +131,7 @@ public class CommonReturnController {
      * 自定义参数校验返回展示
      */
     @GetMapping("/customValidated")
-    public DefaultResponse customValidated(String name, Integer age) {
+    public DefaultResponse<Void> customValidated(String name, Integer age) {
         if (!name.startsWith("李")) {
             throw new ParamValidatedException(Arrays.asList(new ParamError("name", "人名必须姓李")));
         }

@@ -2,9 +2,11 @@ package com.example.demo.controller;
 
 import com.example.demo.common.lisenser.event.MyEvent;
 import com.example.demo.common.task.ControllableScheduleTask;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.retry.RetryException;
 import org.springframework.retry.annotation.Backoff;
 import org.springframework.retry.annotation.Retryable;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -112,7 +114,7 @@ public class TestController {
         log.info("第{}次调用，结果: {}", i, i == 5);
         i++;
         if (i < 6) {
-            throw new RuntimeException("调用失败");
+            throw new RetryException("调用失败");
         }
     }
 
@@ -131,4 +133,16 @@ public class TestController {
     public void stopTask() {
         controllableScheduleTask.stopTask();
     }
+
+
+    
+
+}
+
+@AllArgsConstructor
+class Data {
+
+    public Long orderId;
+    public Long panoId;
+
 }

@@ -18,7 +18,7 @@ public class SmartBeanUtils {
 
     /**
      * 拷贝对象属性<br/>
-     * 返回新对象，但对象属性为浅拷贝
+     * 返回新对象，对象属性为基本类型及{@link String}时为深拷贝，为引用类型时为浅拷贝
      * @param source 源对象
      * @param targetSupplier 目标供应者
      * @param <T> 目标泛型
@@ -35,7 +35,7 @@ public class SmartBeanUtils {
 
     /**
      * 拷贝集合中对象属性<br/>
-     * 返回新集合、新集合元素，但元素对象属性为浅拷贝
+     * 返回新集合、新集合元素，元素对象属性为基本类型及{@link String}时为深拷贝，为引用类型时为浅拷贝
      * @param sourceList 源集合
      * @param targetSupplier 目标供应者
      * @param <T> 目标泛型
@@ -52,7 +52,7 @@ public class SmartBeanUtils {
 
     /**
      * 拷贝分页对象中的对象属性<br/>
-     * 返回新分页对象、新集合、新集合元素，但元素对象属性为浅拷贝
+     * 返回新分页对象、新集合、新集合元素，元素对象属性为基本类型及{@link String}时为深拷贝，为引用类型时为浅拷贝
      * @param sourcePage 源分页对象
      * @param targetSupplier 目标供应者
      * @param <T> 目标泛型
