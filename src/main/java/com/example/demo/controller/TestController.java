@@ -1,14 +1,11 @@
 package com.example.demo.controller;
 
 import com.example.demo.common.lisenser.event.MyEvent;
+import com.example.demo.common.retry.RetryTestService;
 import com.example.demo.common.task.ControllableScheduleTask;
-import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.retry.RetryException;
-import org.springframework.retry.annotation.Backoff;
-import org.springframework.retry.annotation.Retryable;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -34,7 +31,8 @@ public class TestController {
     @Autowired
     private ControllableScheduleTask controllableScheduleTask;
 
-    private int i = 1;
+    @Autowired
+    private RetryTestService retryTestService;
 
     @GetMapping("/index")
     public String index() {
@@ -91,31 +89,14 @@ public class TestController {
 
     /**
      * 重试机制测试
-     * 1.{@link Retryable}注解在接口实现类方法上无效，必须使用普通类
-     * 2.{@link Retryable}注解在本类的方法相互调用时无效，重试方法必须在其他类
-     * 3.{@link Retryable}注解修饰方法的调用对象手动创建时无效，必须被 Spring IOC 容器管理
-     * @return
      */
     @GetMapping("/testRetry")
-    @Retryable(value = Exception.class, maxAttempts = 5, backoff = @Backoff(delay = 500L))
     public String testRetry() {
         log.info("开始发起远程调用...");
-        mockCall();
-        i = 1;
+        retryTestService.mockCall();
         log.info("完成远程调用");
 
         return "SUCCESS";
-    }
-
-    /**
-     * 模拟调用
-     */
-    private void mockCall() {
-        log.info("第{}次调用，结果: {}", i, i == 5);
-        i++;
-        if (i < 6) {
-            throw new RetryException("调用失败");
-        }
     }
 
     /**
@@ -133,16 +114,5 @@ public class TestController {
     public void stopTask() {
         controllableScheduleTask.stopTask();
     }
-
-
-    
-
-}
-
-@AllArgsConstructor
-class Data {
-
-    public Long orderId;
-    public Long panoId;
 
 }
