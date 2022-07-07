@@ -1,7 +1,5 @@
 package com.example.demo.common.retry;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.retry.RetryException;
 import org.springframework.retry.annotation.Backoff;
@@ -30,17 +28,10 @@ public class RetryTestServiceImpl extends RetryManager implements RetryTestServi
                 throw new NullPointerException();
             }
         } catch (Exception e) {
-            log.error("第{}次调用失败", retryTimes);
+            log.error("#第{}次调用失败", retryTimes);
             throw new RetryException("调用失败");
         } finally {
             cleanRetryTimes(retryKey);
         }
     }
-}
-
-@Data
-@AllArgsConstructor
-class B {
-    public Integer type;
-    public Integer status;
 }

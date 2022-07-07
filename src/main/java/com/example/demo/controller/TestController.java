@@ -6,6 +6,8 @@ import com.example.demo.common.task.ControllableScheduleTask;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -33,6 +35,9 @@ public class TestController {
 
     @Autowired
     private RetryTestService retryTestService;
+
+    @Autowired
+    private ThreadPoolTaskExecutor threadPoolTaskExecutor;
 
     @GetMapping("/index")
     public String index() {
@@ -92,9 +97,9 @@ public class TestController {
      */
     @GetMapping("/testRetry")
     public String testRetry() {
-        log.info("开始发起远程调用...");
+        log.info("#开始发起远程调用...");
         retryTestService.mockCall();
-        log.info("完成远程调用");
+        log.info("#完成远程调用");
 
         return "SUCCESS";
     }
@@ -115,4 +120,15 @@ public class TestController {
         controllableScheduleTask.stopTask();
     }
 
+    /**
+     * 跟踪标记测试
+     */
+    @GetMapping("/testTraceId")
+    @Async("threadPoolTaskExecutor")
+    public void testTraceId() {
+        log.info("#test async thread 1");
+        threadPoolTaskExecutor.execute(() -> {
+            log.info("#test async thread 2");
+        });
+    }
 }

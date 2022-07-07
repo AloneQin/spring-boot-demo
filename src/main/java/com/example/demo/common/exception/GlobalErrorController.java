@@ -4,7 +4,6 @@ import com.alibaba.fastjson.JSON;
 import com.example.demo.common.response.DefaultResponse;
 import com.example.demo.common.response.ReturnCodeEnum;
 import com.example.demo.utils.Base64Utils;
-import com.example.demo.utils.RandomUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.validator.internal.engine.path.PathImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -124,12 +123,8 @@ public class GlobalErrorController implements ErrorController {
                 && errorAttributeInfo.getTrace() != null
                 && defaultResponse.getContent() == null) {
             try {
-                // 此处可以返回一些关键信息，便于快速定位日志
-                String details = RandomUtils.getUUID(false);
-                log.error("#error, exception details key: {}", details);
-                details += System.lineSeparator() + errorAttributeInfo.getTrace();
                 // base64 转码，避免查看明文信息时需要对字符串转义字符进行反转义处理
-                defaultResponse.setContent(Base64Utils.encode(details));
+                defaultResponse.setContent(Base64Utils.encode(errorAttributeInfo.getTrace()));
             } catch (UnsupportedEncodingException e) {
                 log.error("#error, fail to base64 encode, can not return exception stack trace");
             }

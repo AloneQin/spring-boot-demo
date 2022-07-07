@@ -1,5 +1,6 @@
 package com.example.demo.common.config;
 
+import com.example.demo.common.filter.TraceIdFilter;
 import com.example.demo.common.metadata.enums.FilterConfigEnum;
 import com.example.demo.common.filter.TestFilter;
 import com.example.demo.common.filter.UrlFilter;
@@ -12,6 +13,19 @@ import org.springframework.context.annotation.Configuration;
  */
 @Configuration
 public class FilterConfig {
+
+    /**
+     * traceId 过滤器注册
+     * @return
+     */
+    @Bean
+    public FilterRegistrationBean TraceIdFilterRegistrationBean() {
+        FilterRegistrationBean<TraceIdFilter> registrationBean = new FilterRegistrationBean();
+        registrationBean.setFilter(new TraceIdFilter());
+        registrationBean.setOrder(FilterConfigEnum.TRACE_ID_FILTER.order);
+        registrationBean.addUrlPatterns(FilterConfigEnum.TRACE_ID_FILTER.urlPatterns);
+        return registrationBean;
+    }
 
     /**
      * URL 过滤器注册
