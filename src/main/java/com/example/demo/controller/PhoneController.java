@@ -6,18 +6,27 @@ import com.example.demo.common.response.ResultFormat;
 import com.example.demo.model.dto.PhoneDTO;
 import com.example.demo.model.vo.PhoneVo;
 import com.example.demo.service.PhoneService;
+import com.example.demo.service.TestService;
 import com.example.demo.utils.SmartBeanUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.*;
 
 import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 /**
  * 手机控制器
@@ -25,12 +34,12 @@ import javax.validation.constraints.NotNull;
 @Validated
 @ResultFormat
 @RestController
+@AllArgsConstructor
 @RequestMapping("/phone")
 @Api(tags = "phone API", description = "手机相关接口")
 public class PhoneController {
 
-    @Autowired
-    private PhoneService phoneService;
+    private final PhoneService phoneService;
 
     @GetMapping("/phoneList")
     @ApiOperation(value = "多条件查询汽车分页列表")
@@ -59,6 +68,12 @@ public class PhoneController {
         return SmartBeanUtils.copyProperties(phoneDTO, PhoneVo::new);
     }
 
+    @GetMapping("/phoneByName")
+    public List<PhoneVo> getPhoneByName(@NotBlank(message = MsgConst.NOT_NULL_MSG) String name) {
+        List<PhoneDTO> phoneDTOList = phoneService.getPhoneByName(name);
+        return SmartBeanUtils.copyPropertiesList(phoneDTOList, PhoneVo::new);
+    }
+
     @PostMapping("/phone")
     @ApiOperation(value = "添加手机")
     public void addPhone(@RequestBody @Validated PhoneVo phoneVo) {
@@ -80,4 +95,11 @@ public class PhoneController {
         phoneService.removePhone(id);
     }
 
+    @Autowired
+    TestService testService;
+
+    @GetMapping("/test")
+    public void test() {
+        testService.add1();
+    }
 }

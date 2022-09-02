@@ -3,8 +3,8 @@ package com.example.demo.controller;
 import com.example.demo.common.lisenser.event.MyEvent;
 import com.example.demo.common.retry.RetryTestService;
 import com.example.demo.common.task.ControllableScheduleTask;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
@@ -24,20 +24,17 @@ import java.util.Enumeration;
  */
 @Slf4j
 @RestController
+@AllArgsConstructor
 @RequestMapping("/test")
 public class TestController {
 
-    @Autowired
-    private ApplicationEventPublisher publisher;
+    private final ApplicationEventPublisher publisher;
 
-    @Autowired
-    private ControllableScheduleTask controllableScheduleTask;
+    private final ControllableScheduleTask controllableScheduleTask;
 
-    @Autowired
-    private RetryTestService retryTestService;
+    private final RetryTestService retryTestService;
 
-    @Autowired
-    private ThreadPoolTaskExecutor threadPoolTaskExecutor;
+    private final ThreadPoolTaskExecutor threadPoolTaskExecutor;
 
     @GetMapping("/index")
     public String index() {

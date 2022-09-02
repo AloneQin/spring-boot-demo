@@ -27,6 +27,7 @@ public class RetryTestServiceImpl extends RetryManager implements RetryTestServi
             if (retryTimes < 5) {
                 throw new NullPointerException();
             }
+            log.info("#第{}次调用成功", retryTimes);
         } catch (Exception e) {
             log.error("#第{}次调用失败", retryTimes);
             throw new RetryException("调用失败");

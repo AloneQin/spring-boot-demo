@@ -4,6 +4,7 @@ import com.example.demo.utils.FastjsonUtils;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.retry.annotation.Retryable;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -11,6 +12,8 @@ import java.util.Objects;
 
 /**
  * 重试管理类
+ * {@link Retryable}注解在本类的方法相互调用时无效，重试方法必须在其他类
+ * {@link Retryable}注解修饰方法的调用对象手动创建时无效，必须被 Spring IOC 容器管理
  */
 @Slf4j
 public class RetryManager {

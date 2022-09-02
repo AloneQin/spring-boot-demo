@@ -12,19 +12,22 @@ import com.example.demo.model.po.PhonePO;
 import com.example.demo.utils.FastjsonUtils;
 import com.example.demo.utils.SmartBeanUtils;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 
 @Slf4j
 @Service
 public class PhoneService {
 
-    @Autowired
-    private PhoneDAOImpl phoneDAO;
+    private final PhoneDAOImpl phoneDAO;
+
+    public PhoneService(PhoneDAOImpl phoneDAO) {
+        this.phoneDAO = phoneDAO;
+    }
 
     public Page<PhoneDTO> getPhoneList(Integer pageSize, Integer pageNum, String name, String brand, String remark) {
         Page<PhonePO> phonePOPage = phoneDAO.pageByCondition(pageSize, pageNum, name, brand, remark);
@@ -34,6 +37,11 @@ public class PhoneService {
     public PhoneDTO getPhoneById(Integer id) {
         PhonePO phonePO = phoneDAO.getById(id);
         return SmartBeanUtils.copyProperties(phonePO, PhoneDTO::new);
+    }
+
+    public List<PhoneDTO> getPhoneByName(String name) {
+        List<PhonePO> phonePOList = phoneDAO.findByName(name);
+        return SmartBeanUtils.copyPropertiesList(phonePOList, PhoneDTO::new);
     }
 
     @Transactional

@@ -4,6 +4,8 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.example.demo.model.po.PhonePO;
 
+import java.util.List;
+
 /**
  * <p>
  * 手机表 服务类
@@ -16,5 +18,6 @@ public interface PhoneDAO extends IService<PhonePO> {
 
     Page<PhonePO> pageByCondition(Integer pageSize, Integer pageNum, String name, String brand, String remark);
 
+    List<PhonePO> findByName(String name);
 
 }

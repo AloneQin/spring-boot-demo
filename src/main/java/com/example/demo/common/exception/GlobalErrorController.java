@@ -4,9 +4,9 @@ import com.alibaba.fastjson.JSON;
 import com.example.demo.common.response.DefaultResponse;
 import com.example.demo.common.response.ReturnCodeEnum;
 import com.example.demo.utils.Base64Utils;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.validator.internal.engine.path.PathImpl;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.error.ErrorAttributeOptions;
 import org.springframework.boot.web.servlet.error.ErrorAttributes;
 import org.springframework.boot.web.servlet.error.ErrorController;
@@ -34,18 +34,17 @@ import java.util.Set;
  */
 @Slf4j
 @Controller
+@AllArgsConstructor
 @RequestMapping("${server.error.path:${error.path:/error}}")
 public class GlobalErrorController implements ErrorController {
 
     private static final String ERROR_PAGE = "error";
 
-    @Autowired
-    private SystemProperties systemProperties;
+    private final SystemProperties systemProperties;
 
-    @Autowired
-    private ErrorAttributes errorAttributes;
+    private final ErrorAttributes errorAttributes;
 
-//    @Override
+    //    @Override
 //    public String getErrorPath() {
 //        return ERROR_PAGE;
 //    }

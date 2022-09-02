@@ -1,7 +1,7 @@
 package com.example.demo.common.task;
 
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 import org.springframework.scheduling.support.CronTrigger;
 import org.springframework.stereotype.Component;
@@ -18,10 +18,13 @@ import java.util.concurrent.ScheduledFuture;
 @Component
 public class ControllableScheduleTask {
 
-    @Autowired
-    private ThreadPoolTaskScheduler threadPoolTaskScheduler;
+    private final ThreadPoolTaskScheduler threadPoolTaskScheduler;
 
     private ScheduledFuture<?> scheduledFuture;
+
+    public ControllableScheduleTask(ThreadPoolTaskScheduler threadPoolTaskScheduler) {
+        this.threadPoolTaskScheduler = threadPoolTaskScheduler;
+    }
 
     public void startTask() {
         scheduledFuture = threadPoolTaskScheduler.schedule(() -> {

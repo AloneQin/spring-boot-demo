@@ -1,14 +1,15 @@
 package com.example.demo.common.response;
 
-import com.example.demo.common.filter.TraceIdFilter;
-import lombok.Data;
-import org.slf4j.MDC;
+import com.example.demo.common.trace.TraceManager;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * 自定义默认返回结构（JSON）
  * @param <T> 内容主体泛型
  */
-@Data
+@Getter
+@Setter
 public class DefaultResponse<T> {
 
     /**
@@ -35,7 +36,7 @@ public class DefaultResponse<T> {
         this.code = code;
         this.message = message;
         this.content = content;
-        this.traceId = MDC.get(TraceIdFilter.TRACE_ID);
+        this.traceId = TraceManager.getTraceId();
     }
 
     public static <T> DefaultResponse<T> success(T content) {

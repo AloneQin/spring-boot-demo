@@ -4,6 +4,8 @@ import com.example.demo.model.po.PhonePO;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 /**
  * <p>
  * 手机表 Mapper 接口
@@ -14,5 +16,7 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface PhoneMapper extends BaseMapper<PhonePO> {
+
+    List<PhonePO> findByName(String name);
 
 }
