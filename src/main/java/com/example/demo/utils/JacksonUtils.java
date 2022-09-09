@@ -17,7 +17,7 @@ public class JacksonUtils {
     private static final ObjectMapper OBJECT_MAPPER = initObjectMapper();
 
     /**
-     * 对象转字符串，省略为<code>null</>的属性
+     * 对象转字符串，省略为<code>null<code/>的属性
      * @param obj 输入对象
      * @return 输出字符串
      */
@@ -26,7 +26,7 @@ public class JacksonUtils {
     }
 
     /**
-     * 对象转格式化字符串，省略为<code>null</>的属性
+     * 对象转格式化字符串，省略为<code>null<code/>的属性
      * @param obj 输入对象
      * @return 格式化字符串
      * @throws JsonProcessingException
@@ -36,11 +36,11 @@ public class JacksonUtils {
     }
 
     /**
-     * 对象转字符串，保留为<code>null</>的属性
+     * 对象转字符串，保留为<code>null<code/>的属性
      * @param obj 输入对象
      * @return 输出字符串
      */
-    public static String toStringExistNull(Object obj) throws JsonProcessingException {
+    public static String toStringKeepNull(Object obj) throws JsonProcessingException {
         // 属性为 null 不进行序列化
         OBJECT_MAPPER.setSerializationInclusion(JsonInclude.Include.NON_NULL);
         return OBJECT_MAPPER.writeValueAsString(obj);

@@ -25,7 +25,7 @@ class FastjsonUtilsTest {
         System.out.println("s2: " + s2);
 
         // 对象转字符串保留为 null 的属性
-        String s3 = FastjsonUtils.toStringExistNull(bookList);
+        String s3 = FastjsonUtils.toStringKeepNull(bookList);
         System.out.println("s3: " + s3);
 
         // 字符串转对象

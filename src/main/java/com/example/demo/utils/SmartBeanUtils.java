@@ -2,9 +2,13 @@ package com.example.demo.utils;
 
 import com.alibaba.fastjson.TypeReference;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.util.CollectionUtils;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -14,6 +18,7 @@ import java.util.stream.Collectors;
 /**
  * 对象工具类
  */
+@Slf4j
 public class SmartBeanUtils {
 
     /**
@@ -76,5 +81,34 @@ public class SmartBeanUtils {
      */
     public static <T> T copyPropertiesGeneric(Object source, TypeReference<T> typeReference) {
         return FastjsonUtils.toObject(FastjsonUtils.toString(source), typeReference);
+    }
+
+    /**
+     * 拷贝非空的对象属性<br/>
+     * 返回新对象，浅拷贝
+     * @param source 源对象
+     * @param target 目标对象
+     * @param <T> 对象类型
+     */
+    public static <T> void copyValueNonNull(T source, T target) {
+        if (Objects.isNull(source) || Objects.isNull(target)) {
+            return;
+        }
+        Class<?> aClass = source.getClass();
+        Field[] declaredFields = aClass.getDeclaredFields();
+        Arrays.stream(declaredFields).forEach(field -> {
+            try {
+                field.setAccessible(true);
+                if (Modifier.isFinal(field.getModifiers())) {
+                    return;
+                }
+                Object newValue = field.get(source);
+                if (Objects.nonNull(newValue)) {
+                    field.set(target, newValue);
+                }
+            } catch (IllegalAccessException e) {
+                log.error("copyValueNonNull catch", e);
+            }
+        });
     }
 }

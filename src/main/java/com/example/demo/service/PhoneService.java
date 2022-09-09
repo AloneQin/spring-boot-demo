@@ -1,7 +1,6 @@
 package com.example.demo.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.example.demo.common.exception.BaseException;
 import com.example.demo.common.exception.ParamError;
 import com.example.demo.common.exception.ParamValidatedException;
 import com.example.demo.common.metadata.constant.MsgConst;
@@ -9,6 +8,7 @@ import com.example.demo.common.response.ReturnCodeEnum;
 import com.example.demo.dao.wrapper.impl.PhoneDAOImpl;
 import com.example.demo.model.dto.PhoneDTO;
 import com.example.demo.model.po.PhonePO;
+import com.example.demo.utils.AssertUtils;
 import com.example.demo.utils.FastjsonUtils;
 import com.example.demo.utils.SmartBeanUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -17,7 +17,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 
 @Slf4j
 @Service
@@ -46,38 +45,27 @@ public class PhoneService {
 
     @Transactional
     public void addPhone(PhoneDTO phoneDTO) {
-        if (Objects.nonNull(phoneDTO.getId())) {
-            throw new ParamValidatedException(Arrays.asList(new ParamError("id", MsgConst.MUST_NULL)));
-        }
+        AssertUtils.isNull(phoneDTO.getId(), new ParamValidatedException(Arrays.asList(new ParamError("id", MsgConst.MUST_NULL))));
 
         PhonePO phonePO = SmartBeanUtils.copyProperties(phoneDTO, PhonePO::new);
         boolean result = phoneDAO.save(phonePO);
-        if (!result) {
-            log.error("failed to add phone, phonePO: {}", FastjsonUtils.toString(phonePO));
-            throw new BaseException(ReturnCodeEnum.FAIL);
-        }
+
+        AssertUtils.isTrue(result, ReturnCodeEnum.FAIL, () -> log.warn("failed to add phone, phonePO: {}", FastjsonUtils.toString(phonePO)));
     }
 
     @Transactional
     public void modifyPhone(PhoneDTO phoneDTO) {
-        if (Objects.isNull(phoneDTO.getId())) {
-            throw new ParamValidatedException(Arrays.asList(new ParamError("id", MsgConst.MUST_NULL)));
-        }
+        AssertUtils.nonNull(phoneDTO.getId(), new ParamValidatedException(Arrays.asList(new ParamError("id", MsgConst.MUST_NULL))));
 
         PhonePO phonePO = SmartBeanUtils.copyProperties(phoneDTO, PhonePO::new);
         boolean result = phoneDAO.updateById(phonePO);
-        if (!result) {
-            log.error("failed to modify phone, phonePO: {}", FastjsonUtils.toString(phonePO));
-            throw new BaseException(ReturnCodeEnum.FAIL);
-        }
+
+        AssertUtils.isTrue(result, ReturnCodeEnum.FAIL, () -> log.warn("failed to modify phone, phonePO: {}", FastjsonUtils.toString(phonePO)));
     }
 
     @Transactional
     public void removePhone(Integer id) {
         boolean result = phoneDAO.removeById(id);
-        if (!result) {
-            log.error("failed to remove phone, id: {}", id);
-            throw new BaseException(ReturnCodeEnum.FAIL);
-        }
+        AssertUtils.isTrue(result, ReturnCodeEnum.FAIL, () -> log.warn("failed to remove phone, id: {}", id));
     }
 }

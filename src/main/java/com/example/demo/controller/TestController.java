@@ -128,4 +128,15 @@ public class TestController {
             log.info("#test async thread 2");
         });
     }
+
+    /**
+     * xss 测试
+     * @param input 模拟参数，如：<script>alert("xss");</script>
+     * @return
+     */
+    @GetMapping("/testXss")
+    public String testXss(String input) {
+        log.info("#testXss: {}", input);
+        return input;
+    }
 }

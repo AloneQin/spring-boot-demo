@@ -1,8 +1,11 @@
 package com.example.demo.common.response;
 
 import com.example.demo.common.trace.TraceManager;
+import com.example.demo.utils.FastjsonUtils;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.util.Objects;
 
 /**
  * 自定义默认返回结构（JSON）
@@ -61,6 +64,20 @@ public class DefaultResponse<T> {
 
     public static <T> DefaultResponse<T> fail() {
         return fail(ReturnCodeEnum.FAIL);
+    }
+
+    /**
+     * 获取详细信息
+     * @return 详细信息
+     */
+    public String detailMessage() {
+        if (successful(this)) {
+            return message;
+        }
+        if (Objects.isNull(content)) {
+           return message;
+        }
+        return message + ": " + FastjsonUtils.toString(content);
     }
 
     /**

@@ -1,19 +1,22 @@
 package com.example.demo.controller;
 
-import com.example.demo.common.exception.BaseException;
 import com.example.demo.common.exception.ParamError;
 import com.example.demo.common.exception.ParamValidatedException;
 import com.example.demo.common.response.DefaultResponse;
 import com.example.demo.common.response.MyReturnCode;
 import com.example.demo.common.response.ReturnCodeEnum;
 import com.example.demo.model.vo.PeopleVo;
+import com.example.demo.utils.AssertUtils;
 import com.example.demo.utils.FastjsonUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.Range;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.*;
 
 import javax.validation.constraints.NotNull;
 import java.util.Arrays;
@@ -75,9 +78,7 @@ public class CommonReturnController {
      */
     @GetMapping("/expectedException")
     public DefaultResponse<Void> expectedException(String token) {
-        if (token == null) {
-            throw new BaseException(ReturnCodeEnum.NEED_LOGIN);
-        }
+        AssertUtils.nonNull(token, ReturnCodeEnum.NEED_LOGIN, () -> log.warn("token is null"));
 
         return DefaultResponse.success();
     }
@@ -87,9 +88,7 @@ public class CommonReturnController {
      */
     @GetMapping("/subReturnCodeException")
     public DefaultResponse<Void> subReturnCodeException(String token) {
-        if (token == null) {
-            throw new BaseException(MyReturnCode.ORDER_STATUS_ERROR);
-        }
+        AssertUtils.nonNull(token, MyReturnCode.ORDER_STATUS_ERROR, () -> log.warn("token is null", true));
 
         return DefaultResponse.success();
     }
@@ -99,9 +98,9 @@ public class CommonReturnController {
      */
     @GetMapping("/validated")
     public DefaultResponse<Void> validated(@NotNull(message = "姓名不能为空")
-                                        @Length(min = 1, max = 10, message = "名称长度必须在1-10之间")  String name,
-                                     @NotNull(message = "年龄不能为空")
-                                        @Range(min = 1, max = 150, message = "年龄必须在[1-150]之间") Integer age) {
+                                               @Length(min = 1, max = 10, message = "名称长度必须在1-10之间")  String name,
+                                           @NotNull(message = "年龄不能为空")
+                                               @Range(min = 1, max = 150, message = "年龄必须在[1-150]之间") Integer age) {
         log.info("name: {}, age: {}", name, age);
 
         return DefaultResponse.success();
@@ -132,13 +131,10 @@ public class CommonReturnController {
      */
     @GetMapping("/customValidated")
     public DefaultResponse<Void> customValidated(String name, Integer age) {
-        if (!name.startsWith("李")) {
-            throw new ParamValidatedException(Arrays.asList(new ParamError("name", "人名必须姓李")));
-        }
 
-        if (age%2 != 0) {
-            throw new ParamValidatedException(Arrays.asList(new ParamError("age", "年龄不能为奇数")));
-        }
+        AssertUtils.isTrue(name.startsWith("李"), new ParamValidatedException(new ParamError("name", "人名必须姓李")));
+
+        AssertUtils.state(() -> age%2 == 0, new ParamValidatedException(Arrays.asList(new ParamError("age", "年龄不能为奇数"))));
 
         return DefaultResponse.success();
     }

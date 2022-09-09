@@ -23,7 +23,7 @@ class JacksonUtilsTest {
         System.out.println("s2: " + s2);
 
         // 对象转字符串保留为 null 的属性
-        String s3 = JacksonUtils.toStringExistNull(bookList);
+        String s3 = JacksonUtils.toStringKeepNull(bookList);
         System.out.println("s3: " + s3);
 
         // 字符串转对象

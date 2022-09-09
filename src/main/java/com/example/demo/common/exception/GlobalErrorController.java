@@ -27,6 +27,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 
 /**
@@ -81,13 +82,10 @@ public class GlobalErrorController implements ErrorController {
     @ResponseBody
     @RequestMapping
     public Object error(HttpServletRequest request, HttpServletResponse response) {
-        ErrorAttributeInfo errorAttributeInfo = getErrorAttributes(request);
-        if (errorAttributeInfo.getThrowable() != null) {
-            log.error("catch exception: ", errorAttributeInfo.getThrowable());
-        }
-
         // 封装返回结构
         DefaultResponse defaultResponse;
+        boolean errorLogFlag = false;
+        ErrorAttributeInfo errorAttributeInfo = getErrorAttributes(request);
         Throwable throwable = errorAttributeInfo.getThrowable();
         if (throwable instanceof BaseException) {
             // 自定义异常
@@ -100,6 +98,7 @@ public class GlobalErrorController implements ErrorController {
             defaultResponse = getParamErrorResponse(throwable);
         } else {
             // 其他异常
+            errorLogFlag = true;
             ReturnCodeEnum returnCodeEnum = null;
             switch (errorAttributeInfo.getStatus()) {
                 case HttpServletResponse.SC_NOT_FOUND:
@@ -126,6 +125,14 @@ public class GlobalErrorController implements ErrorController {
                 defaultResponse.setContent(Base64Utils.encode(errorAttributeInfo.getTrace()));
             } catch (UnsupportedEncodingException e) {
                 log.error("#error, fail to base64 encode, can not return exception stack trace");
+            }
+        }
+
+        if (Objects.nonNull(throwable)) {
+            if (errorLogFlag) {
+                log.error("#catch unexpected exception: ", throwable);
+            } else {
+                log.warn("#catch expected exception: ", throwable);
             }
         }
 

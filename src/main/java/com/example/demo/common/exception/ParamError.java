@@ -1,11 +1,13 @@
 package com.example.demo.common.exception;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 /**
  * 参数校验错误信息
  */
 @Data
+@AllArgsConstructor
 public class ParamError {
 
     /**
@@ -17,8 +19,4 @@ public class ParamError {
      */
     private String message;
 
-    public ParamError(String name, String message) {
-        this.name = name;
-        this.message = message;
-    }
 }

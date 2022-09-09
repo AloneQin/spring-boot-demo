@@ -32,7 +32,7 @@ public class ResponseUtils {
     }
 
     public static void outputJson(HttpServletResponse response, Integer statusCode, Object object) throws IOException {
-        output(response, statusCode, "application/json;charset=UTF-8", FastjsonUtils.toStringExistNull(object));
+        output(response, statusCode, "application/json;charset=UTF-8", FastjsonUtils.toStringKeepNull(object));
     }
 
     /**
@@ -92,7 +92,7 @@ public class ResponseUtils {
      * @throws Exception
      */
     public static void fileDownloadByObj(Object obj, String fileName, HttpServletResponse response) throws Exception {
-        String jsonStr = FastjsonUtils.toStringExistNull(obj);
+        String jsonStr = FastjsonUtils.toStringKeepNull(obj);
         fileDownload(stringToStream(jsonStr), fileName, response);
     }
 }

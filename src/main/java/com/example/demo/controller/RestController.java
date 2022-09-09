@@ -1,15 +1,23 @@
 package com.example.demo.controller;
 
-import com.example.demo.common.exception.BaseException;
 import com.example.demo.common.response.ReturnCodeEnum;
+import com.example.demo.utils.AssertUtils;
 import com.example.demo.utils.ResponseUtils;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.websocket.server.PathParam;
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
@@ -120,11 +128,7 @@ public class RestController {
     public void fileDownload(HttpServletResponse response) throws Exception {
         Path path = Paths.get("/Users/alone/work/test/logo.png");
         File file = path.toFile();
-        if (!file.exists()) {
-            log.error("file not exists: {}", file.getPath());
-            throw new BaseException(ReturnCodeEnum.FAIL);
-
-        }
+        AssertUtils.isTrue(file.exists(), ReturnCodeEnum.FAIL, () -> log.warn("file not exists: {}", file.getPath()));
 
         ResponseUtils.fileDownload(new FileInputStream(file), file.getName(), response);
     }

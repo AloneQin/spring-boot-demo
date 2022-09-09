@@ -1,6 +1,6 @@
 package com.example.demo.service;
 
-import com.example.demo.dao.wrapper.impl.PhoneDAOImpl;
+import com.example.demo.dao.wrapper.PhoneDAO;
 import com.example.demo.model.po.PhonePO;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -13,7 +13,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 public class TestServiceImpl implements TestService {
 
-    private final PhoneDAOImpl phoneDAO;
+    private final PhoneDAO phoneDAO;
 
     @Override
     @Transactional

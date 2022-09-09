@@ -228,8 +228,8 @@ enum RawContentTypeEnum {
     HTML            ("HTML(text/html)",                     MediaType.TEXT_HTML_VALUE),
     ;
 
-    public String key;
-    public String value;
+    public final String key;
+    public final String value;
 
     public static boolean contains(String contentType) {
         for (RawContentTypeEnum rcte : values()) {

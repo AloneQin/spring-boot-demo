@@ -13,7 +13,7 @@ import java.util.List;
 public class FastjsonUtils {
 
     /**
-     * 对象转字符串，省略为<code>null</>的属性
+     * 对象转字符串，省略为<code>null<code/>的属性
      * @param obj 输入对象
      * @return 输出字符串
      */
@@ -22,7 +22,7 @@ public class FastjsonUtils {
     }
 
     /**
-     * 对象转格式化字符串，省略为<code>null</>的属性
+     * 对象转格式化字符串，省略为<code>null<code/>的属性
      * @param obj 输入对象
      * @return 格式化字符串
      */
@@ -31,11 +31,11 @@ public class FastjsonUtils {
     }
 
     /**
-     * 对象转字符串，保留为<code>null</>的属性
+     * 对象转字符串，保留为<code>null<code/>的属性
      * @param obj 输入对象
      * @return 输出字符串
      */
-    public static String toStringExistNull(Object obj) {
+    public static String toStringKeepNull(Object obj) {
         return toString(obj, SerializerFeature.WriteMapNullValue);
     }
 
@@ -43,8 +43,8 @@ public class FastjsonUtils {
      * 对象转字符串
      * @param obj 输入对象
      * @param features 序列化参数<br/>
-     *                 {@link SerializerFeature.WriteMapNullValue} 是否输出值为 null 字段，默认不输出<br/>
-     *                 {@link SerializerFeature.PrettyFormat} 格式输出字符串，默认不格式化<br/>
+     *                 {@link SerializerFeature#WriteMapNullValue} 是否输出值为 null 字段，默认不输出<br/>
+     *                 {@link SerializerFeature#PrettyFormat} 格式输出字符串，默认不格式化<br/>
      * @return 输出字符串
      */
     public static String toString(Object obj, SerializerFeature... features) {
