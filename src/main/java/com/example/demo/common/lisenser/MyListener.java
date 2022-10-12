@@ -13,15 +13,15 @@ import org.springframework.stereotype.Component;
 @Component
 public class MyListener {
 
-    @Async
     @EventListener
+    @Async("threadPoolTaskExecutor")
     public void MyEventListener(MyEvent myEvent) {
         log.info("#MyEventListener, input: {}, hash: {}", myEvent.getStr(), myEvent.getStr().hashCode());
         myEvent.setStr("new str");
     }
 
-    @Async
     @EventListener
+    @Async("threadPoolTaskExecutor")
     public void MyEventListener2(MyEvent myEvent) {
         try {
             Thread.sleep(1000L);

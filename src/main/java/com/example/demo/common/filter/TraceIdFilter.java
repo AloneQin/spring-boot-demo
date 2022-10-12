@@ -8,6 +8,7 @@ import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 
 /**
@@ -17,9 +18,11 @@ import java.io.IOException;
 public class TraceIdFilter implements Filter {
 
     @Override
-    public void doFilter(ServletRequest request, ServletResponse response, FilterChain filterChain) throws IOException, ServletException {
-        TraceManager.putTraceId();
-        filterChain.doFilter(request, response);
+    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
+        HttpServletRequest request = (HttpServletRequest) servletRequest;
+        String traceId = request.getHeader(TraceManager.TRACE_ID);
+        TraceManager.putTraceId(traceId);
+        filterChain.doFilter(servletRequest, servletResponse);
     }
 
     @Override

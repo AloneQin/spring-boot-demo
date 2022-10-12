@@ -10,13 +10,16 @@ import org.hibernate.validator.internal.engine.path.PathImpl;
 import org.springframework.boot.web.error.ErrorAttributeOptions;
 import org.springframework.boot.web.servlet.error.ErrorAttributes;
 import org.springframework.boot.web.servlet.error.ErrorController;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.ServletWebRequest;
 
 import javax.servlet.http.HttpServletRequest;
@@ -27,11 +30,16 @@ import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Set;
 
 /**
- * 全局异常处理控制器，项目的所有错误都会转发到此控制器
+ * 全局错误处理控制器，项目的所有错误都会转发到此控制器
+ *
+ * {@link ControllerAdvice} 与 {@link RestControllerAdvice} 等控制器通知存在局限性：
+ * 1.只能处理控制器之内的异常，无法捕获控制器之外的异常，如：过滤器、拦截器等
+ * 2.无法对响应内容做处理，比如修改 HTTP 状态码
+ *
+ * 全局错误处理器能完全满足上述需求，并可与控制器通知联合使用，当异常被控制器通知拦截时，不走本类逻辑
  */
 @Slf4j
 @Controller
@@ -45,7 +53,7 @@ public class GlobalErrorController implements ErrorController {
 
     private final ErrorAttributes errorAttributes;
 
-    //    @Override
+//    @Override
 //    public String getErrorPath() {
 //        return ERROR_PAGE;
 //    }
@@ -84,7 +92,7 @@ public class GlobalErrorController implements ErrorController {
     public Object error(HttpServletRequest request, HttpServletResponse response) {
         // 封装返回结构
         DefaultResponse defaultResponse;
-        boolean errorLogFlag = false;
+        boolean expectedFlag = true;
         ErrorAttributeInfo errorAttributeInfo = getErrorAttributes(request);
         Throwable throwable = errorAttributeInfo.getThrowable();
         if (throwable instanceof BaseException) {
@@ -98,7 +106,7 @@ public class GlobalErrorController implements ErrorController {
             defaultResponse = getParamErrorResponse(throwable);
         } else {
             // 其他异常
-            errorLogFlag = true;
+            expectedFlag = false;
             ReturnCodeEnum returnCodeEnum = null;
             switch (errorAttributeInfo.getStatus()) {
                 case HttpServletResponse.SC_NOT_FOUND:
@@ -128,12 +136,9 @@ public class GlobalErrorController implements ErrorController {
             }
         }
 
-        if (Objects.nonNull(throwable)) {
-            if (errorLogFlag) {
-                log.error("#catch unexpected exception: ", throwable);
-            } else {
-                log.warn("#catch expected exception: ", throwable);
-            }
+        if (expectedFlag) {
+            // 可预期的异常 HTTP 状态码置为 200
+            response.setStatus(HttpStatus.OK.value());
         }
 
         return defaultResponse;

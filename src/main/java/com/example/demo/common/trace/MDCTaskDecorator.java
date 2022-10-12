@@ -1,6 +1,5 @@
 package com.example.demo.common.trace;
 
-import com.example.demo.utils.StringUtils;
 import org.springframework.core.task.TaskDecorator;
 
 import java.util.Map;
@@ -17,9 +16,7 @@ public class MDCTaskDecorator implements TaskDecorator {
             try {
                 TraceManager.setContextMap(map);
                 String traceId = TraceManager.getTraceId();
-                if (StringUtils.isBlank(traceId)) {
-                    TraceManager.putTraceId();
-                }
+                TraceManager.putTraceId(traceId);
                 runnable.run();
             } finally {
                 TraceManager.clear();

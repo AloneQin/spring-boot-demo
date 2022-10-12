@@ -16,7 +16,7 @@ public class TestServiceImpl implements TestService {
     private final PhoneDAO phoneDAO;
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public void add1() {
         PhonePO phonePO = new PhonePO();
         phonePO.setPhoneCode("aaaa");
@@ -31,7 +31,7 @@ public class TestServiceImpl implements TestService {
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public void add2() {
         PhonePO phonePO = new PhonePO();
         phonePO.setPhoneCode("bbbb");

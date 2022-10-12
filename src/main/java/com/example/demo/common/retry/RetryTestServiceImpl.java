@@ -19,20 +19,20 @@ public class RetryTestServiceImpl extends RetryManager implements RetryTestServi
     @Override
     @Retryable(value = Exception.class, maxAttempts = 5, backoff = @Backoff(delay = 500L))
     public void mockCall() {
-        String retryKey = getRetryKey("mockCall", 1L);
-        initRetryInfo(retryKey, 5);
-        retryTimesAutoincrement(retryKey);
-        Integer retryTimes = getRetryTimes(retryKey);
+        String tryKey = getTryKey("mockCall", 1L);
+        initTryInfo(tryKey, 5);
+        tryTimesAutoincrement(tryKey);
+        Integer tryTimes = getTryTimes(tryKey);
         try {
-            if (retryTimes < 5) {
+            if (tryTimes < 5) {
                 throw new NullPointerException();
             }
-            log.info("#第{}次调用成功", retryTimes);
+            log.info("#第{}次调用成功", tryTimes);
         } catch (Exception e) {
-            log.error("#第{}次调用失败", retryTimes);
+            log.error("#第{}次调用失败", tryTimes);
             throw new RetryException("调用失败");
         } finally {
-            cleanRetryTimes(retryKey);
+            cleanTryTimes(tryKey);
         }
     }
 }

@@ -43,7 +43,7 @@ public class PhoneService {
         return SmartBeanUtils.copyPropertiesList(phonePOList, PhoneDTO::new);
     }
 
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public void addPhone(PhoneDTO phoneDTO) {
         AssertUtils.isNull(phoneDTO.getId(), new ParamValidatedException(Arrays.asList(new ParamError("id", MsgConst.MUST_NULL))));
 
@@ -53,7 +53,7 @@ public class PhoneService {
         AssertUtils.isTrue(result, ReturnCodeEnum.FAIL, () -> log.warn("failed to add phone, phonePO: {}", FastjsonUtils.toString(phonePO)));
     }
 
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public void modifyPhone(PhoneDTO phoneDTO) {
         AssertUtils.nonNull(phoneDTO.getId(), new ParamValidatedException(Arrays.asList(new ParamError("id", MsgConst.MUST_NULL))));
 
@@ -63,7 +63,7 @@ public class PhoneService {
         AssertUtils.isTrue(result, ReturnCodeEnum.FAIL, () -> log.warn("failed to modify phone, phonePO: {}", FastjsonUtils.toString(phonePO)));
     }
 
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public void removePhone(Integer id) {
         boolean result = phoneDAO.removeById(id);
         AssertUtils.isTrue(result, ReturnCodeEnum.FAIL, () -> log.warn("failed to remove phone, id: {}", id));

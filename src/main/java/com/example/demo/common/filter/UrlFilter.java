@@ -19,7 +19,6 @@ public class UrlFilter implements Filter {
         String uri = request.getRequestURI();
         String contentType = request.getContentType();
         log.info("#doFilter, method: {}, uri: {}, contentType: {}", method, uri, contentType);
-
         filterChain.doFilter(servletRequest, servletResponse);
     }
 }

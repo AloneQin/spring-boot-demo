@@ -19,111 +19,111 @@ import java.util.Objects;
 public class RetryManager {
 
     /**
-     * 重试信息集合
+     * 尝试信息集合
      */
-    private final static Map<String, RetryInfo> RETRY_INFO_MAP = new HashMap();
+    private final static Map<String, TryInfo> TRY_INFO_MAP = new HashMap();
 
     /**
-     * 获取重试 key
+     * 获取尝试 key
      * @param type 重试类型
      * @param id 唯一标识
      * @return 重试 key
      */
-    protected String getRetryKey(String type, Long id) {
+    protected String getTryKey(String type, Long id) {
         return type + "_" + id;
     }
 
     /**
-     * 初始化重试信息
-     * @param retryKey 重试 key
+     * 初始化尝试信息
+     * @param tryKey 尝试 key
      */
-    protected void initRetryInfo(String retryKey, Integer maxRetryTimes) {
-        RetryInfo retryInfo = RETRY_INFO_MAP.get(retryKey);
-        if (Objects.isNull(retryInfo)) {
-            retryInfo = new RetryInfo(0, maxRetryTimes);
-            RETRY_INFO_MAP.put(retryKey, retryInfo);
-            log.info("initRetryInfo, key: {}, value: {}", retryKey, FastjsonUtils.toString(retryInfo));
+    protected void initTryInfo(String tryKey, Integer maxTryTimes) {
+        TryInfo tryInfo = TRY_INFO_MAP.get(tryKey);
+        if (Objects.isNull(tryInfo)) {
+            tryInfo = new TryInfo(0, maxTryTimes);
+            TRY_INFO_MAP.put(tryKey, tryInfo);
+            log.info("initTryInfo, key: {}, value: {}", tryKey, FastjsonUtils.toString(tryInfo));
         }
     }
 
     /**
-     * 自增重试次数
-     * @param retryKey 重试 key
+     * 自增尝试次数
+     * @param tryKey 尝试 key
      */
-    protected synchronized void retryTimesAutoincrement(String retryKey) {
-        RetryInfo retryInfo = RETRY_INFO_MAP.get(retryKey);
-        if (Objects.nonNull(retryInfo)) {
-            retryInfo.setRetryTimes(retryInfo.getRetryTimes() + 1);
-            RETRY_INFO_MAP.put(retryKey, retryInfo);
-            log.info("retryTimesAutoincrement, key: {}, value: {}", retryKey, FastjsonUtils.toString(retryInfo));
+    protected synchronized void tryTimesAutoincrement(String tryKey) {
+        TryInfo tryInfo = TRY_INFO_MAP.get(tryKey);
+        if (Objects.nonNull(tryInfo)) {
+            tryInfo.setTryTimes(tryInfo.getTryTimes() + 1);
+            TRY_INFO_MAP.put(tryKey, tryInfo);
+            log.info("tryTimesAutoincrement, key: {}, value: {}", tryKey, FastjsonUtils.toString(tryInfo));
         }
     }
 
     /**
-     * 获取重试信息
-     * @param retryKey 重试 key
-     * @return 重试信息
+     * 获取尝试信息
+     * @param tryKey 尝试 key
+     * @return 尝试信息
      */
-    protected RetryInfo getRetryInfo(String retryKey) {
-        return RETRY_INFO_MAP.get(retryKey);
+    protected TryInfo getTryInfo(String tryKey) {
+        return TRY_INFO_MAP.get(tryKey);
     }
 
     /**
-     * 获取重试次数
-     * @param retryKey 重试 key
-     * @return 当前重试次数
+     * 获取尝试次数
+     * @param tryKey 尝试 key
+     * @return 当前尝试次数
      */
-    protected Integer getRetryTimes(String retryKey) {
-        RetryInfo retryInfo = getRetryInfo(retryKey);
-        return Objects.isNull(retryInfo) ? 0 : retryInfo.getRetryTimes();
+    protected Integer getTryTimes(String tryKey) {
+        TryInfo tryInfo = getTryInfo(tryKey);
+        return Objects.isNull(tryInfo) ? 0 : tryInfo.getTryTimes();
     }
 
     /**
-     * 清除重试次数
-     * @param retryKey 重试 key
+     * 清除尝试次数
+     * @param tryKey 尝试 key
      */
-    protected void cleanRetryTimes(String retryKey) {
-        RetryInfo retryInfo = RETRY_INFO_MAP.get(retryKey);
-        if (Objects.nonNull(retryInfo) && retryInfo.isToLimit()) {
-            cleanRetryInfo(retryKey);
+    protected void cleanTryTimes(String tryKey) {
+        TryInfo tryInfo = TRY_INFO_MAP.get(tryKey);
+        if (Objects.nonNull(tryInfo) && tryInfo.isToLimit()) {
+            cleanTryInfo(tryKey);
         }
     }
 
     /**
-     * 清除重试信息
-     * @param retryKey 重试 key
+     * 清除尝试信息
+     * @param tryKey 尝试 key
      */
-    private void cleanRetryInfo(String retryKey) {
-        RetryInfo retryInfo = RETRY_INFO_MAP.get(retryKey);
-        if (Objects.nonNull(retryInfo)) {
-            RETRY_INFO_MAP.remove(retryKey);
-            log.info("cleanRetryInfo, key: {}", retryKey);
+    private void cleanTryInfo(String tryKey) {
+        TryInfo tryInfo = TRY_INFO_MAP.get(tryKey);
+        if (Objects.nonNull(tryInfo)) {
+            TRY_INFO_MAP.remove(tryKey);
+            log.info("cleanTryInfo, key: {}", tryKey);
         }
     }
 
     /**
-     * 重试信息
+     * 尝试信息
      */
     @Data
     @AllArgsConstructor
-    class RetryInfo {
+    class TryInfo {
 
         /**
-         * 重试次数
+         * 尝试次数
          */
-        private Integer retryTimes;
+        private Integer tryTimes;
 
         /**
-         * 最大重试次数
+         * 最大尝试次数
          */
-        private Integer maxRetryTimes;
+        private Integer maxTryTimes;
 
         /**
-         * 是否达到重试上限
+         * 是否达到尝试上限
          * @return
          */
         public boolean isToLimit() {
-            return retryTimes >= maxRetryTimes;
+            return tryTimes >= maxTryTimes;
         }
     }
 }
