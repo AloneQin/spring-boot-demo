@@ -25,7 +25,7 @@ public class TraceManager {
 
     public static void putTraceId(String traceId) {
         if (StringUtils.isBlank(traceId)) {
-            MDC.put(TRACE_ID, RandomUtils.getUUID(false));
+            MDC.put(TRACE_ID, RandomUtils.getUUID(true));
         } else {
             MDC.put(TRACE_ID, traceId);
         }

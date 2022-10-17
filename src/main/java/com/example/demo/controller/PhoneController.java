@@ -6,14 +6,12 @@ import com.example.demo.common.response.ResultFormat;
 import com.example.demo.model.dto.PhoneDTO;
 import com.example.demo.model.vo.PhoneVo;
 import com.example.demo.service.PhoneService;
-import com.example.demo.service.TestService;
 import com.example.demo.utils.SmartBeanUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -95,11 +93,4 @@ public class PhoneController {
         phoneService.removePhone(id);
     }
 
-    @Autowired
-    TestService testService;
-
-    @GetMapping("/test")
-    public void test() {
-        testService.add1();
-    }
 }

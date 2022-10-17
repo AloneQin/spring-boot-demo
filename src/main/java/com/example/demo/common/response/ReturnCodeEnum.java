@@ -17,9 +17,17 @@ public enum ReturnCodeEnum {
     SERVER_ERROR                ("000500", "系统开小差了"),
 
     // ---------------------------业务返回码---------------------------
+    /*
+     * 用户相关
+     */
     NEED_LOGIN                  ("100000", "需要登录"),
     PERMISSION_DENIED           ("100001", "权限不足"),
     USERNAME_OR_PASSWORD_ERROR  ("100002", "用户名或密码错误"),
+
+    /*
+     * 手机相关
+     */
+    PHONE_ALREADY_EXISTS        ("101000", "手机已存在"),
     ;
 
     public final String code;

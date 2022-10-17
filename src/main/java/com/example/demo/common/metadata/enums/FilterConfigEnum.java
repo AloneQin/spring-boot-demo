@@ -11,15 +11,19 @@ public enum FilterConfigEnum {
     /**
      * traceId 过滤器
      */
-    TRACE_ID_FILTER (100, new String[] {"/*"}),
+    TRACE_ID_FILTER     (100, new String[] {"/*"}),
     /**
      * URL 过滤器
      */
-    URL_FILTER      (200, new String[] {"/*"}),
+    URL_FILTER          (200, new String[] {"/*"}),
+    /**
+     * 跨域过滤器
+     */
+    CROSS_DOMAIN_FILTER (300, new String[] {"/*"}),
     /**
      * test 过滤器
      */
-    TEST_FILTER     (300, new String[] {"/*"}),
+    TEST_FILTER         (400, new String[] {"/*"}),
     ;
 
     /**

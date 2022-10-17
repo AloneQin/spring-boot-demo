@@ -11,6 +11,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 
 /**
  * <p>
@@ -38,6 +39,14 @@ public class PhoneDAOImpl extends ServiceImpl<PhoneMapper, PhonePO> implements P
 
     @Override
     public List<PhonePO> findByName(String name) {
-        return phoneMapper.findByName(name);
+        return phoneMapper.selectByName(name);
+    }
+
+    @Override
+    public List<PhonePO> findByIdAndName(Integer id, String name) {
+        return new LambdaQueryChainWrapper<>(phoneMapper)
+                .eq(Objects.nonNull(id), PhonePO::getId, id)
+                .eq(Objects.nonNull(name), PhonePO::getName, name)
+                .list();
     }
 }

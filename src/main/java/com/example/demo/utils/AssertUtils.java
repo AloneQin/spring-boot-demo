@@ -407,6 +407,110 @@ public class AssertUtils<E extends BaseException, T> {
     }
 
     /**
+     * 判断布尔表达式为<code>false</code>，不是将抛出异常
+     * @param expression 待判断表达式
+     * @param e {@link BaseException}
+     * @param <E> {@link BaseException}
+     */
+    public static <E> void isFalse(boolean expression, E e) {
+        if (expression) {
+            doThrow((BaseException) e);
+        }
+    }
+
+    /**
+     * 判断布尔表达式为<code>false</code>，不是将抛出异常，并支持植入额外操作
+     * @param expression 待判断表达式
+     * @param e {@link BaseException}
+     * @param runnable 需要植入的操作
+     * @param <E> {@link BaseException}
+     */
+    public static <E> void isFalse(boolean expression, E e, Runnable runnable) {
+        if (expression) {
+            runnable.run();
+            doThrow((BaseException) e);
+        }
+    }
+
+    /**
+     * 判断布尔表达式为<code>false</code>，不是将抛出异常
+     * @param expression 待判断表达式
+     * @param defaultResponse {@link DefaultResponse}
+     */
+    public static void isFalse(boolean expression, DefaultResponse defaultResponse) {
+        if (expression) {
+            doThrow(defaultResponse);
+        }
+    }
+
+    /**
+     * 判断布尔表达式为<code>false</code>，不是将抛出异常，并支持植入额外操作
+     * @param expression 待判断表达式
+     * @param defaultResponse {@link DefaultResponse}
+     * @param runnable 需要植入的操作
+     */
+    public static void isFalse(boolean expression, DefaultResponse defaultResponse, Runnable runnable) {
+        if (expression) {
+            runnable.run();
+            doThrow(defaultResponse);
+        }
+    }
+
+    /**
+     * 判断布尔表达式为<code>false</code>，不是将抛出异常
+     * @param expression 待判断表达式
+     * @param returnCodeEnum {@link ReturnCodeEnum}
+     */
+    public static void isFalse(boolean expression, ReturnCodeEnum returnCodeEnum) {
+        if (expression) {
+            doThrow(returnCodeEnum);
+        }
+    }
+
+    /**
+     * 判断布尔表达式为<code>false</code>，不是将抛出异常，并支持植入额外操作
+     * @param expression 待判断表达式
+     * @param returnCodeEnum {@link ReturnCodeEnum}
+     * @param runnable 需要植入的操作
+     */
+    public static void isFalse(boolean expression, ReturnCodeEnum returnCodeEnum, Runnable runnable) {
+        if (expression) {
+            runnable.run();
+            doThrow(returnCodeEnum);
+        }
+    }
+
+    /**
+     * 判断布尔表达式为<code>false</code>，不是将抛出异常
+     * @param expression 待判断表达式
+     * @param code {@link DefaultResponse#getCode()}
+     * @param message {@link DefaultResponse#getMessage()}
+     * @param content {@link DefaultResponse#getContent()}
+     * @param <T> {@link DefaultResponse#getContent()#getClass()}
+     */
+    public static <T> void isFalse(boolean expression, String code, String message, T content) {
+        if (expression) {
+            doThrow(code, message, content);
+        }
+    }
+
+    /**
+     * 判断布尔表达式为<code>false</code>，不是将抛出异常，并支持植入额外操作
+     * @param expression 待判断表达式
+     * @param code {@link DefaultResponse#getCode()}
+     * @param message {@link DefaultResponse#getMessage()}
+     * @param content {@link DefaultResponse#getContent()}
+     * @param runnable 需要植入的操作
+     * @param <T> @param <T> {@link DefaultResponse#getContent()#getClass()}
+     */
+    public static <T> void isFalse(boolean expression, String code, String message, T content, Runnable runnable) {
+        if (expression) {
+            runnable.run();
+            doThrow(code, message, content);
+        }
+    }
+
+    /**
      * 判断布尔表达式提供者为<code>true</code>，不是将抛出异常
      * @param expressionSupplier 布尔表达式提供者
      * @param e {@link BaseException}

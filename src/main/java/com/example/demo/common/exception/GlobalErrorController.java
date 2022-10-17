@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.ServletWebRequest;
 
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.ConstraintViolation;
@@ -100,14 +101,13 @@ public class GlobalErrorController implements ErrorController {
             BaseException exception = (BaseException) errorAttributeInfo.getThrowable();
             defaultResponse = exception.getDefaultResponse();
         } else if (throwable instanceof ConstraintViolationException
-                || throwable instanceof BindException
-                || throwable instanceof MethodArgumentNotValidException) {
+                || throwable instanceof BindException) {
             // 参数校验异常
             defaultResponse = getParamErrorResponse(throwable);
         } else {
             // 其他异常
             expectedFlag = false;
-            ReturnCodeEnum returnCodeEnum = null;
+            ReturnCodeEnum returnCodeEnum = ReturnCodeEnum.SERVER_ERROR;
             switch (errorAttributeInfo.getStatus()) {
                 case HttpServletResponse.SC_NOT_FOUND:
                     // 资源找不到
@@ -117,11 +117,13 @@ public class GlobalErrorController implements ErrorController {
                     // 方法不被允许
                     returnCodeEnum = ReturnCodeEnum.METHOD_NOT_ALLOWED;
                     break;
-                default:
-                    returnCodeEnum = ReturnCodeEnum.SERVER_ERROR;
-                    break;
             }
             defaultResponse = DefaultResponse.fail(returnCodeEnum);
+        }
+
+        // 一些特殊异常 Servlet 并不会打印堆栈，为帮助调试，打印相关堆栈
+        if (throwable instanceof ServletException || throwable instanceof BindException) {
+            log.warn("catch exception", throwable);
         }
 
         // 若开启调试模式展示异常，并且主体空余，则返回异常堆栈信息
@@ -140,6 +142,8 @@ public class GlobalErrorController implements ErrorController {
             // 可预期的异常 HTTP 状态码置为 200
             response.setStatus(HttpStatus.OK.value());
         }
+
+
 
         return defaultResponse;
     }
@@ -181,12 +185,10 @@ public class GlobalErrorController implements ErrorController {
                 String paramName = pathImpl.getLeafNode().getName();
                 paramErrorList.add(new ParamError(paramName, violation.getMessageTemplate()));
             }
-        } else if (throwable instanceof BindException || throwable instanceof MethodArgumentNotValidException) {
+        } else if (throwable instanceof BindException) {
             BindingResult bindingResult = null;
             if (throwable instanceof BindException) {
                 bindingResult = ((BindException) throwable).getBindingResult();
-            } else if (throwable instanceof MethodArgumentNotValidException) {
-                bindingResult = ((MethodArgumentNotValidException) throwable).getBindingResult();
             }
             List<FieldError> fieldErrorList = bindingResult.getFieldErrors();
             for (int i = 0; i < fieldErrorList.size(); i++) {

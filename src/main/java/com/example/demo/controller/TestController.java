@@ -3,6 +3,7 @@ package com.example.demo.controller;
 import com.example.demo.common.lisenser.event.MyEvent;
 import com.example.demo.common.retry.RetryTestService;
 import com.example.demo.common.task.ControllableScheduleTask;
+import com.example.demo.service.TestService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
@@ -35,6 +36,8 @@ public class TestController {
     private final RetryTestService retryTestService;
 
     private final ThreadPoolTaskExecutor threadPoolTaskExecutor;
+
+    private final TestService testService;
 
     @GetMapping("/index")
     public String index() {
@@ -138,5 +141,10 @@ public class TestController {
     public String testXss(String input) {
         log.info("#testXss: {}", input);
         return input;
+    }
+
+    @GetMapping("/testPhoneOpenServiceRef")
+    public void testPhoneOpenServiceRef() {
+        testService.testPhoneOpenServiceRef("iphone 12");
     }
 }

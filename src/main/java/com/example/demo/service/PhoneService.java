@@ -5,12 +5,14 @@ import com.example.demo.common.exception.ParamError;
 import com.example.demo.common.exception.ParamValidatedException;
 import com.example.demo.common.metadata.constant.MsgConst;
 import com.example.demo.common.response.ReturnCodeEnum;
-import com.example.demo.dao.wrapper.impl.PhoneDAOImpl;
+import com.example.demo.dao.wrapper.PhoneDAO;
 import com.example.demo.model.dto.PhoneDTO;
 import com.example.demo.model.po.PhonePO;
+import com.example.demo.service.open.PhoneOpenService;
 import com.example.demo.utils.AssertUtils;
 import com.example.demo.utils.FastjsonUtils;
 import com.example.demo.utils.SmartBeanUtils;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,13 +22,12 @@ import java.util.List;
 
 @Slf4j
 @Service
+@AllArgsConstructor
 public class PhoneService {
 
-    private final PhoneDAOImpl phoneDAO;
+    private final PhoneDAO phoneDAO;
 
-    public PhoneService(PhoneDAOImpl phoneDAO) {
-        this.phoneDAO = phoneDAO;
-    }
+    private final PhoneOpenService phoneOpenService;
 
     public Page<PhoneDTO> getPhoneList(Integer pageSize, Integer pageNum, String name, String brand, String remark) {
         Page<PhonePO> phonePOPage = phoneDAO.pageByCondition(pageSize, pageNum, name, brand, remark);
@@ -46,6 +47,7 @@ public class PhoneService {
     @Transactional(rollbackFor = Exception.class)
     public void addPhone(PhoneDTO phoneDTO) {
         AssertUtils.isNull(phoneDTO.getId(), new ParamValidatedException(Arrays.asList(new ParamError("id", MsgConst.MUST_NULL))));
+        phoneOpenService.checkPhoneExists(null, phoneDTO.getName());
 
         PhonePO phonePO = SmartBeanUtils.copyProperties(phoneDTO, PhonePO::new);
         boolean result = phoneDAO.save(phonePO);
@@ -56,6 +58,7 @@ public class PhoneService {
     @Transactional(rollbackFor = Exception.class)
     public void modifyPhone(PhoneDTO phoneDTO) {
         AssertUtils.nonNull(phoneDTO.getId(), new ParamValidatedException(Arrays.asList(new ParamError("id", MsgConst.MUST_NULL))));
+        phoneOpenService.checkPhoneExists(phoneDTO.getId(), phoneDTO.getName());
 
         PhonePO phonePO = SmartBeanUtils.copyProperties(phoneDTO, PhonePO::new);
         boolean result = phoneDAO.updateById(phonePO);

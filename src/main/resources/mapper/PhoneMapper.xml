@@ -16,7 +16,7 @@
         <result column="updated_time" jdbcType="TIMESTAMP" property="updatedTime" />
     </resultMap>
 
-    <select id="findByName" parameterType="string" resultMap="BaseResultMap">
+    <select id="selectByName" parameterType="string" resultMap="BaseResultMap">
         select * from phone where name = #{name}
     </select>
 </mapper>

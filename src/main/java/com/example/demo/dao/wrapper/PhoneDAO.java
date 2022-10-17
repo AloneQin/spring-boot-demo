@@ -20,4 +20,6 @@ public interface PhoneDAO extends IService<PhonePO> {
 
     List<PhonePO> findByName(String name);
 
+    List<PhonePO> findByIdAndName(Integer id, String name);
+
 }

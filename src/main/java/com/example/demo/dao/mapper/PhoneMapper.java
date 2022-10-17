@@ -17,6 +17,6 @@ import java.util.List;
 @Repository
 public interface PhoneMapper extends BaseMapper<PhonePO> {
 
-    List<PhonePO> findByName(String name);
+    List<PhonePO> selectByName(String name);
 
 }
