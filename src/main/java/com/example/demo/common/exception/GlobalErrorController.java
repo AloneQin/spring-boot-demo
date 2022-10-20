@@ -143,8 +143,6 @@ public class GlobalErrorController implements ErrorController {
             response.setStatus(HttpStatus.OK.value());
         }
 
-
-
         return defaultResponse;
     }
 

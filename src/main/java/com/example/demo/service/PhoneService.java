@@ -17,6 +17,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 
@@ -70,5 +72,28 @@ public class PhoneService {
     public void removePhone(Integer id) {
         boolean result = phoneDAO.removeById(id);
         AssertUtils.isTrue(result, ReturnCodeEnum.FAIL, () -> log.warn("failed to remove phone, id: {}", id));
+    }
+
+    public void testTransactionNest() {
+        // 事务不会生效
+        testModifyPhone();
+
+        // 显式使用代理对象调用，事务生效
+//        ((PhoneService)AopContext.currentProxy()).testModifyPhone();
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    public void testModifyPhone() {
+        PhonePO phonePO = new PhonePO();
+        phonePO.setId(29);
+        phonePO.setPhoneCode("test2");
+        phonePO.setName("test2");
+        phonePO.setBrand("test2");
+        phonePO.setProdDate(LocalDate.now());
+        phonePO.setPrice(new BigDecimal("100.00"));
+        phoneDAO.updateById(phonePO);
+
+        // 发生异常 update 数据并不会回滚，因为调用 testModifyPhone() 方法的对象 this 始终是原始实例，不是代理对象，所以事务不会生效
+        Arrays.asList().get(100);
     }
 }

@@ -12,17 +12,17 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
 
 /**
- * 格式化返回结构通知处理
+ * 格式化响应 JSON 返回结构通知处理
  */
 @Slf4j
 @RestControllerAdvice
-public class ResultFormatAdvice implements ResponseBodyAdvice {
+public class ResponseFormatAdvice implements ResponseBodyAdvice {
 
     @Override
     public boolean supports(MethodParameter methodParameter, Class clazz) {
         // 判断类或方法上是否使用了相关注解
-        return AnnotatedElementUtils.hasAnnotation(methodParameter.getContainingClass(), ResultFormat.class)
-                || methodParameter.hasMethodAnnotation(ResultFormat.class);
+        return AnnotatedElementUtils.hasAnnotation(methodParameter.getContainingClass(), ResponseFormat.class)
+                || methodParameter.hasMethodAnnotation(ResponseFormat.class);
     }
 
     @Override

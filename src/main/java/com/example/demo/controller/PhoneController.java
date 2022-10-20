@@ -2,7 +2,7 @@ package com.example.demo.controller;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.demo.common.metadata.constant.MsgConst;
-import com.example.demo.common.response.ResultFormat;
+import com.example.demo.common.response.ResponseFormat;
 import com.example.demo.model.dto.PhoneDTO;
 import com.example.demo.model.vo.PhoneVo;
 import com.example.demo.service.PhoneService;
@@ -30,7 +30,7 @@ import java.util.List;
  * 手机控制器
  */
 @Validated
-@ResultFormat
+@ResponseFormat
 @RestController
 @AllArgsConstructor
 @RequestMapping("/phone")
@@ -93,4 +93,11 @@ public class PhoneController {
         phoneService.removePhone(id);
     }
 
+    /**
+     * 测试事务嵌套
+     */
+    @GetMapping("/testTransactionNest")
+    public void testTransactionNest() {
+        phoneService.testTransactionNest();
+    }
 }

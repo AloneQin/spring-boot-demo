@@ -39,7 +39,7 @@ public class LocalDateTimeUtils {
      * @return 日期时间字符串
      */
     public static String localDateTime2Str(LocalDateTime localDateTime, String pattern) {
-        DateTimeFormatter formatter = null;
+        DateTimeFormatter formatter;
         if (Objects.nonNull(pattern)) {
             formatter = DateTimeFormatter.ofPattern(pattern);
         } else {
@@ -64,7 +64,7 @@ public class LocalDateTimeUtils {
      * @return 本地日期时间
      */
     public static LocalDateTime str2LocalDateTime(String dateStr, String pattern) {
-        DateTimeFormatter formatter = null;
+        DateTimeFormatter formatter;
         if (Objects.nonNull(pattern)) {
             formatter = DateTimeFormatter.ofPattern(pattern);
         } else {
@@ -125,7 +125,7 @@ public class LocalDateTimeUtils {
      * @return 日期字符串
      */
     public static String localDate2Str(LocalDate localDate, String pattern) {
-        DateTimeFormatter formatter = null;
+        DateTimeFormatter formatter;
         if (Objects.nonNull(pattern)) {
             formatter = DateTimeFormatter.ofPattern(pattern);
         } else {
@@ -150,7 +150,7 @@ public class LocalDateTimeUtils {
      * @return 本地日期
      */
     public static LocalDate str2localDate(String dateStr, String pattern) {
-        DateTimeFormatter formatter = null;
+        DateTimeFormatter formatter;
         if (Objects.nonNull(pattern)) {
             formatter = DateTimeFormatter.ofPattern(pattern);
         } else {
@@ -175,7 +175,7 @@ public class LocalDateTimeUtils {
      * @return 时间字符串
      */
     public static String localTime2Str(LocalTime localTime, String pattern) {
-        DateTimeFormatter formatter = null;
+        DateTimeFormatter formatter;
         if (Objects.nonNull(pattern)) {
             formatter = DateTimeFormatter.ofPattern(pattern);
         } else {
@@ -200,7 +200,7 @@ public class LocalDateTimeUtils {
      * @return 本地时间
      */
     public static LocalTime str2localTime(String dateStr, String pattern) {
-        DateTimeFormatter formatter = null;
+        DateTimeFormatter formatter;
         if (Objects.nonNull(pattern)) {
             formatter = DateTimeFormatter.ofPattern(pattern);
         } else {

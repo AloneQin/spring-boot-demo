@@ -29,12 +29,11 @@ public class PhoneDAOImpl extends ServiceImpl<PhoneMapper, PhonePO> implements P
 
     @Override
     public Page<PhonePO> pageByCondition(Integer pageSize, Integer pageNum, String name, String brand, String remark) {
-        LambdaQueryChainWrapper<PhonePO> wrapper = new LambdaQueryChainWrapper<>(phoneMapper)
+        return new LambdaQueryChainWrapper<>(phoneMapper)
                 .like(StringUtils.nonBlank(name), PhonePO::getName, name)
                 .eq(StringUtils.nonBlank(brand), PhonePO::getBrand, brand)
-                .like(StringUtils.nonBlank(remark), PhonePO::getRemark, remark);
-
-        return wrapper.page(new Page<>(pageSize, pageNum));
+                .like(StringUtils.nonBlank(remark), PhonePO::getRemark, remark)
+                .page(new Page<>(pageNum, pageSize));
     }
 
     @Override
