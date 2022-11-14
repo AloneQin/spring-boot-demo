@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 
 @Data
 @ApiModel("手机视图对象")
-public class PhoneVo {
+public class PhoneVO {
 
     /**
      * 主键

@@ -1,7 +1,7 @@
 package com.example.demo.controller;
 
 import com.example.demo.common.response.DefaultResponse;
-import com.example.demo.model.vo.CarVo;
+import com.example.demo.model.vo.CarVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -27,9 +27,9 @@ public class SwaggerController {
              */
             @ApiImplicitParam(name = "brand", value = "品牌", required = true, dataType = "string", paramType = "query" ,example = "BMW")
     })
-    public DefaultResponse<CarVo> getCar(String brand) {
+    public DefaultResponse<CarVO> getCar(String brand) {
 
-        CarVo carVo = new CarVo("BMW", "red");
+        CarVO carVo = new CarVO("BMW", "red");
         if (carVo.getBrand().equals(brand)) {
             return DefaultResponse.success(carVo);
         }
@@ -39,7 +39,7 @@ public class SwaggerController {
 
     @PostMapping("/car")
     @ApiOperation(value = "保存汽车信息")
-    public DefaultResponse saveCar(@RequestBody CarVo carVo) {
+    public DefaultResponse saveCar(@RequestBody CarVO carVo) {
         // save car ...
 
         return DefaultResponse.success();

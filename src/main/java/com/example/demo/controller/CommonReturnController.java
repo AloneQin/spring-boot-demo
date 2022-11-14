@@ -5,7 +5,7 @@ import com.example.demo.common.exception.ParamValidatedException;
 import com.example.demo.common.response.DefaultResponse;
 import com.example.demo.common.response.MyReturnCode;
 import com.example.demo.common.response.ReturnCodeEnum;
-import com.example.demo.model.vo.PeopleVo;
+import com.example.demo.model.vo.PeopleVO;
 import com.example.demo.utils.AssertUtils;
 import com.example.demo.utils.FastjsonUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.util.Arrays;
 import java.util.List;
@@ -110,7 +111,7 @@ public class CommonReturnController {
      * 非 JSON 对象传参校验展示
      */
     @GetMapping("/objectValidated")
-    public DefaultResponse<Void> objectValidated(@Validated PeopleVo peopleVo) {
+    public DefaultResponse<Void> objectValidated(@Valid PeopleVO peopleVo) {
         log.info(FastjsonUtils.toString(peopleVo));
 
         return DefaultResponse.success();
@@ -120,7 +121,7 @@ public class CommonReturnController {
      * JSON 对象传参校验展示
      */
     @PostMapping("/jsonObjectValidated")
-    public DefaultResponse<Void> jsonObjectValidated(@RequestBody @Validated PeopleVo peopleVo) {
+    public DefaultResponse<Void> jsonObjectValidated(@RequestBody @Valid PeopleVO peopleVo) {
         log.info(FastjsonUtils.toString(peopleVo));
 
         return DefaultResponse.success();

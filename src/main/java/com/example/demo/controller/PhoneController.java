@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.demo.common.metadata.constant.MsgConst;
 import com.example.demo.common.response.ResponseFormat;
 import com.example.demo.model.dto.PhoneDTO;
-import com.example.demo.model.vo.PhoneVo;
+import com.example.demo.model.vo.PhoneVO;
 import com.example.demo.service.PhoneService;
 import com.example.demo.utils.SmartBeanUtils;
 import io.swagger.annotations.Api;
@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -48,7 +49,7 @@ public class PhoneController {
             @ApiImplicitParam(name = "brand", value = "手机品牌", required = false, dataType = "string", paramType = "query"),
             @ApiImplicitParam(name = "remark", value = "手机备注（支持模糊搜索）", required = false, dataType = "string", paramType = "query"),
     })
-    public Page<PhoneVo> getPhoneList(@NotNull(message = MsgConst.NOT_NULL_MSG)
+    public Page<PhoneVO> getPhoneList(@NotNull(message = MsgConst.NOT_NULL_MSG)
                                           @Min(value = MsgConst.MIN_1_VAL, message = MsgConst.MIN_1_MSG) Integer pageSize,
                                       @NotNull(message = MsgConst.NOT_NULL_MSG)
                                           @Min(value = MsgConst.MIN_1_VAL, message = MsgConst.MIN_1_MSG) Integer pageNum,
@@ -56,32 +57,32 @@ public class PhoneController {
                                       String brand,
                                       String remark) {
         Page<PhoneDTO> phoneDTOPage = phoneService.getPhoneList(pageSize, pageNum, name, brand, remark);
-        return SmartBeanUtils.copyPropertiesPage(phoneDTOPage, PhoneVo::new);
+        return SmartBeanUtils.copyPropertiesPage(phoneDTOPage, PhoneVO::new);
     }
 
     @GetMapping("/phone")
-    public PhoneVo getPhoneById(@NotNull(message = MsgConst.NOT_NULL_MSG)
+    public PhoneVO getPhoneById(@NotNull(message = MsgConst.NOT_NULL_MSG)
                                     @Min(value = MsgConst.MIN_1_VAL, message = MsgConst.MIN_1_MSG) Integer id) {
         PhoneDTO phoneDTO = phoneService.getPhoneById(id);
-        return SmartBeanUtils.copyProperties(phoneDTO, PhoneVo::new);
+        return SmartBeanUtils.copyProperties(phoneDTO, PhoneVO::new);
     }
 
     @GetMapping("/phoneByName")
-    public List<PhoneVo> getPhoneByName(@NotBlank(message = MsgConst.NOT_NULL_MSG) String name) {
+    public List<PhoneVO> getPhoneByName(@NotBlank(message = MsgConst.NOT_NULL_MSG) String name) {
         List<PhoneDTO> phoneDTOList = phoneService.getPhoneByName(name);
-        return SmartBeanUtils.copyPropertiesList(phoneDTOList, PhoneVo::new);
+        return SmartBeanUtils.copyPropertiesList(phoneDTOList, PhoneVO::new);
     }
 
     @PostMapping("/phone")
     @ApiOperation(value = "添加手机")
-    public void addPhone(@RequestBody @Validated PhoneVo phoneVo) {
+    public void addPhone(@RequestBody @Valid PhoneVO phoneVo) {
         PhoneDTO phoneDTO = SmartBeanUtils.copyProperties(phoneVo, PhoneDTO::new);
         phoneService.addPhone(phoneDTO);
     }
 
     @PutMapping("/phone")
     @ApiOperation(value = "修改手机")
-    public void modifyPhone(@RequestBody @Validated PhoneVo phoneVo) {
+    public void modifyPhone(@RequestBody @Valid PhoneVO phoneVo) {
         PhoneDTO phoneDTO = SmartBeanUtils.copyProperties(phoneVo, PhoneDTO::new);
         phoneService.modifyPhone(phoneDTO);
     }

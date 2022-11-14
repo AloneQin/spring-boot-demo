@@ -7,7 +7,7 @@ import org.hibernate.validator.constraints.Range;
 import javax.validation.constraints.NotNull;
 
 @Data
-public class PeopleVo {
+public class PeopleVO {
 
     @NotNull(message = "姓名不能为空")
     @Length(min = 1, max = 10, message = "名称长度必须在1-10之间")

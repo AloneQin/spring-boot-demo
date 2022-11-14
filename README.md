@@ -143,7 +143,7 @@ spring-boot-demo
 参考`com.example.demo.controller#testRetry`
 
 ## 异步调用
-参考`com.example.demo.CompletableFutureTest`
+参考`com.example.demo.juc.CompletableFutureTest`
 
 ## 定时任务
 参考`com.example.demo.common.task`
