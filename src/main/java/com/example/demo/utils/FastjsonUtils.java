@@ -27,7 +27,7 @@ public class FastjsonUtils {
      * @return 格式化字符串
      */
     public static String toStringFormat(Object obj) {
-        return toString(obj, SerializerFeature.PrettyFormat);
+        return toString(obj, SerializerFeature.PrettyFormat, SerializerFeature.WriteMapNullValue);
     }
 
     /**
