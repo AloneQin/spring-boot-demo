@@ -12,13 +12,13 @@ import java.util.concurrent.TimeoutException;
 public class CompletableFutureTest {
 
     public static void main(String[] args) throws ExecutionException, InterruptedException, TimeoutException {
-//        simpleAsync();
+        simpleAsync();
 //        stageAsync();
 //        andAsync();
 //        andAllOfAsync();
 //        orAsync();
 //        orAnyOfAsync();
-        exceptionallyAsync();
+//        exceptionallyAsync();
     }
 
     /**
