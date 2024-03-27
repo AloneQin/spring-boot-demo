@@ -154,4 +154,5 @@ public class TestController {
     public void testRedirect(HttpServletResponse response) throws IOException {
         response.sendRedirect("http://testv3.58v5.cn/SUtUOnMlKSUxU/video-6d2c5da5/1_probe_order_video3.mp4?token=WHFKZnRPMEl6TlNTMVNiZ2hqREpUOHRjMTJBPTplPTE2NzM1MDc5OTImZj0xX3Byb2JlX29yZGVyX3ZpZGVvMy5tcDQmcj0yNTI0OTg3MTIy");
     }
+
 }
