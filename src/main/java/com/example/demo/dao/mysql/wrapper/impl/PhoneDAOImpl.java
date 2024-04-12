@@ -1,10 +1,10 @@
-package com.example.demo.dao.wrapper.impl;
+package com.example.demo.dao.mysql.wrapper.impl;
 
 import com.baomidou.mybatisplus.extension.conditions.query.LambdaQueryChainWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.example.demo.dao.mapper.PhoneMapper;
-import com.example.demo.dao.wrapper.PhoneDAO;
+import com.example.demo.dao.mysql.mapper.PhoneMapper;
+import com.example.demo.dao.mysql.wrapper.PhoneDAO;
 import com.example.demo.model.po.PhonePO;
 import com.example.demo.utils.StringUtils;
 import lombok.AllArgsConstructor;

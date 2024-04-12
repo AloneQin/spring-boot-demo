@@ -1,4 +1,4 @@
-package com.example.demo.dao.wrapper;
+package com.example.demo.dao.mysql.wrapper;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;

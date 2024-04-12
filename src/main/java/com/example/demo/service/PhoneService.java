@@ -5,7 +5,7 @@ import com.example.demo.common.exception.ParamError;
 import com.example.demo.common.exception.ParamValidatedException;
 import com.example.demo.common.metadata.constant.MsgConst;
 import com.example.demo.common.response.ReturnCodeEnum;
-import com.example.demo.dao.wrapper.PhoneDAO;
+import com.example.demo.dao.mysql.wrapper.PhoneDAO;
 import com.example.demo.model.dto.PhoneDTO;
 import com.example.demo.model.po.PhonePO;
 import com.example.demo.service.open.PhoneOpenService;

@@ -1,7 +1,7 @@
 package com.example.demo.service.open;
 
 import com.example.demo.common.response.ReturnCodeEnum;
-import com.example.demo.dao.wrapper.PhoneDAO;
+import com.example.demo.dao.mysql.wrapper.PhoneDAO;
 import com.example.demo.model.po.PhonePO;
 import com.example.demo.utils.AssertUtils;
 import lombok.AllArgsConstructor;

@@ -1,5 +1,8 @@
 package com.example.demo.utils;
 
+import com.alibaba.excel.EasyExcel;
+import com.alibaba.excel.ExcelWriter;
+import com.alibaba.excel.write.metadata.WriteSheet;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.ClassPathResource;
 
@@ -40,11 +43,22 @@ class ExcelUtilsTest {
         });
 
         // 写 Excel
-        String path = "/Users/anjuke/work/test/test.xlsx";
+        String path = "/Users/alone/work/test/test.xlsx";
         List<Teacher> teacherList = Arrays.asList(
                 new Teacher("jack", 100101),
                 new Teacher("tom", 100102)
         );
         ExcelUtils.writeExcel(path, "老师信息", Teacher.class, teacherList);
+
+
+        List<List<String>> head = new ArrayList<>();
+        head.add(Arrays.asList("1"));
+        head.add(Arrays.asList("2"));
+        head.add(Arrays.asList("3"));
+
+        ExcelWriter excelWriter = EasyExcel.write(path).build();
+        WriteSheet writeSheet = EasyExcel.writerSheet("sheet").head(head).build();
+        excelWriter.write(head, writeSheet);
+        excelWriter.finish();
     }
 }

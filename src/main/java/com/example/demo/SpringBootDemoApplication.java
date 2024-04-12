@@ -11,7 +11,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @EnableAsync
 @EnableScheduling
 @SpringBootApplication
-@MapperScan({"com.example.demo.dao.mapper"})
+@MapperScan({"com.example.demo.dao.mysql.mapper"})
 public class SpringBootDemoApplication {
 
     public static void main(String[] args) {

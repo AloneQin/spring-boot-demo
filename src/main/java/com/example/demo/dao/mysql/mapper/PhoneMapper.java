@@ -1,4 +1,4 @@
-package com.example.demo.dao.mapper;
+package com.example.demo.dao.mysql.mapper;
 
 import com.example.demo.model.po.PhonePO;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
