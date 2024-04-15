@@ -4,13 +4,7 @@ import com.example.demo.common.response.ReturnCodeEnum;
 import com.example.demo.utils.AssertUtils;
 import com.example.demo.utils.ResponseUtils;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
@@ -27,9 +21,9 @@ import java.util.Map;
  * 控制器中常用的参数获取方式及写法
  */
 @Slf4j
-@org.springframework.web.bind.annotation.RestController
+@RestController
 @RequestMapping("/rest")
-public class RestController {
+public class MyRestController {
 
     /**
      * 形参（根据参数名称）获取参数，最常用的参数获取方式

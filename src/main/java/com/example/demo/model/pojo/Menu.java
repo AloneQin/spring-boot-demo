@@ -5,10 +5,10 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class Role {
+public class Menu {
 
     private String name;
 
-    private Integer type;
+    private String path;
 
 }
