@@ -24,7 +24,7 @@ public class RestTemplateUtils {
      * @param requestBody 请求体，非 JSON 使用{@link MultiValueMap}，否则使用{@link JSONObject}或{@link JSONArray}
      * @param responseType 响应体类型
      * @param <T> 响应体类型泛型
-     * @return
+     * @return 响应体
      */
     public static <T> ResponseEntity<T> send(RestTemplate restTemplate, String url, HttpMethod method,
                                              Map<String, String> headerMap, MediaType contentType,

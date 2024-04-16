@@ -27,6 +27,15 @@ public class FastjsonUtils {
      * @return 格式化字符串
      */
     public static String toStringFormat(Object obj) {
+        return toString(obj, SerializerFeature.PrettyFormat);
+    }
+
+    /**
+     * 对象转格式化字符串，保留为<code>null<code/>的属性
+     * @param obj 输入对象
+     * @return 输出字符串
+     */
+    public static String toStringFormatKeepNull(Object obj) {
         return toString(obj, SerializerFeature.PrettyFormat, SerializerFeature.WriteMapNullValue);
     }
 

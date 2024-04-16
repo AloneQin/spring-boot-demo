@@ -1,5 +1,7 @@
 package com.example.demo.utils;
 
+import java.util.Objects;
+
 /**
  * 十六进制字符串工具类
  */
@@ -11,9 +13,9 @@ public class HexStringUtils {
      * @return 十六进制字符串
      */
     private static String byte2HexStr(byte[] buff) {
-        StringBuffer sb = new StringBuffer();
-        for (int i = 0; i < buff.length; i++) {
-            String hex = Integer.toHexString(buff[i] & 0xFF);
+        StringBuilder sb = new StringBuilder();
+        for (byte b : buff) {
+            String hex = Integer.toHexString(b & 0xFF);
             if (hex.length() == 1) {
                 hex = '0' + hex;
             }
@@ -28,7 +30,7 @@ public class HexStringUtils {
      * @return 字节数组
      */
     private static byte[] hexStr2Byte(String hexStr) {
-        if (hexStr.length() < 1) {
+        if (hexStr == null || hexStr.isEmpty()) {
             return null;
         }
         byte[] result = new byte[hexStr.length() / 2];
@@ -55,7 +57,7 @@ public class HexStringUtils {
      * @return 字符串
      */
     private static String hexStrToStr(String hexStr) {
-        return new String(hexStr2Byte(hexStr));
+        return new String(Objects.requireNonNull(hexStr2Byte(hexStr)));
     }
 
     public static void main(String[] args) {

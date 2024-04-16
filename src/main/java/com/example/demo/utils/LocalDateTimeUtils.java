@@ -11,7 +11,9 @@ import java.util.Objects;
 public class LocalDateTimeUtils {
 
     public static final String Y_M_D = "yyyy-MM-dd";
+    public static final String H_M_S = "HH:mm:ss";
     public static final String H_M_S_S = "HH:mm:ss.SSS";
+    public static final String Y_M_D_H_M_S = "yyyy-MM-dd HH:mm:ss";
     public static final String Y_M_D_H_M_S_S = "yyyy-MM-dd HH:mm:ss.SSS";
 
     /**
@@ -24,7 +26,7 @@ public class LocalDateTimeUtils {
     }
 
     /**
-     * {@link LocalDateTime} 转 {@link String}，默认格式 {@link LocalDateTimeUtils#Y_M_D_H_M_S_S}
+     * {@link LocalDateTime} 转 {@link String}，默认格式 {@link LocalDateTimeUtils#Y_M_D_H_M_S}
      * @param localDateTime 本地日期时间
      * @return 日期时间字符串
      */
@@ -43,13 +45,13 @@ public class LocalDateTimeUtils {
         if (Objects.nonNull(pattern)) {
             formatter = DateTimeFormatter.ofPattern(pattern);
         } else {
-            formatter = DateTimeFormatter.ofPattern(Y_M_D_H_M_S_S);
+            formatter = DateTimeFormatter.ofPattern(Y_M_D_H_M_S);
         }
         return localDateTime.format(formatter);
     }
 
     /**
-     * {@link String} 转 {@link LocalDateTime}，默认格式 {@link LocalDateTimeUtils#Y_M_D_H_M_S_S}
+     * {@link String} 转 {@link LocalDateTime}，默认格式 {@link LocalDateTimeUtils#Y_M_D_H_M_S}
      * @param dateStr 日期时间字符串
      * @return 本地日期时间
      */
@@ -68,7 +70,7 @@ public class LocalDateTimeUtils {
         if (Objects.nonNull(pattern)) {
             formatter = DateTimeFormatter.ofPattern(pattern);
         } else {
-            formatter = DateTimeFormatter.ofPattern(Y_M_D_H_M_S_S);
+            formatter = DateTimeFormatter.ofPattern(Y_M_D_H_M_S);
         }
         return LocalDateTime.parse(dateStr, formatter);
     }
@@ -139,8 +141,8 @@ public class LocalDateTimeUtils {
      * @param dateStr 日期字符串
      * @return 本地日期
      */
-    public static LocalDate str2localDate(String dateStr) {
-        return str2localDate(dateStr);
+    public static LocalDate str2LocalDate(String dateStr) {
+        return str2LocalDate(dateStr, null);
     }
 
     /**
@@ -149,7 +151,7 @@ public class LocalDateTimeUtils {
      * @param pattern 日期格式
      * @return 本地日期
      */
-    public static LocalDate str2localDate(String dateStr, String pattern) {
+    public static LocalDate str2LocalDate(String dateStr, String pattern) {
         DateTimeFormatter formatter;
         if (Objects.nonNull(pattern)) {
             formatter = DateTimeFormatter.ofPattern(pattern);
@@ -160,7 +162,7 @@ public class LocalDateTimeUtils {
     }
 
     /**
-     * {@link LocalTime} 转 {@link String}，默认格式 {@link LocalDateTimeUtils#H_M_S_S}
+     * {@link LocalTime} 转 {@link String}，默认格式 {@link LocalDateTimeUtils#H_M_S}
      * @param localTime 本地时间
      * @return 时间字符串
      */
@@ -179,13 +181,13 @@ public class LocalDateTimeUtils {
         if (Objects.nonNull(pattern)) {
             formatter = DateTimeFormatter.ofPattern(pattern);
         } else {
-            formatter = DateTimeFormatter.ofPattern(H_M_S_S);
+            formatter = DateTimeFormatter.ofPattern(H_M_S);
         }
         return localTime.format(formatter);
     }
 
     /**
-     * {@link String} 转 {@link LocalTime}，默认格式 {@link LocalDateTimeUtils#H_M_S_S}
+     * {@link String} 转 {@link LocalTime}，默认格式 {@link LocalDateTimeUtils#H_M_S}
      * @param dateStr 时间字符串
      * @return 本地时间
      */
@@ -204,7 +206,7 @@ public class LocalDateTimeUtils {
         if (Objects.nonNull(pattern)) {
             formatter = DateTimeFormatter.ofPattern(pattern);
         } else {
-            formatter = DateTimeFormatter.ofPattern(H_M_S_S);
+            formatter = DateTimeFormatter.ofPattern(H_M_S);
         }
         return LocalTime.parse(dateStr, formatter);
     }

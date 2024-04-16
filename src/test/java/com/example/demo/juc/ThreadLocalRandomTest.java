@@ -19,12 +19,11 @@ public class ThreadLocalRandomTest {
 
     private static void testRandom(int max) {
         long startTime = System.currentTimeMillis();
-        Random random = new Random();
         ExecutorService executor = Executors.newFixedThreadPool(100);
         for (int i = 0; i < max; i++) {
             executor.execute(() -> {
                 try {
-                    random.nextInt(100);
+                    ThreadLocalRandom.current().nextInt(100);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

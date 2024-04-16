@@ -15,8 +15,8 @@ public class DateUtils {
 
 	/**
 	 * 日期转字符串
-	 * @param date 	需要转换的日期 {@link java.util.Date}
-	 * @return 		字符串格式 {@link java.lang.String}
+	 * @param date		需要转换的日期 {@link java.util.Date}
+	 * @return 日期字符串	字符串格式 {@link java.lang.String}
 	 */
 	public static String date2Str(Date date) {
 		return date2Str(date, Y_M_D_H_M_S);
@@ -26,7 +26,7 @@ public class DateUtils {
 	 * 日期转字符串
 	 * @param date		需要转换的日期 {@link java.util.Date}
 	 * @param pattern	转换格式 like: yyyy-MM-dd HH:mm:ss.SSS
-	 * @return			字符串格式 {@link java.lang.String}
+	 * @return 日期字符串	字符串格式 {@link java.lang.String}
 	 */
 	public static String date2Str(Date date, String pattern) {
 		SimpleDateFormat sdf = new SimpleDateFormat(pattern);
@@ -36,8 +36,8 @@ public class DateUtils {
 	/**
 	 * 字符串转日期
 	 * @param date 	需要转换的字符串 {@link java.lang.String}
-	 * @return 		日期格式 {@link java.util.Date}
-	 * @throws ParseException
+	 * @return 日期	日期格式 {@link java.util.Date}
+	 * @throws ParseException 异常
 	 */
 	public static Date str2Date(String date) throws ParseException {
 		return str2Date(date, Y_M_D_H_M_S);
@@ -47,8 +47,8 @@ public class DateUtils {
 	 * 字符串转日期
 	 * @param date		需要转换的字符串 {@link java.lang.String}
 	 * @param pattern	转换格式 like: yyyy-MM-dd HH:mm:ss.SSS
-	 * @return			日期格式 {@link java.util.Date}
-	 * @throws ParseException 
+	 * @return 日期		日期格式 {@link java.util.Date}
+	 * @throws ParseException 异常
 	 */
 	public static Date str2Date(String date, String pattern) throws ParseException {
 		SimpleDateFormat sdf = new SimpleDateFormat(pattern);

@@ -1,6 +1,5 @@
 package com.example.demo.utils;
 
-import java.util.Random;
 import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -9,9 +8,7 @@ import java.util.concurrent.ThreadLocalRandom;
  */
 public class RandomUtils {
 
-	private static Random random = new Random();
-
-	private static String[] chars = new String[] {
+	private static final String[] chars = new String[] {
 			"a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m",
 			"n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z",
 			"0", "1", "2", "3", "4", "5", "6", "7", "8", "9"
@@ -23,11 +20,11 @@ public class RandomUtils {
 	 * @return 随机数
 	 */
 	public static String getRandom(int length) {
-		String code = "";
+		StringBuilder code = new StringBuilder();
 		for (int i = 0; i < length; i++) {
-			code += chars[random.nextInt(chars.length)];
+			code.append(chars[ThreadLocalRandom.current().nextInt(chars.length)]);
 		}
-		return code;
+		return code.toString();
 	}
 
 	/**
@@ -36,11 +33,11 @@ public class RandomUtils {
 	 * @return 随机数
 	 */
 	public static String getRandomConcurrent(int length) {
-		String code = "";
+		StringBuilder code = new StringBuilder();
 		for (int i = 0; i < length; i++) {
-			code += chars[random.nextInt(chars.length)];
+			code.append(chars[ThreadLocalRandom.current().nextInt(chars.length)]);
 		}
-		return code;
+		return code.toString();
 	}
 	
 	/**
@@ -49,11 +46,11 @@ public class RandomUtils {
 	 * @return 随机数
 	 */
 	public static String getNumRandom(int length) {
-		String code = "";
+		StringBuilder code = new StringBuilder();
 		for(int i = 0; i < length; i++){
-			code += ThreadLocalRandom.current().nextInt(10);
+			code.append(ThreadLocalRandom.current().nextInt(10));
 		}
-		return code;
+		return code.toString();
 	}
 
 	/**
@@ -62,11 +59,11 @@ public class RandomUtils {
 	 * @return 随机数
 	 */
 	public static String getNumRandomConcurrent(int length) {
-		String code = "";
+		StringBuilder code = new StringBuilder();
 		for(int i = 0; i < length; i++){
-			code += ThreadLocalRandom.current().nextInt(10);
+			code.append(ThreadLocalRandom.current().nextInt(10));
 		}
-		return code;
+		return code.toString();
 	}
 	
 	/**

@@ -7,10 +7,21 @@ import com.example.demo.model.pojo.Role;
 import com.example.demo.model.pojo.User;
 import com.example.demo.utils.DateUtils;
 import com.example.demo.utils.FastjsonUtils;
+import com.example.demo.utils.SmartBeanUtils;
+import com.example.demo.utils.StringUtils;
 import org.apache.lucene.search.join.ScoreMode;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.index.query.TermQueryBuilder;
+import org.elasticsearch.search.aggregations.Aggregation;
+import org.elasticsearch.search.aggregations.AggregationBuilders;
+import org.elasticsearch.search.aggregations.Aggregations;
+import org.elasticsearch.search.aggregations.bucket.terms.ParsedLongTerms;
+import org.elasticsearch.search.aggregations.bucket.terms.ParsedStringTerms;
+import org.elasticsearch.search.aggregations.bucket.terms.ParsedTerms;
+import org.elasticsearch.search.aggregations.bucket.terms.TermsAggregationBuilder;
+import org.elasticsearch.search.aggregations.metrics.ParsedMax;
+import org.elasticsearch.search.aggregations.metrics.ParsedMin;
 import org.elasticsearch.search.sort.FieldSortBuilder;
 import org.elasticsearch.search.sort.SortBuilders;
 import org.elasticsearch.search.sort.SortOrder;
@@ -23,14 +34,14 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.elasticsearch.core.*;
+import org.springframework.data.elasticsearch.core.mapping.IndexCoordinates;
+import org.springframework.data.elasticsearch.core.query.FetchSourceFilterBuilder;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQuery;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.text.ParseException;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -155,7 +166,7 @@ public class EsTest {
         // 排序条件
         FieldSortBuilder sortBuilder = SortBuilders.fieldSort("id").order(SortOrder.DESC);
         // 分页参数
-        PageRequest pageRequest = PageRequest.of(0, 2);
+        PageRequest pageRequest = PageRequest.of(0, 1);
         // 执行查询
         NativeSearchQuery query = new NativeSearchQueryBuilder()
                 .withQuery(queryBuilder)
@@ -163,7 +174,7 @@ public class EsTest {
                 .withPageable(pageRequest)
                 .build();
         SearchHits<User> searchHits = esRestTemplate.search(query, User.class);
-        // 获取分页信息
+        // 1. 复杂分页
         SearchPage<User> searchPage = SearchHitSupport.searchPageFor(searchHits, query.getPageable());
         List<User> userList = searchPage.getSearchHits()
                 .stream()
@@ -171,6 +182,14 @@ public class EsTest {
                 .collect(Collectors.toList());
         // 组装返回信息
         Page<User> page = new PageImpl<>(userList, searchPage.getPageable(), searchPage.getTotalElements());
+        System.out.println(FastjsonUtils.toStringFormat(page));
+
+        // 2. 简单分页
+        userList = searchHits.getSearchHits()
+                .stream()
+                .map(SearchHit::getContent)
+                .collect(Collectors.toList());
+        page = new PageImpl<>(userList, pageRequest, searchHits.getTotalHits());
         System.out.println(FastjsonUtils.toStringFormat(page));
     }
 
@@ -317,5 +336,122 @@ public class EsTest {
                 .map(SearchHit::getContent)
                 .collect(Collectors.toList());
         System.out.println(FastjsonUtils.toStringFormat(userList));
+    }
+
+    @Test
+    public void scroll() {
+        int scrollTimes = 0;
+        long scrollTimeInMillis = 1 * 1000L;
+        String scrollId = null;
+        IndexCoordinates indexCoordinates = IndexCoordinates.of("user");
+        NativeSearchQuery query = new NativeSearchQueryBuilder().build();
+        query.setMaxResults(1);
+        SearchScrollHits<User> scrollHits = esRestTemplate.searchScrollStart(scrollTimeInMillis, query, User.class, indexCoordinates);
+        try {
+            scrollId = scrollHits.getScrollId();
+            while (scrollHits.hasSearchHits()) {
+                scrollTimes++;
+                System.out.println(StringUtils.padding("第{}页，总数据条数：{}", scrollTimes, scrollHits.getTotalHits()));
+
+                List<User> userList = scrollHits.getSearchHits().stream()
+                        .map(SearchHit::getContent)
+                        .collect(Collectors.toList());
+
+                System.out.println(FastjsonUtils.toStringFormat(userList));
+
+                scrollHits = esRestTemplate.searchScrollContinue(scrollId, scrollTimeInMillis, User.class, indexCoordinates);
+                scrollId = scrollHits.getScrollId();
+            }
+        } finally {
+            if (StringUtils.nonNull(scrollId)) {
+                esRestTemplate.searchScrollClear(Collections.singletonList(scrollId));
+            }
+        }
+    }
+
+    @Test
+    public void filter() {
+        NativeSearchQuery query = new NativeSearchQueryBuilder()
+                .withQuery(QueryBuilders.matchQuery("note", "good"))
+                // 过滤字段法-1
+                .withFields(SmartBeanUtils.getFieldName(User::getId), SmartBeanUtils.getFieldName(User::getName))
+                // 过滤字段法-2
+                .withSourceFilter(new FetchSourceFilterBuilder().withIncludes(SmartBeanUtils.getFieldName(User::getId),
+                        SmartBeanUtils.getFieldName(User::getName)).build())
+                .build();
+
+        // 打印查询语句
+        System.out.println("#Elasticsearch Query:" + System.lineSeparator() + query.getQuery().toString());
+        List<User> userList = esRestTemplate.search(query, User.class)
+                .getSearchHits().stream()
+                .map(SearchHit::getContent)
+                .collect(Collectors.toList());
+        System.out.println(FastjsonUtils.toStringFormat(userList));
+    }
+
+    /**
+     * 指标聚合
+     * 统计指标，如最大值、最小值、平均值、总和等
+     *
+     * sql: select max(age), min(age) from user
+     */
+    @Test
+    public void metric() {
+        NativeSearchQuery query = new NativeSearchQueryBuilder()
+                .addAggregation(AggregationBuilders.max("maxAge").field(SmartBeanUtils.getFieldName(User::getAge)))
+                .addAggregation(AggregationBuilders.min("minAge").field(SmartBeanUtils.getFieldName(User::getAge)))
+                .build();
+        Aggregations aggregations = esRestTemplate.search(query, User.class).getAggregations();
+        if (aggregations == null) {
+            return;
+        }
+        ParsedMax max = aggregations.get("maxAge");
+        ParsedMin min = aggregations.get("minAge");
+        System.out.println(StringUtils.padding("最大年龄：{}", max.getValue()));
+        System.out.println(StringUtils.padding("最小年龄：{}", min.getValue()));
+    }
+
+    /**
+     * 分组聚合
+     * 根据指定字段进行分组，并统计分组内的数据
+     *
+     * sql: select gender, count(*) from user group by gender
+     */
+    @Test
+    public void bucket() {
+        NativeSearchQuery query = new NativeSearchQueryBuilder()
+                .addAggregation(AggregationBuilders.terms("genders").field(SmartBeanUtils.getFieldName(User::getGender)))
+                .build();
+        Aggregations aggregations = esRestTemplate.search(query, User.class).getAggregations();
+        if (aggregations == null) {
+            return;
+        }
+        ParsedLongTerms genders = aggregations.get("genders");
+        genders.getBuckets().stream()
+                .forEach(bucket -> System.out.println(StringUtils.padding("{}：{}", bucket.getKeyAsString(), bucket.getDocCount())));
+    }
+
+    /**
+     * 嵌套聚合
+     * 在聚合的基础上，再次进行聚合，可以实现多层聚合
+     *
+     * sql: select gender, min(age) from user group by gender
+     */
+    @Test
+    public void aggregation() {
+        TermsAggregationBuilder builder = AggregationBuilders.terms("genders").field(SmartBeanUtils.getFieldName(User::getGender))
+                .subAggregation(AggregationBuilders.min("minAge").field(SmartBeanUtils.getFieldName(User::getAge)));
+        NativeSearchQuery query = new NativeSearchQueryBuilder()
+                .addAggregation(builder)
+                .build();
+        Aggregations aggregations = esRestTemplate.search(query, User.class).getAggregations();
+        if (aggregations == null) {
+            return;
+        }
+        ParsedLongTerms genders = aggregations.get("genders");
+        genders.getBuckets().forEach(bucket -> {
+            ParsedMin min = bucket.getAggregations().get("minAge");
+            System.out.println(StringUtils.padding("{}：{}", bucket.getKeyAsString(), min.getValue()));
+        });
     }
 }

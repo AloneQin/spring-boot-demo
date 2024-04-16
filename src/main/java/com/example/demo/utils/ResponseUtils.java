@@ -22,7 +22,7 @@ public class ResponseUtils {
      * @param statusCode http 状态码
      * @param contentType 响应内容类型
      * @param content 主体信息
-     * @throws IOException
+     * @throws IOException IO异常
      */
     public static void output(HttpServletResponse response, Integer statusCode, String contentType, String content) throws IOException {
         response.setStatus(statusCode);
@@ -40,7 +40,7 @@ public class ResponseUtils {
      * @param inputStream 输入流
      * @param fileName 文件名称
      * @param response HttpServletResponse
-     * @throws Exception 异常抛出，以便处理
+     * @throws Exception IO异常
      */
     public static void fileDownload(InputStream inputStream, String fileName, HttpServletResponse response) throws Exception {
         // 设置头信息
@@ -89,7 +89,7 @@ public class ResponseUtils {
      * @param obj 目标对象
      * @param fileName 文件名称
      * @param response HttpServletResponse
-     * @throws Exception
+     * @throws Exception 异常
      */
     public static void fileDownloadByObj(Object obj, String fileName, HttpServletResponse response) throws Exception {
         String jsonStr = FastjsonUtils.toStringKeepNull(obj);

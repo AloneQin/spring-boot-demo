@@ -1,105 +1,52 @@
 package com.example.demo.common.function;
 
-import com.example.demo.model.pojo.Role;
-import com.example.demo.model.pojo.User;
-import lombok.Data;
-
 import java.beans.Introspector;
 import java.io.Serializable;
 import java.lang.invoke.SerializedLambda;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.List;
 import java.util.function.Function;
-import java.util.function.Supplier;
 
+/**
+ * 可序列化的函数式接口 <br/>
+ *
+ * 继承 Serializable 以便反射动态生成 writeReplace() 方法 <br/>
+ * 继承 Function 以便使用 Lambda 表达式 <br/>
+ *
+ * @param <T> 输入类型
+ * @param <R> 输出类型
+ */
 @FunctionalInterface
 public interface SFunction<T, R> extends Serializable, Function<T, R> {
 
-    static <T, R> String getFieldName(Function<T, R> function) {
+    /**
+     * 获取字段名称
+     * @param sFunction 可序列化的函数式接口
+     * @return 字段名称
+     * @param <T> 输入类型
+     * @param <R> 输出类型
+     */
+    static <T, R> String getFieldName(SFunction<T, R> sFunction) {
         try {
-            Method method = function.getClass().getDeclaredMethod("writeReplace");
+            // 通过 writeReplace() 方法以便获取 SerializedLambda 对象
+            Method method = sFunction.getClass().getDeclaredMethod("writeReplace");
             method.setAccessible(true);
-            SerializedLambda serializedLambda = (SerializedLambda) method.invoke(function);
+            SerializedLambda serializedLambda = (SerializedLambda) method.invoke(sFunction);
             String implMethodName = serializedLambda.getImplMethodName();
-            String fieldName = "";
+            String prefix = "";
             if (implMethodName.startsWith("is")) {
-                fieldName = implMethodName.replace("is", "");
+                prefix = "is";
             } else if (implMethodName.startsWith("get")) {
-                fieldName = implMethodName.replace("get", "");
+                prefix = "get";
             } else {
-                throw new RuntimeException("get方法名称[" + implMethodName + "]不符合Java Bean规范");
+                throw new RuntimeException("get()方法名称[" + implMethodName + "]不符合Java Bean规范");
             }
-            fieldName = Introspector.decapitalize(fieldName);
-            return fieldName;
+            // 截取字段名并将首字母转换为小写
+            return Introspector.decapitalize(implMethodName.replace(prefix, ""));
         } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
             throw new RuntimeException(e);
         } catch (Exception e) {
             throw e;
         }
-    }
-
-    static void main(String[] args) {
-        String fieldName = getFieldName(TestField::getId);
-        System.out.println(fieldName);
-
-
-    }
-
-
-}
-
-class TestField {
-
-    private Integer id;
-
-    private String isShow;
-
-    private String isIsShow;
-
-    private Integer getId;
-
-    private Boolean flag;
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getIsShow() {
-        return isShow;
-    }
-
-    public void setIsShow(String isShow) {
-        this.isShow = isShow;
-    }
-
-    public String getIsIsShow() {
-        return isIsShow;
-    }
-
-    public void setIsIsShow(String isIsShow) {
-        this.isIsShow = isIsShow;
-    }
-
-    public Integer getGetId() {
-        return getId;
-    }
-
-    public void setGetId(Integer getId) {
-        this.getId = getId;
-    }
-
-    public Boolean getFlag() {
-        return flag;
-    }
-
-    public void setFlag(Boolean flag) {
-        this.flag = flag;
     }
 }

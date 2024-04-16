@@ -36,18 +36,18 @@ public class AssertUtils<E extends BaseException, T> {
 
     /**
      * 抛出异常
-     * @param defaultResponse {@link DefaultResponse}
+     * @param defaultResponse {@link DefaultResponse<T>}
      */
-    public static void doThrow(DefaultResponse defaultResponse) {
+    public static <T> void doThrow(DefaultResponse<T> defaultResponse) {
         throw new BaseException(defaultResponse);
     }
 
     /**
      * 抛出异常，并支持植入额外操作
-     * @param defaultResponse {@link DefaultResponse}
+     * @param defaultResponse {@link DefaultResponse<T>}
      * @param runnable 需要植入的操作
      */
-    public static void doThrow(DefaultResponse defaultResponse, Runnable runnable) {
+    public static <T> void doThrow(DefaultResponse<T> defaultResponse, Runnable runnable) {
         runnable.run();
         throw new BaseException(defaultResponse);
     }
@@ -123,9 +123,9 @@ public class AssertUtils<E extends BaseException, T> {
     /**
      * 判断对象为<code>null</>，不是将抛出异常
      * @param object 待判断对象
-     * @param defaultResponse {@link DefaultResponse}
+     * @param defaultResponse {@link DefaultResponse<T>}
      */
-    public static void isNull(Object object, DefaultResponse defaultResponse) {
+    public static <T> void isNull(Object object, DefaultResponse<T> defaultResponse) {
         if (Objects.nonNull(object)) {
             doThrow(defaultResponse);
         }
@@ -134,10 +134,10 @@ public class AssertUtils<E extends BaseException, T> {
     /**
      * 判断对象为<code>null</>，不是将抛出异常，并支持植入额外操作
      * @param object 待判断对象
-     * @param defaultResponse {@link DefaultResponse}
+     * @param defaultResponse {@link DefaultResponse<T>}
      * @param runnable 需要植入的操作
      */
-    public static void isNull(Object object, DefaultResponse defaultResponse, Runnable runnable) {
+    public static <T> void isNull(Object object, DefaultResponse<T> defaultResponse, Runnable runnable) {
         if (Objects.nonNull(object)) {
             runnable.run();
             doThrow(defaultResponse);
@@ -227,9 +227,9 @@ public class AssertUtils<E extends BaseException, T> {
     /**
      * 判断对象不为<code>null</>，是将抛出异常
      * @param object 待判断对象
-     * @param defaultResponse {@link DefaultResponse}
+     * @param defaultResponse {@link DefaultResponse<T>}
      */
-    public static void nonNull(Object object, DefaultResponse defaultResponse) {
+    public static <T> void nonNull(Object object, DefaultResponse<T> defaultResponse) {
         if (Objects.isNull(object)) {
             doThrow(defaultResponse);
         }
@@ -238,10 +238,10 @@ public class AssertUtils<E extends BaseException, T> {
     /**
      * 判断对象不为<code>null</>，是将抛出异常，并支持植入额外操作
      * @param object 待判断对象
-     * @param defaultResponse {@link DefaultResponse}
+     * @param defaultResponse {@link DefaultResponse<T>}
      * @param runnable 需要植入的操作
      */
-    public static void nonNull(Object object, DefaultResponse defaultResponse, Runnable runnable) {
+    public static <T> void nonNull(Object object, DefaultResponse<T> defaultResponse, Runnable runnable) {
         if (Objects.isNull(object)) {
             runnable.run();
             doThrow(defaultResponse);
@@ -331,9 +331,9 @@ public class AssertUtils<E extends BaseException, T> {
     /**
      * 判断布尔表达式为<code>true</code>，不是将抛出异常
      * @param expression 待判断表达式
-     * @param defaultResponse {@link DefaultResponse}
+     * @param defaultResponse {@link DefaultResponse<T>}
      */
-    public static void isTrue(boolean expression, DefaultResponse defaultResponse) {
+    public static <T> void isTrue(boolean expression, DefaultResponse<T> defaultResponse) {
         if (!expression) {
             doThrow(defaultResponse);
         }
@@ -342,10 +342,10 @@ public class AssertUtils<E extends BaseException, T> {
     /**
      * 判断布尔表达式为<code>true</code>，不是将抛出异常，并支持植入额外操作
      * @param expression 待判断表达式
-     * @param defaultResponse {@link DefaultResponse}
+     * @param defaultResponse {@link DefaultResponse<T>}
      * @param runnable 需要植入的操作
      */
-    public static void isTrue(boolean expression, DefaultResponse defaultResponse, Runnable runnable) {
+    public static <T> void isTrue(boolean expression, DefaultResponse<T> defaultResponse, Runnable runnable) {
         if (!expression) {
             runnable.run();
             doThrow(defaultResponse);
@@ -435,9 +435,9 @@ public class AssertUtils<E extends BaseException, T> {
     /**
      * 判断布尔表达式为<code>false</code>，不是将抛出异常
      * @param expression 待判断表达式
-     * @param defaultResponse {@link DefaultResponse}
+     * @param defaultResponse {@link DefaultResponse<T>}
      */
-    public static void isFalse(boolean expression, DefaultResponse defaultResponse) {
+    public static <T> void isFalse(boolean expression, DefaultResponse<T> defaultResponse) {
         if (expression) {
             doThrow(defaultResponse);
         }
@@ -446,10 +446,10 @@ public class AssertUtils<E extends BaseException, T> {
     /**
      * 判断布尔表达式为<code>false</code>，不是将抛出异常，并支持植入额外操作
      * @param expression 待判断表达式
-     * @param defaultResponse {@link DefaultResponse}
+     * @param defaultResponse {@link DefaultResponse<T>}
      * @param runnable 需要植入的操作
      */
-    public static void isFalse(boolean expression, DefaultResponse defaultResponse, Runnable runnable) {
+    public static <T> void isFalse(boolean expression, DefaultResponse<T> defaultResponse, Runnable runnable) {
         if (expression) {
             runnable.run();
             doThrow(defaultResponse);
@@ -539,9 +539,9 @@ public class AssertUtils<E extends BaseException, T> {
     /**
      * 判断布尔表达式提供者为<code>true</code>，不是将抛出异常
      * @param expressionSupplier 布尔表达式提供者
-     * @param defaultResponse {@link DefaultResponse}
+     * @param defaultResponse {@link DefaultResponse<T>}
      */
-    public static void state(Supplier<Boolean> expressionSupplier, DefaultResponse defaultResponse) {
+    public static <T> void state(Supplier<Boolean> expressionSupplier, DefaultResponse<T> defaultResponse) {
         if (!expressionSupplier.get()) {
             doThrow(defaultResponse);
         }
@@ -550,10 +550,10 @@ public class AssertUtils<E extends BaseException, T> {
     /**
      * 判断布尔表达式提供者为<code>true</code>，不是将抛出异常，并支持植入额外操作
      * @param expressionSupplier 布尔表达式提供者
-     * @param defaultResponse {@link DefaultResponse}
+     * @param defaultResponse {@link DefaultResponse<T>}
      * @param runnable 需要植入的操作
      */
-    public static void state(Supplier<Boolean> expressionSupplier, DefaultResponse defaultResponse, Runnable runnable) {
+    public static <T> void state(Supplier<Boolean> expressionSupplier, DefaultResponse<T> defaultResponse, Runnable runnable) {
         if (!expressionSupplier.get()) {
             runnable.run();
             doThrow(defaultResponse);

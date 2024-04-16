@@ -15,7 +15,7 @@ public class ReflectUtils {
      * 根据类全路径获取类型
      * @param fullPath 全路径
      * @return 类类型
-     * @throws ClassNotFoundException
+     * @throws ClassNotFoundException 类不存在异常
      */
     public static Class getClazz(String fullPath) throws ClassNotFoundException {
         return Class.forName(fullPath);
@@ -35,7 +35,7 @@ public class ReflectUtils {
      * @param clazz 类类型
      * @param fieldName 属性名称
      * @return 属性
-     * @throws NoSuchFieldException
+     * @throws NoSuchFieldException 字段不存在异常
      */
     public static Field getFieldByName(Class clazz, String fieldName) throws NoSuchFieldException {
         return clazz.getDeclaredField(fieldName);
@@ -46,10 +46,10 @@ public class ReflectUtils {
      * @param obj 目标对象
      * @param fieldName 字段名称
      * @return 字段值
-     * @throws NoSuchMethodException
-     * @throws InvocationTargetException
-     * @throws IllegalAccessException
-     * @throws NoSuchFieldException
+     * @throws NoSuchMethodException 方法不存在异常
+     * @throws InvocationTargetException 方法执行异常
+     * @throws IllegalAccessException 方法访问异常
+     * @throws NoSuchFieldException 字段不存在异常
      */
     public static Object getFieldValue(Object obj, String fieldName)
             throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, NoSuchFieldException {
@@ -93,7 +93,7 @@ public class ReflectUtils {
     /**
      * 获取类所有的方法
      * @param clazz 类类型
-     * @return
+     * @return 方法数组
      */
     public static Method[] getAllMethod(Class clazz) {
         return clazz.getDeclaredMethods();
@@ -105,7 +105,7 @@ public class ReflectUtils {
      * @param methodName 方法名称
      * @param parameterTypes 方法入参（null=无入参）
      * @return 方法
-     * @throws NoSuchMethodException
+     * @throws NoSuchMethodException 方法不存在异常
      */
     public static Method getMethodByName(Class clazz, String methodName, Class<?>... parameterTypes) throws NoSuchMethodException {
         return clazz.getDeclaredMethod(methodName, parameterTypes);
@@ -116,8 +116,8 @@ public class ReflectUtils {
      * @param method 方法
      * @param obj 目标对象
      * @return 方法返回值
-     * @throws InvocationTargetException
-     * @throws IllegalAccessException
+     * @throws InvocationTargetException 方法执行异常
+     * @throws IllegalAccessException 方法访问异常
      */
     public static Object getMethodReturnValue(Method method, Object obj) throws InvocationTargetException, IllegalAccessException {
         return method.invoke(obj);
@@ -127,8 +127,8 @@ public class ReflectUtils {
      * 根据无参构造器创建对象
      * @param clazz 类类型
      * @return 对象
-     * @throws InstantiationException
-     * @throws IllegalAccessException
+     * @throws InstantiationException 实例化异常
+     * @throws IllegalAccessException 访问异常
      */
     public static Object newInstance(Class clazz) throws InstantiationException, IllegalAccessException {
         return clazz.newInstance();
@@ -140,10 +140,10 @@ public class ReflectUtils {
      * @param parameterTypes 参数类型
      * @param initArgs 参数值
      * @return 目标对象
-     * @throws NoSuchMethodException
-     * @throws InvocationTargetException
-     * @throws InstantiationException
-     * @throws IllegalAccessException
+     * @throws NoSuchMethodException 方法不存在异常
+     * @throws InvocationTargetException 方法执行异常
+     * @throws InstantiationException 实例化异常
+     * @throws IllegalAccessException 访问异常
      */
     public static Object newInstance(Class clazz, Class<?>[] parameterTypes, Object[] initArgs)
             throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {

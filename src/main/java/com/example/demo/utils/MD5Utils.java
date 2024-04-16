@@ -10,7 +10,7 @@ import java.security.MessageDigest;
  */
 public class MD5Utils {
 
-	private static char hexDigits[] = { 
+	private static final char[] hexDigits = {
 		'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'
 	};
 
@@ -18,7 +18,7 @@ public class MD5Utils {
 	 * 获取字符串的 md5 值
 	 * @param s 字符串
 	 * @return md5
-	 * @throws Exception
+	 * @throws Exception 异常
 	 */
 	public static String md5(String s) throws Exception {
 		byte[] strTemp = s.getBytes();
@@ -41,7 +41,7 @@ public class MD5Utils {
 	 * 获取文件的 md5 值
 	 * @param file 待检验文件
 	 * @return md5
-	 * @throws Exception
+	 * @throws Exception 异常
 	 */
 	public static String md5(File file) throws Exception {
 		String md5;

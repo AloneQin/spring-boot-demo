@@ -73,6 +73,24 @@ public class StringUtils {
 	/**
 	 * 字符串判空
 	 * @param str 待判定字符串
+	 * @return true or false
+	 */
+	public static boolean isNull(String str) {
+		return null == str;
+	}
+
+	/**
+	 * 字符串判非空
+	 * @param str 待判定字符串
+	 * @return true or false
+	 */
+	public static boolean nonNull(String str) {
+		return !isNull(str);
+	}
+
+	/**
+	 * 字符串判空
+	 * @param str 待判定字符串
 	 * @return
 	 */
 	public static boolean isBlank(String str) {
@@ -98,5 +116,22 @@ public class StringUtils {
 		return sql.replace("\n", "").replace("\t", "");
 	}
 
-
+	/**
+	 * 字符串填充
+	 * @param str 需要填充的字符串，格式：xxx{}xxx{}xxx
+	 * @param params 需要填充的参数
+	 * @return 填充后的字符串
+	 */
+	public static String padding(String str, Object... params) {
+		if (params == null) {
+			return str;
+		}
+        for (Object param : params) {
+            if (!str.contains("{}")) {
+                break;
+            }
+            str = str.replaceFirst("\\{}", param.toString());
+        }
+		return str;
+	}
 }

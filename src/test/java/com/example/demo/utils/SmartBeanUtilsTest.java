@@ -44,6 +44,9 @@ class SmartBeanUtilsTest {
         obj1Map.get("a").setNo(2);
         obj1Map.get("a").getChildObj().setNo(2);
         System.out.println(obj2Map);
+
+        // 打印字段名称
+        System.out.println(SmartBeanUtils.getFieldName(TestPojo::getIsShow));
     }
 
 }
@@ -81,4 +84,57 @@ class ChildObj {
 
     private Integer no;
 
+}
+
+class TestPojo {
+
+    private Integer id;
+
+    private String isShow;
+
+    private String isIsShow;
+
+    private Integer getId;
+
+    private Boolean flag;
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public String getIsShow() {
+        return isShow;
+    }
+
+    public void setIsShow(String isShow) {
+        this.isShow = isShow;
+    }
+
+    public String xxxIsIsShow() {
+        return isIsShow;
+    }
+
+    public void setIsIsShow(String isIsShow) {
+        this.isIsShow = isIsShow;
+    }
+
+    public Integer getGetId() {
+        return getId;
+    }
+
+    public void setGetId(Integer getId) {
+        this.getId = getId;
+    }
+
+    public Boolean isFlag() {
+        return flag;
+    }
+
+    public void setFlag(Boolean flag) {
+        this.flag = flag;
+    }
 }

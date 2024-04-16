@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Arrays;
 import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * 验证码工具类
@@ -18,7 +19,6 @@ public class CheckCodeUtils {
 	
 	// 使用到 Algerian 字体，系统里没有的话需要安装字体，字体只显示大写，去掉了 1，0，i，o 几个容易混淆的字符
 	public static final String VERIFY_CODES = "23456789ABCDEFGHJKLMNPQRSTUVWXYZ";
-	private static Random random = new Random();
 
 	/**
 	 * 使用系统默认字符源生成验证码
@@ -33,10 +33,10 @@ public class CheckCodeUtils {
 	 * 使用指定源生成验证码
 	 * @param verifySize 验证码长度
 	 * @param sources 验证码字符源
-	 * @return
+	 * @return 验证码
 	 */
-	private static String generateVerifyCode(int verifySize, String sources){
-		if(sources == null || sources.length() == 0){
+	public static String generateVerifyCode(int verifySize, String sources){
+		if(sources == null || sources.isEmpty()){
 			sources = VERIFY_CODES;
 		}
 		int codesLen = sources.length();
@@ -49,12 +49,12 @@ public class CheckCodeUtils {
 	}
 	
 	/**
-	 * 生成随机验证码文件,并返回验证码值
+	 * 生成随机验证码文件,并返回验证码
 	 * @param w 图片宽
 	 * @param h 图片高
 	 * @param outputFile 输出文件
 	 * @param verifySize 验证码长度
-	 * @return
+	 * @return 验证码
 	 * @throws IOException
 	 */
 	public static String outputVerifyImage(int w, int h, File outputFile, int verifySize) throws IOException{
@@ -64,12 +64,12 @@ public class CheckCodeUtils {
 	}
 	
 	/**
-	 * 输出随机验证码图片流,并返回验证码值
+	 * 输出随机验证码图片流,并返回验证码
 	 * @param w 图片宽
 	 * @param h 图片高
 	 * @param os 图片输出流
 	 * @param verifySize 验证码长度
-	 * @return
+	 * @return 验证码
 	 * @throws IOException
 	 */
 	public static String outputVerifyImage(int w, int h, OutputStream os, int verifySize) throws IOException{
@@ -80,11 +80,11 @@ public class CheckCodeUtils {
 	
 	/**
 	 * 生成指定验证码图像文件
-	 * @param w
-	 * @param h
-	 * @param outputFile
-	 * @param code
-	 * @throws IOException
+	 * @param w 图片宽
+	 * @param h 图片高
+	 * @param outputFile 输出文件
+	 * @param code 验证码
+	 * @throws IOException IO异常
 	 */
 	private static void outputImage(int w, int h, File outputFile, String code) throws IOException{
 		if(outputFile == null){
@@ -94,28 +94,29 @@ public class CheckCodeUtils {
 		if(!dir.exists()){
 			dir.mkdirs();
 		}
+		FileOutputStream fos = null;
 		try{
 			outputFile.createNewFile();
-			FileOutputStream fos = new FileOutputStream(outputFile);
+			fos = new FileOutputStream(outputFile);
 			outputImage(w, h, fos, code);
-			fos.close();
-		} catch(IOException e){
-			throw e;
+		} finally {
+			if (fos != null) {
+				fos.close();
+			}
 		}
 	}
 	
 	/**
 	 * 输出指定验证码图片流
-	 * @param w
-	 * @param h
-	 * @param os
-	 * @param code
-	 * @throws IOException
+	 * @param w 图片宽
+	 * @param h 图片高
+	 * @param os 图片输出流
+	 * @param code 验证码
+	 * @throws IOException IO异常
 	 */
 	private static void outputImage(int w, int h, OutputStream os, String code) throws IOException{
 		int verifySize = code.length();
 		BufferedImage image = new BufferedImage(w, h, BufferedImage.TYPE_INT_RGB);
-		Random rand = new Random();
 		Graphics2D g2 = image.createGraphics();
 		g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,RenderingHints.VALUE_ANTIALIAS_ON);
 		Color[] colors = new Color[5];
@@ -124,8 +125,8 @@ public class CheckCodeUtils {
 				Color.PINK, Color.YELLOW };
 		float[] fractions = new float[colors.length];
 		for(int i = 0; i < colors.length; i++){
-			colors[i] = colorSpaces[rand.nextInt(colorSpaces.length)];
-			fractions[i] = rand.nextFloat();
+			colors[i] = colorSpaces[ThreadLocalRandom.current().nextInt(colorSpaces.length)];
+			fractions[i] = ThreadLocalRandom.current().nextFloat();
 		}
 		Arrays.sort(fractions);
 		
@@ -137,13 +138,12 @@ public class CheckCodeUtils {
 		g2.fillRect(0, 2, w, h-4);
 		
 		//绘制干扰线
-		Random random = new Random();
 		g2.setColor(getRandColor(160, 200));// 设置线条的颜色
 		for (int i = 0; i < 20; i++) {
-			int x = random.nextInt(w - 1);
-			int y = random.nextInt(h - 1);
-			int xl = random.nextInt(6) + 1;
-			int yl = random.nextInt(12) + 1;
+			int x = ThreadLocalRandom.current().nextInt(w - 1);
+			int y = ThreadLocalRandom.current().nextInt(h - 1);
+			int xl = ThreadLocalRandom.current().nextInt(6) + 1;
+			int yl = ThreadLocalRandom.current().nextInt(12) + 1;
 			g2.drawLine(x, y, x + xl + 40, y + yl + 20);
 		}
 		
@@ -151,8 +151,8 @@ public class CheckCodeUtils {
 		float yawpRate = 0.05f;// 噪声率
 		int area = (int) (yawpRate * w * h);
 		for (int i = 0; i < area; i++) {
-			int x = random.nextInt(w);
-			int y = random.nextInt(h);
+			int x = ThreadLocalRandom.current().nextInt(w);
+			int y = ThreadLocalRandom.current().nextInt(h);
 			int rgb = getRandomIntColor();
 			image.setRGB(x, y, rgb);
 		}
@@ -166,7 +166,7 @@ public class CheckCodeUtils {
 		char[] chars = code.toCharArray();
 		for(int i = 0; i < verifySize; i++){
 			AffineTransform affine = new AffineTransform();
-			affine.setToRotation(Math.PI / 4 * rand.nextDouble() * (rand.nextBoolean() ? 1 : -1), (w / verifySize) * i + fontSize/2, h/2);
+			affine.setToRotation(Math.PI / 4 * ThreadLocalRandom.current().nextDouble() * (ThreadLocalRandom.current().nextBoolean() ? 1 : -1), (w / verifySize) * i + fontSize/2, h/2);
 			g2.setTransform(affine);
 			g2.drawChars(chars, i, 1, ((w-10) / verifySize) * i + 5, h/2 + fontSize/2 - 10);
 		}
@@ -180,9 +180,9 @@ public class CheckCodeUtils {
 			fc = 255;
 		if (bc > 255)
 			bc = 255;
-		int r = fc + random.nextInt(bc - fc);
-		int g = fc + random.nextInt(bc - fc);
-		int b = fc + random.nextInt(bc - fc);
+		int r = fc + ThreadLocalRandom.current().nextInt(bc - fc);
+		int g = fc + ThreadLocalRandom.current().nextInt(bc - fc);
+		int b = fc + ThreadLocalRandom.current().nextInt(bc - fc);
 		return new Color(r, g, b);
 	}
 	
@@ -199,7 +199,7 @@ public class CheckCodeUtils {
 	private static int[] getRandomRgb() {
 		int[] rgb = new int[3];
 		for (int i = 0; i < 3; i++) {
-			rgb[i] = random.nextInt(255);
+			rgb[i] = ThreadLocalRandom.current().nextInt(255);
 		}
 		return rgb;
 	}
@@ -211,11 +211,11 @@ public class CheckCodeUtils {
 	
 	private static void shearX(Graphics g, int w1, int h1, Color color) {
 
-		int period = random.nextInt(2);
+		int period = ThreadLocalRandom.current().nextInt(2);
 
 		boolean borderGap = true;
 		int frames = 1;
-		int phase = random.nextInt(2);
+		int phase = ThreadLocalRandom.current().nextInt(2);
 
 		for (int i = 0; i < h1; i++) {
 			double d = (double) (period >> 1)
@@ -234,7 +234,7 @@ public class CheckCodeUtils {
 
 	private static void shearY(Graphics g, int w1, int h1, Color color) {
 
-		int period = random.nextInt(40) + 10; // 50;
+		int period = ThreadLocalRandom.current().nextInt(40) + 10; // 50;
 
 		boolean borderGap = true;
 		int frames = 20;
@@ -260,7 +260,7 @@ public class CheckCodeUtils {
 		/**
 		 * 生成验证码预览图片
 		 */
-		File dir = new File("/Users/alone/work/test");
+		File dir = new File("./target/");
 		for(int i = 0; i < 3; i++){
 			File file = new File(dir, (i + 1) + ".png");
 			outputVerifyImage(w, h, file, 4);

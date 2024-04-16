@@ -110,9 +110,10 @@ public class OkHttpUtils {
 
     /**
      * 编码 url
-     *  url = abc
-     *  paramMap = {"p1":"1", "p2","2"}
-     *  output -> abc?p1=1&p2=2
+     *
+     * <p> url = abc
+     * <p> paramMap = {"p1":"1", "p2","2"}
+     * <p> output -> abc?p1=1&p2=2
      *
      * @param uri 请求名
      * @param paramMap 参数集合

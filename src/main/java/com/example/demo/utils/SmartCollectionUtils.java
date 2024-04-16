@@ -21,8 +21,8 @@ public class SmartCollectionUtils extends CollectionUtils {
 
     /**
      * Map 是否不为空
-     * @param map
-     * @return
+     * @param map 待校验 Map
+     * @return true=不为空、false=空
      */
     public static boolean nonEmpty(Map<?, ?> map) {
         return !isEmpty(map);

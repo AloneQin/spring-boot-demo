@@ -33,7 +33,7 @@ public class JacksonUtils {
      * 对象转字符串，省略为<code>null<code/>的属性，需处理编译异常
      * @param obj 输入对象
      * @return 输出字符串
-     * @throws JsonProcessingException
+     * @throws JsonProcessingException 异常
      */
     public static String toStringThrow(Object obj) throws JsonProcessingException {
         // 属性为 null 不进行序列化
@@ -58,7 +58,7 @@ public class JacksonUtils {
      * 对象转格式化字符串，省略为<code>null<code/>的属性，需处理编译异常
      * @param obj 输入对象
      * @return 格式化字符串
-     * @throws JsonProcessingException
+     * @throws JsonProcessingException 异常
      */
     public static String toStringFormatThrow(Object obj) throws JsonProcessingException {
         // 属性为 null 不进行序列化
@@ -70,7 +70,7 @@ public class JacksonUtils {
      * 对象转字符串，保留为<code>null<code/>的属性
      * @param obj 输入对象
      * @return 输出字符串
-     * @throws JsonProcessingException
+     * @throws RuntimeException 异常
      */
     public static String toStringKeepNull(Object obj) {
         try {
@@ -84,7 +84,7 @@ public class JacksonUtils {
      * 对象转字符串，保留为<code>null<code/>的属性，需处理编译异常
      * @param obj 输入对象
      * @return 输出字符串
-     * @throws JsonProcessingException
+     * @throws JsonProcessingException 异常
      */
     public static String toStringKeepNullThrow(Object obj) throws JsonProcessingException {
         return OBJECT_MAPPER.writeValueAsString(obj);
@@ -109,7 +109,7 @@ public class JacksonUtils {
      * @param obj 输入对象
      * @param config 序列化配置
      * @return 输出字符串
-     * @throws JsonProcessingException
+     * @throws JsonProcessingException 异常
      */
     public static String toStringThrow(Object obj, SerializationConfig config) throws JsonProcessingException {
         OBJECT_MAPPER.setConfig(config);
@@ -137,7 +137,7 @@ public class JacksonUtils {
      * @param clazz 对象类型
      * @param <T> 对象泛型
      * @return 输出对象
-     * @throws JsonProcessingException
+     * @throws JsonProcessingException 异常
      */
     public static <T> T toObjectThrow(String str, Class<T> clazz) throws JsonProcessingException {
         return OBJECT_MAPPER.readValue(str, clazz);
@@ -164,7 +164,7 @@ public class JacksonUtils {
      * @param typeReference 类型引用
      * @param <T> 对象泛型
      * @return 输出对象
-     * @throws JsonProcessingException
+     * @throws JsonProcessingException 异常
      */
     public static <T> T toObjectThrow(String str, TypeReference<T> typeReference) throws JsonProcessingException {
         return OBJECT_MAPPER.readValue(str, typeReference);
@@ -172,7 +172,7 @@ public class JacksonUtils {
 
     /**
      * 初始化
-     * @return
+     * @return 对象映射器
      */
     private static ObjectMapper initObjectMapper() {
         ObjectMapper objectMapper = new ObjectMapper();

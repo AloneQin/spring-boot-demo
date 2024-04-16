@@ -10,10 +10,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class Teacher {
 
-    @ExcelProperty("姓名")
+    @ExcelProperty("姓名（姓+名）")
     private String name;
 
-    @ExcelProperty("工号")
-    private Integer no;
+    @ExcelProperty("工号（唯一编号）")
+    private String no;
 
 }
