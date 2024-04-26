@@ -1,5 +1,6 @@
 package com.example.demo.utils;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.TypeReference;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -38,10 +39,14 @@ class FastjsonUtilsTest {
         List<Book> bookList2 = FastjsonUtils.toArray(s5, Book.class);
         System.out.println(bookList2);
 
+        List<Map<String, Object>> list = FastjsonUtils.toObject(s5, new TypeReference<>() {});
+        System.out.println(list);
+
         // 字符串转复杂对象
         String s6 = "{\"a\":[{\"name\":\"A\",\"price\":10.0,\"press\":null},{\"name\":\"B\",\"price\":8.0,\"press\":\"\"}]}";
         Map<String, List<Book>> map = FastjsonUtils.toObject(s6, new TypeReference<>() {});
         System.out.println(map);
+
     }
 }
 

@@ -85,11 +85,7 @@ public class DefaultResponse<T> {
      * @param defaultResponse 目标响应信息
      * @return {@code true}=是，{@code false}=否
      */
-    public static boolean successful(DefaultResponse defaultResponse) {
-        if (defaultResponse != null && ReturnCodeEnum.SUCCESS.code.equals(defaultResponse.code)) {
-            return true;
-        }
-
-        return false;
+    public static <T> boolean successful(DefaultResponse<T> defaultResponse) {
+        return defaultResponse != null && ReturnCodeEnum.SUCCESS.code.equals(defaultResponse.code);
     }
 }

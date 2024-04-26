@@ -10,10 +10,8 @@ import org.springframework.data.elasticsearch.config.AbstractElasticsearchConfig
 @Configuration
 public class ElasticsearchConfig extends AbstractElasticsearchConfiguration {
 
-
     @Value("${spring.data.elasticsearch.client.reactive.endpoints}")
     private String esServerAddr;
-
 
     @Override
     public RestHighLevelClient elasticsearchClient() {

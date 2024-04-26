@@ -89,7 +89,7 @@ public class CommonReturnController {
      */
     @GetMapping("/subReturnCodeException")
     public DefaultResponse<Void> subReturnCodeException(String token) {
-        AssertUtils.nonNull(token, MyReturnCode.ORDER_STATUS_ERROR, () -> log.warn("token is null", true));
+        AssertUtils.nonNull(token, MyReturnCode.ORDER_STATUS_ERROR, () -> log.warn("token is null"));
 
         return DefaultResponse.success();
     }
@@ -135,7 +135,7 @@ public class CommonReturnController {
 
         AssertUtils.isTrue(name.startsWith("李"), new ParamValidatedException(new ParamError("name", "人名必须姓李")));
 
-        AssertUtils.state(() -> age%2 == 0, new ParamValidatedException(Arrays.asList(new ParamError("age", "年龄不能为奇数"))));
+        AssertUtils.state(() -> age%2 == 0, new ParamValidatedException(List.of(new ParamError("age", "年龄不能为奇数"))));
 
         return DefaultResponse.success();
     }

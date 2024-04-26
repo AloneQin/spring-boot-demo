@@ -5,6 +5,6 @@ package com.example.demo.common.response;
  */
 public interface MyReturnCode {
 
-    DefaultResponse ORDER_STATUS_ERROR = DefaultResponse.fail("200000", "订单状态错误", null);
+    DefaultResponse<Void> ORDER_STATUS_ERROR = DefaultResponse.fail("200000", "订单状态错误", null);
 
 }

@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.context.request.async.DeferredResult;
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -155,4 +157,50 @@ public class TestController {
         response.sendRedirect("http://testv3.58v5.cn/SUtUOnMlKSUxU/video-6d2c5da5/1_probe_order_video3.mp4?token=WHFKZnRPMEl6TlNTMVNiZ2hqREpUOHRjMTJBPTplPTE2NzM1MDc5OTImZj0xX3Byb2JlX29yZGVyX3ZpZGVvMy5tcDQmcj0yNTI0OTg3MTIy");
     }
 
+    /**
+     * 延时响应测试
+     * @param seconds 延时秒数
+     * @return
+     */
+    @GetMapping("/testDeferredResult")
+    public DeferredResult<String> testDeferredResult(Integer seconds) {
+        DeferredResult<String> deferredResult = new DeferredResult<>(3000L, () -> "我超时了");
+        new Thread(() -> {
+            try {
+                Thread.sleep(1000L * seconds);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            deferredResult.setResult("我完成啦");
+        }).start();
+
+        return deferredResult;
+    }
+
+    /**
+     * sse 消息推送
+     * <p> 服务器发送事件(Server-Sent Events)机制，基于 HTTP 协议，只能传输文本信息，不支持 IE 浏览器
+     * @return
+     */
+    @GetMapping("/testSseEmitter")
+    public SseEmitter testSseEmitter() {
+        // 默认超时时间为 30 秒，0 代表永不过期
+        SseEmitter sseEmitter = new SseEmitter(0L);
+        new Thread(() -> {
+            try {
+                for (int i = 0; i < 10; i++) {
+                    Thread.sleep(1000L);
+                    sseEmitter.send(i);
+                }
+                // 关闭连接前发送固定消息，客户端若存活，接收此消息后可重复发起请求，以此避免长期保持长连接而浪费资源
+                sseEmitter.send("--SSE CLOSE--");
+                sseEmitter.complete();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }).start();
+        return sseEmitter;
+    }
 }

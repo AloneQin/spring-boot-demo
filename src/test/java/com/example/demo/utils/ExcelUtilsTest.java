@@ -49,17 +49,6 @@ public class ExcelUtilsTest {
             log.info("Read All Page: " + FastjsonUtils.toString(entityList));
         });
 
-
-//        List<List<String>> head = new ArrayList<>();
-//        head.add(Arrays.asList("1"));
-//        head.add(Arrays.asList("2"));
-//        head.add(Arrays.asList("3"));
-//
-//        ExcelWriter excelWriter = EasyExcel.write(path).build();
-//        WriteSheet writeSheet = EasyExcel.writerSheet("sheet").head(head).build();
-//        excelWriter.write(head, writeSheet);
-//        excelWriter.finish();
-
         System.out.println(FastjsonUtils.toStringFormat(getHead()));
     }
 

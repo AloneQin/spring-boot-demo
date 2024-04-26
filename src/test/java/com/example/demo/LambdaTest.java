@@ -20,7 +20,7 @@ public class LambdaTest {
         fun2.doSomething("Hello World!");
 
         // lambda
-        Fun fun3 = (s) -> System.out.println(s);
+        Fun fun3 = System.out::println;
         fun3.doSomething("Hello World!");
     }
 
