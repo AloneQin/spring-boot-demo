@@ -1,4 +1,4 @@
-package com.example.demo.service.open;
+package com.example.demo.service.facade;
 
 import com.example.demo.common.response.ReturnCodeEnum;
 import com.example.demo.dao.mysql.wrapper.PhoneDAO;
@@ -12,26 +12,26 @@ import org.springframework.util.CollectionUtils;
 import java.util.List;
 
 /**
- * 手机开放服务，可供其他服务调用
+ * 手机门面服务，可供其他服务调用
  *
  * 避免 Service 之间相互调用<br/>
  *
  * 调用规则：<br/>
  * 1.规定服务调用只能由上至下纵向调用，调用链路：AController -> AService -> ADAO<br/>
- * 2.禁止横向调用，如 BService -> AService，如有类似场景，将公共方法抽取到 AOpenService 开放层<br/>
+ * 2.禁止横向调用，如 BService -> AService，如有类似场景，将公共方法抽取到 AServiceFacade 门面层（开放层）<br/>
  *
  * 总调用链路：
  * AController -> AService -> ADAO
+ *                  ↑           ↑
+ *              AServiceFacade
  *                  ↑
- *              AOpenService
- *                  ↓
  * BController -> BService -> BDAO
  *
  */
 @Slf4j
 @Service
 @AllArgsConstructor
-public class PhoneOpenService {
+public class PhoneServiceFacade {
 
     private final PhoneDAO phoneDAO;
 
