@@ -82,7 +82,7 @@ public class ReflectUtils {
         if (Objects.isNull(source)) {
             return null;
         }
-        if ("".equals(source)) {
+        if (source.isEmpty()) {
             return "";
         }
         byte[] bytes = source.getBytes();
@@ -95,7 +95,7 @@ public class ReflectUtils {
      * @param clazz 类类型
      * @return 方法数组
      */
-    public static Method[] getAllMethod(Class clazz) {
+    public static Method[] getAllMethod(Class<?> clazz) {
         return clazz.getDeclaredMethods();
     }
 
@@ -107,7 +107,7 @@ public class ReflectUtils {
      * @return 方法
      * @throws NoSuchMethodException 方法不存在异常
      */
-    public static Method getMethodByName(Class clazz, String methodName, Class<?>... parameterTypes) throws NoSuchMethodException {
+    public static Method getMethodByName(Class<?> clazz, String methodName, Class<?>... parameterTypes) throws NoSuchMethodException {
         return clazz.getDeclaredMethod(methodName, parameterTypes);
     }
 
@@ -130,7 +130,7 @@ public class ReflectUtils {
      * @throws InstantiationException 实例化异常
      * @throws IllegalAccessException 访问异常
      */
-    public static Object newInstance(Class clazz) throws InstantiationException, IllegalAccessException {
+    public static Object newInstance(Class<?> clazz) throws InstantiationException, IllegalAccessException {
         return clazz.newInstance();
     }
 
@@ -145,9 +145,9 @@ public class ReflectUtils {
      * @throws InstantiationException 实例化异常
      * @throws IllegalAccessException 访问异常
      */
-    public static Object newInstance(Class clazz, Class<?>[] parameterTypes, Object[] initArgs)
+    public static Object newInstance(Class<?> clazz, Class<?>[] parameterTypes, Object[] initArgs)
             throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
-        Constructor constructor = clazz.getDeclaredConstructor(parameterTypes);
+        Constructor<?> constructor = clazz.getDeclaredConstructor(parameterTypes);
         return constructor.newInstance(initArgs);
     }
 }

@@ -1,5 +1,6 @@
 package com.example.demo.common.trace;
 
+import org.jetbrains.annotations.NotNull;
 import org.springframework.core.task.TaskDecorator;
 
 import java.util.Map;
@@ -9,8 +10,9 @@ import java.util.Map;
  */
 public class MDCTaskDecorator implements TaskDecorator {
 
+    @NotNull
     @Override
-    public Runnable decorate(Runnable runnable) {
+    public Runnable decorate(@NotNull Runnable runnable) {
         Map<String, String> map = TraceManager.getCopyOfContextMap();
         return () -> {
             try {

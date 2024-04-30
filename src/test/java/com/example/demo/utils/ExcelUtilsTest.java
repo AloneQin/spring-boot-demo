@@ -4,7 +4,6 @@ import com.alibaba.excel.EasyExcel;
 import com.alibaba.excel.ExcelWriter;
 import com.alibaba.excel.write.metadata.WriteSheet;
 import com.alibaba.excel.write.metadata.style.WriteCellStyle;
-import com.alibaba.excel.write.style.DefaultStyle;
 import com.alibaba.excel.write.style.HorizontalCellStyleStrategy;
 import com.alibaba.excel.write.style.column.LongestMatchColumnWidthStyleStrategy;
 import lombok.extern.slf4j.Slf4j;
@@ -84,20 +83,20 @@ public class ExcelUtilsTest {
 
     @Test
     public void writeExcel1() {
-        String path = StringUtils.padding("./target/{}", "test.xlsx");
+        String path = StringUtils.format("./target/{}", "test.xlsx");
         ExcelUtils.writeExcel(path, null, "老师信息", Teacher.class, getTeachers());
     }
 
     @Test
     public void writeExcel2() {
-        String path = StringUtils.padding("./target/{}", "test2.xlsx");
+        String path = StringUtils.format("./target/{}", "test2.xlsx");
         // 宽度自适应
         ExcelUtils.writeExcel(path, null, "老师信息", Teacher.class, getTeachers(), new LongestMatchColumnWidthStyleStrategy());
     }
 
     @Test
     public void writeExcel3() {
-        String path = StringUtils.padding("./target/{}", "test3.xlsx");
+        String path = StringUtils.format("./target/{}", "test3.xlsx");
         ExcelUtils.writeExcel(path, null,"sheet", getHead(), getData());
     }
 
@@ -114,7 +113,7 @@ public class ExcelUtilsTest {
         HorizontalCellStyleStrategy horizontalCellStyleStrategy =
                 new HorizontalCellStyleStrategy(headWriteCellStyle, contentWriteCellStyle);
 
-        String path = StringUtils.padding("./target/{}", "test4.xlsx");
+        String path = StringUtils.format("./target/{}", "test4.xlsx");
         ExcelUtils.writeExcel(path, null, "sheet", getHead(), getData(), horizontalCellStyleStrategy);
     }
 
@@ -123,7 +122,7 @@ public class ExcelUtilsTest {
      */
     @Test
     public void writeExcel5() {
-        String path = StringUtils.padding("./target/{}", "test5.xlsx");
+        String path = StringUtils.format("./target/{}", "test5.xlsx");
         ExcelWriter excelWriter = EasyExcel.write(path).build();
         for (int i = 0; i < 5; i++) {
             WriteSheet writeSheet = EasyExcel.writerSheet(i,"sheet" + i).head(getHead()).build();

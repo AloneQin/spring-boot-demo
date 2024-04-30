@@ -9,16 +9,16 @@ import java.util.regex.Pattern;
 public class StringUtils {
 	
 	/**
-	 * 正则匹配用户名
-	 * ^[a-zA-z][a-zA-Z0-9_]{6,20}$: 字母、数字、下划线、必须以字母开头、长度 6-20 位
-	 * 
-	 * @param userName 用户名
-	 * @return true or false
-	 * 
-	 * 链接：
-	 * http://www.codeceo.com/article/useful-regular-expression.html
-	 * http://www.jb51.net/article/72867.htm
-	 */
+     * 正则匹配用户名
+     * ^[a-zA-z][a-zA-Z0-9_]{6,20}$: 字母、数字、下划线、必须以字母开头、长度 6-20 位
+     *
+     * @param userName 用户名
+     * @return true or false
+     *
+     * 链接：
+     * <a href="http://www.codeceo.com/article/useful-regular-expression.html">example1</a>
+     * <a href="http://www.jb51.net/article/72867.htm">example2</a>
+     */
 	public static boolean isUserName(String userName) {
 		if (userName == null) {
 			return false;
@@ -117,12 +117,12 @@ public class StringUtils {
 	}
 
 	/**
-	 * 字符串填充
+	 * 字符串格式化填充
 	 * @param str 需要填充的字符串，格式：xxx{}xxx{}xxx
 	 * @param params 需要填充的参数
 	 * @return 填充后的字符串
 	 */
-	public static String padding(String str, Object... params) {
+	public static String format(String str, Object... params) {
 		if (params == null) {
 			return str;
 		}
