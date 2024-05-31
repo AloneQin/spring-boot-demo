@@ -95,10 +95,10 @@ public class PhoneController {
     }
 
     /**
-     * 测试事务嵌套
+     * 测试事务失效
      */
-    @GetMapping("/testTransactionNest")
-    public void testTransactionNest() {
-        phoneService.testTransactionNest();
+    @GetMapping("/testTransactionLapse")
+    public void testTransactionLapse() {
+        phoneService.testTransactionLapse();
     }
 }

@@ -20,3 +20,18 @@ insert into phone(phone_code, name, brand, prod_date, price, remark) values('4eb
 insert into phone(phone_code, name, brand, prod_date, price, remark) values('5472da83-0293-46b2-bdbc-2adc3786d932', 'X50 Pro', 'vivo', '2020-06-01', 4298.00, '星空模式好玩好用');
 insert into phone(phone_code, name, brand, prod_date, price, remark) values('93b36718-61af-46b9-8148-7a1199d69bd4', 'Reno4 Pro', 'OPPO', '2020-06-05', 3799.00, '夜景视频拍摄很出色');
 insert into phone(phone_code, name, brand, prod_date, price, remark) values('a4e1da74-54ee-459d-87e8-982db945d702', '小米10至尊版', '小米', '2020-08-11', 5299.00, '有线无线电池回血都超快');
+
+CREATE TABLE `log` (
+  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `content` TINYTEXT NOT NULL COMMENT '内容',
+  `created_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  PRIMARY KEY (`id`)
+) ENGINE = InnoDB DEFAULT CHARSET=utf8 COMMENT = '日志表';
+
+INSERT INTO `spring-boot-demo`.`log` (`id`, `content`) VALUES ('1', 'test');
+
+
+
+
+
+

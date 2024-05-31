@@ -2,6 +2,11 @@ package com.example.demo.utils;
 
 import com.alibaba.excel.EasyExcel;
 import com.alibaba.excel.ExcelWriter;
+import com.alibaba.excel.converters.Converter;
+import com.alibaba.excel.enums.CellDataTypeEnum;
+import com.alibaba.excel.metadata.GlobalConfiguration;
+import com.alibaba.excel.metadata.data.WriteCellData;
+import com.alibaba.excel.metadata.property.ExcelContentProperty;
 import com.alibaba.excel.write.metadata.WriteSheet;
 import com.alibaba.excel.write.metadata.style.WriteCellStyle;
 import com.alibaba.excel.write.style.HorizontalCellStyleStrategy;
@@ -14,9 +19,14 @@ import org.springframework.core.io.ClassPathResource;
 
 import java.io.File;
 import java.io.IOException;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 @Slf4j
 public class ExcelUtilsTest {
@@ -76,8 +86,8 @@ public class ExcelUtilsTest {
 
     private static List<Teacher> getTeachers() {
         return Arrays.asList(
-                new Teacher("jack", "100101100101100101100101100101100101"),
-                new Teacher("tom", "100102")
+                new Teacher("jack", "100101100101100101100101100101100101", 1717053863601L),
+                new Teacher("tom", "100102", 1717053863601L)
         );
     }
 
@@ -129,5 +139,31 @@ public class ExcelUtilsTest {
             excelWriter.write(getData(), writeSheet);
         }
         excelWriter.finish();
+    }
+
+    class DateTimeConverter implements Converter<Long> {
+
+        private final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+
+        @Override
+        public Class<?> supportJavaTypeKey() {
+            return Long.class;
+        }
+
+        @Override
+        public CellDataTypeEnum supportExcelTypeKey() {
+            return CellDataTypeEnum.STRING;
+        }
+
+        @Override
+        public WriteCellData<?> convertToExcelData(Long value, ExcelContentProperty contentProperty,
+                                                   GlobalConfiguration globalConfiguration) throws Exception {
+            if (Objects.isNull(value)){
+                new WriteCellData(CellDataTypeEnum.STRING,null);
+            }
+            LocalDateTime localDateTime = LocalDateTime.ofInstant(Instant.ofEpochMilli(value), ZoneId.systemDefault());
+            String dateStr = localDateTime.format(DATE_TIME_FORMATTER);
+            return new WriteCellData(CellDataTypeEnum.STRING,dateStr);
+        }
     }
 }

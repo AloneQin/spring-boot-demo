@@ -11,20 +11,22 @@ import java.util.Map;
 import java.util.Objects;
 
 /**
- * 重试管理类
- * {@link Retryable}注解在本类的方法相互调用时无效，重试方法必须在其他类
- * {@link Retryable}注解修饰方法的调用对象手动创建时无效，必须被 Spring IOC 容器管理
+ * 重试管理类，用来记录重试时的次数
+ * <p> {@link Retryable}注解在本类的方法相互调用时无效，重试方法必须在其他类
+ * <p> {@link Retryable}注解修饰方法的调用对象手动创建时无效，必须被 Spring IOC 容器管理
+ *
+ * @deprecated 可使用 RetrySynchronizationManager.getContext().getRetryCount() 获取重试次数，此类可废弃
  */
 @Slf4j
 public class RetryManager {
 
     /**
-     * 尝试信息集合
+     * 重试信息集合
      */
     private final static Map<String, TryInfo> TRY_INFO_MAP = new HashMap();
 
     /**
-     * 获取尝试 key
+     * 获取重试 key
      * @param type 重试类型
      * @param id 唯一标识
      * @return 重试 key
@@ -34,8 +36,8 @@ public class RetryManager {
     }
 
     /**
-     * 初始化尝试信息
-     * @param tryKey 尝试 key
+     * 初始化重试信息
+     * @param tryKey 重试 key
      */
     protected void initTryInfo(String tryKey, Integer maxTryTimes) {
         TryInfo tryInfo = TRY_INFO_MAP.get(tryKey);
@@ -47,8 +49,8 @@ public class RetryManager {
     }
 
     /**
-     * 自增尝试次数
-     * @param tryKey 尝试 key
+     * 自增重试次数
+     * @param tryKey 重试 key
      */
     protected synchronized void tryTimesAutoincrement(String tryKey) {
         TryInfo tryInfo = TRY_INFO_MAP.get(tryKey);
@@ -60,18 +62,18 @@ public class RetryManager {
     }
 
     /**
-     * 获取尝试信息
-     * @param tryKey 尝试 key
-     * @return 尝试信息
+     * 获取重试信息
+     * @param tryKey 重试 key
+     * @return 重试信息
      */
     protected TryInfo getTryInfo(String tryKey) {
         return TRY_INFO_MAP.get(tryKey);
     }
 
     /**
-     * 获取尝试次数
-     * @param tryKey 尝试 key
-     * @return 当前尝试次数
+     * 获取重试次数
+     * @param tryKey 重试 key
+     * @return 当前重试次数
      */
     protected Integer getTryTimes(String tryKey) {
         TryInfo tryInfo = getTryInfo(tryKey);
@@ -79,8 +81,8 @@ public class RetryManager {
     }
 
     /**
-     * 清除尝试次数
-     * @param tryKey 尝试 key
+     * 清除重试次数
+     * @param tryKey 重试 key
      */
     protected void cleanTryTimes(String tryKey) {
         TryInfo tryInfo = TRY_INFO_MAP.get(tryKey);
@@ -90,8 +92,8 @@ public class RetryManager {
     }
 
     /**
-     * 清除尝试信息
-     * @param tryKey 尝试 key
+     * 清除重试信息
+     * @param tryKey 重试 key
      */
     private void cleanTryInfo(String tryKey) {
         TryInfo tryInfo = TRY_INFO_MAP.get(tryKey);
@@ -102,24 +104,24 @@ public class RetryManager {
     }
 
     /**
-     * 尝试信息
+     * 重试信息
      */
     @Data
     @AllArgsConstructor
     class TryInfo {
 
         /**
-         * 尝试次数
+         * 重试次数
          */
         private Integer tryTimes;
 
         /**
-         * 最大尝试次数
+         * 最大重试次数
          */
         private Integer maxTryTimes;
 
         /**
-         * 是否达到尝试上限
+         * 是否达到重试上限
          * @return
          */
         public boolean isToLimit() {

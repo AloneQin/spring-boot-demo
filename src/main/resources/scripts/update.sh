@@ -32,7 +32,7 @@ git pull
 echo -e "---------------------------------------------"
 echo -e "Maven package"
 echo -e "---------------------------------------------"
-mvn clean package -Dmaven.test.skip=true
+mvn clean package '-Dmaven.test.skip=true'
 
 echo -e "---------------------------------------------"
 echo -e "Transfer jar"

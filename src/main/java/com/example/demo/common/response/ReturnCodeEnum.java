@@ -28,6 +28,11 @@ public enum ReturnCodeEnum {
      * 手机相关
      */
     PHONE_ALREADY_EXISTS        ("101000", "手机已存在"),
+
+    /**
+     * 测试相关
+     */
+    NAME_ILLEGAL                ("102000", "名称不合法"),
     ;
 
     public final String code;

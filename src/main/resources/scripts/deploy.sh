@@ -6,7 +6,7 @@
 # Histroy:
 #	2021-02-23 19:04:17	alone	First release
 
-# 执行任何语句出错
+# 执行任何语句出错则退出
 set -e
 
 echo -e "Update project"

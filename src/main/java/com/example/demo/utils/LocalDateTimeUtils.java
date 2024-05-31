@@ -15,6 +15,7 @@ public class LocalDateTimeUtils {
     public static final String H_M_S_S = "HH:mm:ss.SSS";
     public static final String Y_M_D_H_M_S = "yyyy-MM-dd HH:mm:ss";
     public static final String Y_M_D_H_M_S_S = "yyyy-MM-dd HH:mm:ss.SSS";
+    public static final String Y_M_D_H_M_S_S_S = "yyyy-MM-dd HH:mm:ss.SSSSSS";
 
     /**
      * 清除时间字符串中的 "T"、"Z" 字符
@@ -210,4 +211,6 @@ public class LocalDateTimeUtils {
         }
         return LocalTime.parse(dateStr, formatter);
     }
+
+
 }

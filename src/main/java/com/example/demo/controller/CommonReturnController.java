@@ -8,20 +8,24 @@ import com.example.demo.common.response.ReturnCodeEnum;
 import com.example.demo.model.vo.PeopleVO;
 import com.example.demo.utils.AssertUtils;
 import com.example.demo.utils.FastjsonUtils;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.Range;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.ConstraintViolation;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
-import java.util.Arrays;
-import java.util.List;
+import javax.validation.groups.Default;
+import java.util.*;
 
 /**
  * 通用返回结构的运用
@@ -29,8 +33,11 @@ import java.util.List;
 @Slf4j
 @Validated
 @RestController
+@AllArgsConstructor
 @RequestMapping("/commonReturn")
 public class CommonReturnController {
+
+    private final LocalValidatorFactoryBean validatorFactoryBean;
 
     /**
      * 通用成功返回展示
@@ -99,7 +106,7 @@ public class CommonReturnController {
      */
     @GetMapping("/validated")
     public DefaultResponse<Void> validated(@NotNull(message = "姓名不能为空")
-                                               @Length(min = 1, max = 10, message = "名称长度必须在1-10之间")  String name,
+                                               @Length(min = 1, max = 10, message = "名称长度必须在1-10之间") String name,
                                            @NotNull(message = "年龄不能为空")
                                                @Range(min = 1, max = 150, message = "年龄必须在[1-150]之间") Integer age) {
         log.info("name: {}, age: {}", name, age);
@@ -128,15 +135,39 @@ public class CommonReturnController {
     }
 
     /**
-     * 自定义参数校验返回展示
+     * 自定义手动校验
      */
     @GetMapping("/customValidated")
-    public DefaultResponse<Void> customValidated(String name, Integer age) {
+    public DefaultResponse<Void> customValidated() {
+        PeopleVO peopleVo = new PeopleVO();
+        peopleVo.setName("");
 
-        AssertUtils.isTrue(name.startsWith("李"), new ParamValidatedException(new ParamError("name", "人名必须姓李")));
+        Set<ConstraintViolation<PeopleVO>> set = validatorFactoryBean.validate(peopleVo, PeopleVO.Group1.class);
+        set.forEach(constraintViolation -> {
+            log.info("group1, fieldName: {}, message: {}", constraintViolation.getPropertyPath().toString(), constraintViolation.getMessage());
+        });
 
-        AssertUtils.state(() -> age%2 == 0, new ParamValidatedException(List.of(new ParamError("age", "年龄不能为奇数"))));
+        Set<ConstraintViolation<PeopleVO>> set2 = validatorFactoryBean.validate(peopleVo, PeopleVO.Group2.class);
+        set2.forEach(constraintViolation -> {
+            log.info("group2, fieldName: {}, message: {}", constraintViolation.getPropertyPath().toString(), constraintViolation.getMessage());
+        });
+
+        Set<ConstraintViolation<PeopleVO>> set3 = validatorFactoryBean.validate(peopleVo, PeopleVO.Group1.class, PeopleVO.Group2.class);
+        set3.forEach(constraintViolation -> {
+            log.info("all, fieldName: {}, message: {}", constraintViolation.getPropertyPath().toString(), constraintViolation.getMessage());
+        });
 
         return DefaultResponse.success();
     }
+
+    /**
+     * 自定义参数校验返回展示
+     */
+    @GetMapping("/customValidated2")
+    public DefaultResponse<Void> customValidated2(String name, Integer age) {
+        AssertUtils.isTrue(name.startsWith("李"), new ParamValidatedException(new ParamError("name", "人名必须姓李")));
+        AssertUtils.state(() -> age%2 == 0, new ParamValidatedException(List.of(new ParamError("age", "年龄不能为奇数"))));
+        return DefaultResponse.success();
+    }
+
 }

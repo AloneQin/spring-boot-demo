@@ -69,7 +69,7 @@ public class ApplicationEventListener implements ApplicationListener<Application
                                 throw new BaseException(ReturnCodeEnum.SERVER_ERROR, StringUtils.format("web socket url [{}] duplicate paths", path));
                             }
                             webSocketReqMappingInfoMap.put(path, new WebSocketReqMappingInfo(clazz, method, classValue + methodValue, bean));
-                            log.info("#annotation @WebSocketRequestMapping, path: [{}], class: {}, method: {}()", path, clazz.getName(), method.getName());
+                            log.info("#annotation scan @WebSocketRequestMapping, path: [{}], class: {}, method: {}()", path, clazz.getName(), method.getName());
                         }
                     }
                 }
@@ -113,7 +113,7 @@ public class ApplicationEventListener implements ApplicationListener<Application
                                 throw new BaseException(ReturnCodeEnum.SERVER_ERROR, StringUtils.format("web socket url [{}] duplicate paths", path));
                             }
                             webSocketReqMappingInfoMap.put(path, new WebSocketReqMappingInfo(clazz, method, classValue + methodValue, entry.getValue()));
-                            log.info("#annotation @WebSocketRequestMapping, path: [{}], class: {}, method: {}()", path, clazz.getName(), method.getName());
+                            log.info("#annotation scan @WebSocketRequestMapping, path: [{}], class: {}, method: {}()", path, clazz.getName(), method.getName());
                         }
                     }
                 }

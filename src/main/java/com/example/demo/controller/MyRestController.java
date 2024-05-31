@@ -1,6 +1,7 @@
 package com.example.demo.controller;
 
 import com.example.demo.common.response.ReturnCodeEnum;
+import com.example.demo.model.vo.DemoVO;
 import com.example.demo.utils.AssertUtils;
 import com.example.demo.utils.ResponseUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -16,6 +17,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * 控制器中常用的参数获取方式及写法
@@ -104,7 +106,7 @@ public class MyRestController {
      */
     @PostMapping("/multiFileUpload2")
     public String multiFileUpload2(@RequestParam("file") List<MultipartFile> fileList) {
-        String fileName = null;
+        String fileName = "";
         for (int i = 0; i < fileList.size(); i++) {
             fileName += fileList.get(i).getOriginalFilename();
             if (i != fileList.size() - 1) {
@@ -113,6 +115,16 @@ public class MyRestController {
         }
 
         return fileName;
+    }
+
+    /**
+     * 同时上传文件与对象
+     * @param demoVO 对象
+     * @param file 文件
+     */
+    @PostMapping("/uploadFileAndObj")
+    public void uploadFileAndObj(DemoVO demoVO, @RequestParam("file") MultipartFile file) {
+        log.info("demoVO: {}, fileName: {}", demoVO, file.getOriginalFilename());
     }
 
     /**

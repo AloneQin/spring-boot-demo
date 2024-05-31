@@ -2,8 +2,10 @@ package com.example.demo.controller;
 
 import com.example.demo.common.lisenser.event.MyEvent;
 import com.example.demo.common.retry.RetryTestService;
+import com.example.demo.common.retry.RetryTestService2;
 import com.example.demo.common.task.ControllableScheduleTask;
 import com.example.demo.service.TestService;
+import com.example.demo.service.facade.TestServiceFacade;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
@@ -39,7 +41,11 @@ public class TestController {
 
     private final RetryTestService retryTestService;
 
+    private final RetryTestService2 retryTestService2;
+
     private final ThreadPoolTaskExecutor threadPoolTaskExecutor;
+
+    private final TestServiceFacade testServiceFacade;
 
     private final TestService testService;
 
@@ -104,7 +110,14 @@ public class TestController {
         log.info("#开始发起远程调用...");
         retryTestService.mockCall();
         log.info("#完成远程调用");
+        return "SUCCESS";
+    }
 
+    @GetMapping("/testRetry2")
+    public String testRetry2(int num) {
+        log.info("#开始发起远程调用...");
+        retryTestService2.mockCall(num);
+        log.info("#完成远程调用");
         return "SUCCESS";
     }
 
@@ -149,7 +162,7 @@ public class TestController {
 
     @GetMapping("/testPhoneOpenServiceRef")
     public void testPhoneOpenServiceRef() {
-        testService.testPhoneOpenServiceRef("iphone 12");
+        testServiceFacade.testFacadeServiceRef("iphone 12");
     }
 
     @GetMapping("/testRedirect")
@@ -202,5 +215,14 @@ public class TestController {
             }
         }).start();
         return sseEmitter;
+    }
+
+    /**
+     * 测试 StopWatch 执行时间
+     */
+    @GetMapping("/testStopWatch")
+    public String testStopWatch() throws InterruptedException {
+        testService.testStopWatch();
+        return "SUCCESS";
     }
 }

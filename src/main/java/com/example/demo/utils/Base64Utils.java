@@ -19,7 +19,6 @@ public class Base64Utils {
      * 编码
      * @param text 字符串
      * @return base64 编码后的字符串
-     * @throws UnsupportedEncodingException
      */
     public static String encode(String text) throws UnsupportedEncodingException {
         return encoder.encodeToString(text.getBytes(CHARSET));
@@ -29,7 +28,6 @@ public class Base64Utils {
      * 解码
      * @param base64Text base64 编码的字符串
      * @return 字符串
-     * @throws UnsupportedEncodingException
      */
     public static String decode(String base64Text) throws UnsupportedEncodingException {
         return new String(decoder.decode(base64Text), CHARSET);
