@@ -1,12 +1,15 @@
 package com.example.demo.utils;
 
+import org.springframework.util.StringUtils;
+
+import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
  * 字符串工具类
  */
-public class StringUtils {
+public class SmartStringUtils extends StringUtils {
 	
 	/**
      * 正则匹配用户名
@@ -76,7 +79,7 @@ public class StringUtils {
 	 * @return true or false
 	 */
 	public static boolean isNull(String str) {
-		return null == str;
+		return Objects.isNull(str);
 	}
 
 	/**

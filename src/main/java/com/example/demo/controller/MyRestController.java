@@ -1,31 +1,42 @@
 package com.example.demo.controller;
 
+import com.example.demo.common.interceptor.WebMvcConfig;
+import com.example.demo.common.minio.MinioManager;
 import com.example.demo.common.response.ReturnCodeEnum;
 import com.example.demo.model.vo.DemoVO;
 import com.example.demo.utils.AssertUtils;
 import com.example.demo.utils.ResponseUtils;
+import io.minio.ObjectWriteResponse;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.websocket.server.PathParam;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.net.URL;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 /**
  * 控制器中常用的参数获取方式及写法
  */
 @Slf4j
 @RestController
+@AllArgsConstructor
 @RequestMapping("/rest")
 public class MyRestController {
+
+    private final MinioManager minioManager;
+    
 
     /**
      * 形参（根据参数名称）获取参数，最常用的参数获取方式
@@ -78,19 +89,45 @@ public class MyRestController {
      */
     @PostMapping("/fileUpload")
     public String fileUpload(@RequestParam("file") MultipartFile file, @RequestParam("savePath") String savePath) {
+        try {
+            file.getInputStream().close();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
         log.info("file name: {}", file.getOriginalFilename());
         log.info("file size: {}", file.getSize());
 
         Path path = Paths.get(savePath + file.getOriginalFilename());
 
-        try {
-            // 文件拷贝
-            file.transferTo(path);
-            return "SUCCESS";
-        } catch (IOException e) {
-            log.error("文件上传失败: ", e);
-            return "FAIL";
-        }
+//        try {
+//            // 文件拷贝
+//            file.transferTo(path);
+//            return "SUCCESS";
+//        } catch (IOException e) {
+//            log.error("文件上传失败: ", e);
+//            return "FAIL";
+//        }
+        return "--";
+    }
+
+    /**
+     * 文件上传到 Minio，并指定上传文件时的参数名
+     */
+    @PostMapping("/fileUploadToMinio")
+    public ObjectWriteResponse fileUploadToMinio(@RequestParam("file") MultipartFile file) {
+        return minioManager.uploadFile(file, file.getOriginalFilename(), file.getContentType());
+    }
+
+    /**
+     * 获取 Minio 文件地址
+     * @param objectName 对象名称
+     * @param expires 过期时间，单位秒
+     * @return 文件地址
+     */
+    @GetMapping("/getFileUrlByMinio")
+    public String getFileUrlByMinio(String objectName, Integer expires) {
+        return minioManager.getPresignedObjectUrl(objectName, expires);
     }
 
     /**
@@ -128,14 +165,41 @@ public class MyRestController {
     }
 
     /**
-     * 文件下载
+     * 文件下载-附件形式
+     * Content-Type:application/octet-stream 直接以附件形式进行下载
      */
     @GetMapping("/fileDownload")
     public void fileDownload(HttpServletResponse response) throws Exception {
-        Path path = Paths.get("/Users/alone/work/test/logo.png");
+        Path path = Paths.get("D:/work/dev/test/logo.png");
         File file = path.toFile();
         AssertUtils.isTrue(file.exists(), ReturnCodeEnum.FAIL, () -> log.warn("file not exists: {}", file.getPath()));
-
-        ResponseUtils.fileDownload(new FileInputStream(file), file.getName(), response);
+        ResponseUtils.fileDownloadByAttachment(new FileInputStream(file), file.getName(), response);
     }
+
+    /**
+     * 文件下载-直显方式
+     * 不设置 Content-Type 浏览器支持的格式都会被直接预览，不支持的格式将会进行下载（但可能会导致文件格式出错）
+     * 建议只对浏览器支持的常规格式采用此种下载方式，不支持的文件采用附件下载
+     * 如果具有本地文件系统，推荐使用静态资源映射的方式进行展示，浏览器支持的文件会被直接预览，浏览器不支持的文件自动以附件的形式进行下载，且不会出现格式紊乱，详见 {@link WebMvcConfig#addResourceHandlers(ResourceHandlerRegistry)}
+     */
+    @GetMapping("/fileDownload2")
+    public void fileDownload2(HttpServletResponse response, @RequestParam("fileName") String fileName) throws Exception {
+        Path path = Paths.get("D:/work/dev/test/" + fileName);
+        File file = path.toFile();
+        AssertUtils.isTrue(file.exists(), ReturnCodeEnum.FAIL, () -> log.warn("file not exists: {}", file.getPath()));
+//        ResponseUtils.outputStreamToResponse(new FileInputStream(file), response);
+        ResponseUtils.fileDownload(new FileInputStream(file), fileName, response);
+    }
+
+    /**
+     * 文件下载-文本方式
+     * Content-Type:text/html 浏览器将会将流转换成文本内容进行显示，不会进行下载
+     */
+    @GetMapping("/fileDownload3")
+    public Resource fileDownload3() {
+        URL url = getClass().getResource("/images/logo.png");
+        Resource resource = new UrlResource(url);
+        return resource;
+    }
+
 }

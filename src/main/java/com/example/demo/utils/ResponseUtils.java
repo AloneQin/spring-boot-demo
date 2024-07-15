@@ -1,5 +1,7 @@
 package com.example.demo.utils;
 
+import lombok.Cleanup;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.servlet.ServletOutputStream;
@@ -9,6 +11,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 
 /**
  * HttpServletResponse 工具类
@@ -40,35 +43,45 @@ public class ResponseUtils {
      * @param inputStream 输入流
      * @param fileName 文件名称
      * @param response HttpServletResponse
-     * @throws Exception IO异常
      */
-    public static void fileDownload(InputStream inputStream, String fileName, HttpServletResponse response) throws Exception {
+    @SneakyThrows
+    public static void fileDownloadByAttachment(InputStream inputStream, String fileName, HttpServletResponse response) {
         // 设置头信息
         response.setContentType("application/octet-stream;charset=utf-8");
-        response.addHeader("Content-Disposition", "attachment;fileName=" + URLEncoder.encode(fileName, "utf-8"));
+        response.addHeader("Content-Disposition", "attachment;fileName=" + URLEncoder.encode(fileName, StandardCharsets.UTF_8));
         // IO操作
+        outputStreamToResponse(inputStream, response);
+    }
+
+    /**
+     * 文件下载
+     * @param inputStream 输入流
+     * @param fileName 文件名称
+     * @param response HttpServletResponse
+     */
+    @SneakyThrows
+    public static void fileDownload(InputStream inputStream, String fileName, HttpServletResponse response) {
+        // 设置头信息
+        response.addHeader("Content-Disposition", "fileName=" + URLEncoder.encode(fileName, StandardCharsets.UTF_8));
+        // IO操作
+        outputStreamToResponse(inputStream, response);
+    }
+
+    /**
+     * 输出流到响应
+     * @param inputStream 输入流
+     * @param response 响应
+     */
+    @SneakyThrows
+    public static void outputStreamToResponse(InputStream inputStream, HttpServletResponse response) {
         byte[] buffer = new byte[1024 * 10];
-        BufferedInputStream bis = null;
-        ServletOutputStream sos = null;
-        try {
-            bis = new BufferedInputStream(inputStream);
-            sos = response.getOutputStream();
-            int i = -1;
-            while ((i = bis.read(buffer)) != -1) {
-                sos.write(buffer, 0, i);
-            }
-            sos.flush();
-        } finally {
-            if (inputStream != null) {
-                inputStream.close();
-            }
-            if (bis != null) {
-                bis.close();
-            }
-            if (sos != null) {
-                sos.close();
-            }
+        @Cleanup BufferedInputStream bis = new BufferedInputStream(inputStream);;
+        @Cleanup ServletOutputStream sos = response.getOutputStream();
+        int i;
+        while ((i = bis.read(buffer)) != -1) {
+            sos.write(buffer, 0, i);
         }
+        sos.flush();
     }
 
     /**
@@ -93,6 +106,6 @@ public class ResponseUtils {
      */
     public static void fileDownloadByObj(Object obj, String fileName, HttpServletResponse response) throws Exception {
         String jsonStr = FastjsonUtils.toStringKeepNull(obj);
-        fileDownload(stringToStream(jsonStr), fileName, response);
+        fileDownloadByAttachment(stringToStream(jsonStr), fileName, response);
     }
 }

@@ -1,7 +1,7 @@
 package com.example.demo.common.trace;
 
 import com.example.demo.utils.RandomUtils;
-import com.example.demo.utils.StringUtils;
+import com.example.demo.utils.SmartStringUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.MDC;
 
@@ -24,7 +24,7 @@ public class TraceManager {
     }
 
     public static void putTraceId(String traceId) {
-        if (StringUtils.isBlank(traceId)) {
+        if (SmartStringUtils.isBlank(traceId)) {
             MDC.put(TRACE_ID, RandomUtils.getUUID(true));
         } else {
             MDC.put(TRACE_ID, traceId);

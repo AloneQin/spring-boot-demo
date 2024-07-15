@@ -2,7 +2,10 @@ package com.example.demo.utils;
 
 import java.time.*;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -10,6 +13,10 @@ import java.util.Objects;
  */
 public class LocalDateTimeUtils {
 
+    /**
+     * 默认时区偏移量：Asia/Shanghai
+     */
+    public static final String DEFAULT_OFFSET_ID = "+8";
     public static final String Y_M_D = "yyyy-MM-dd";
     public static final String H_M_S = "HH:mm:ss";
     public static final String H_M_S_S = "HH:mm:ss.SSS";
@@ -82,16 +89,43 @@ public class LocalDateTimeUtils {
      * @return 时间戳
      */
     public static Long localDateTime2Timestamp(LocalDateTime localDateTime) {
-        return localDateTime.atZone(ZoneOffset.systemDefault()).toInstant().toEpochMilli();
+        return localDateTime.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
     }
 
     /**
-     * 时间戳 转 {@link LocalDateTime}
+     * 毫秒时间戳 转 {@link LocalDateTime}
      * @param timestamp 时间戳
      * @return 本地日期时间
      */
     public static LocalDateTime timestamp2LocalDateTime(Long timestamp) {
-        return Instant.ofEpochMilli(timestamp).atZone(ZoneOffset.systemDefault()).toLocalDateTime();
+        return Instant.ofEpochMilli(timestamp).atZone(ZoneId.systemDefault()).toLocalDateTime();
+    }
+
+    /**
+     * {@link LocalDateTime} 转 毫秒时间戳
+     * @param localDateTime 本地日期时间
+     * @return 毫秒时间戳
+     */
+    public static Long LocalDateTime2timestamp(LocalDateTime localDateTime) {
+        return localDateTime.toInstant(ZoneOffset.of(DEFAULT_OFFSET_ID)).toEpochMilli();
+    }
+
+    /**
+     * 毫秒时间戳 转 {@link LocalDate}
+     * @param timestamp 时间戳
+     * @return 本地日期
+     */
+    public static LocalDate timestamp2LocalDate(Long timestamp) {
+        return Instant.ofEpochMilli(timestamp).atZone(ZoneId.systemDefault()).toLocalDate();
+    }
+
+    /**
+     * {@link LocalDate} 转 毫秒时间戳
+     * @param localDate 本地日期
+     * @return 毫秒时间戳
+     */
+    public static Long LocalDate2timestamp(LocalDate localDate) {
+        return LocalDateTime2timestamp(localDate.atStartOfDay());
     }
 
     /**
@@ -100,7 +134,16 @@ public class LocalDateTimeUtils {
      * @return 日期
      */
     public static Date localDateTime2Date(LocalDateTime localDateTime) {
-        return Date.from(localDateTime.atZone(ZoneOffset.systemDefault()).toInstant());
+        return Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
+    }
+
+    /**
+     * {@link LocalDate} 转 {@link Date}
+     * @param localDate 本地日期
+     * @return 日期
+     */
+    public static Date localDate2Date(LocalDate localDate) {
+        return Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
     }
 
     /**
@@ -109,7 +152,25 @@ public class LocalDateTimeUtils {
      * @return 本地日期时间
      */
     public static LocalDateTime date2LocalDateTime(Date date) {
-        return date.toInstant().atZone(ZoneOffset.systemDefault()).toLocalDateTime();
+        return date.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
+    }
+
+    /**
+     * {@link Date} 转 {@link LocalDate}
+     * @param date 日期
+     * @return 本地日期
+     */
+    public static LocalDate date2LocalDate(Date date) {
+        return date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+    }
+
+    /**
+     * {@link Date} 转 {@link LocalTime}
+     * @param date 日期
+     * @return 本地时间
+     */
+    public static LocalTime date2LocalTime(Date date) {
+        return date.toInstant().atZone(ZoneId.systemDefault()).toLocalTime();
     }
 
     /**
@@ -212,5 +273,28 @@ public class LocalDateTimeUtils {
         return LocalTime.parse(dateStr, formatter);
     }
 
+    /**
+     * 获取两个日期之间的日期天数
+     * @param start 开始日期
+     * @param end 结束日期
+     * @return 日期天数集合
+     */
+    public static List<String> getDaysBetween(LocalDate start, LocalDate end) {
+        long days = ChronoUnit.DAYS.between(start, end);
+        List<String> dayList = new ArrayList<>((int) days);
+        for (int i = 0; i <= days; i++) {
+            LocalDate localDate = start.plusDays(i);
+            dayList.add(localDate.format(DateTimeFormatter.ISO_DATE));
+        }
+        return dayList;
+    }
 
+    public static void main(String[] args) {
+        System.out.println(date2LocalDate(new Date()));
+        System.out.println(localDate2Date(LocalDate.now()));
+        LocalDateTime now = LocalDateTime.now();
+        System.out.println(LocalDateTime2timestamp(LocalDateTime.now()));
+        System.out.println(localDateTime2Date(now).getTime());
+        getDaysBetween(LocalDate.now(), LocalDate.now().plusDays(5)).forEach(System.out::println);
+    }
 }

@@ -8,7 +8,7 @@ import com.example.demo.model.pojo.User;
 import com.example.demo.utils.DateUtils;
 import com.example.demo.utils.FastjsonUtils;
 import com.example.demo.utils.SmartBeanUtils;
-import com.example.demo.utils.StringUtils;
+import com.example.demo.utils.SmartStringUtils;
 import org.apache.lucene.search.join.ScoreMode;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
@@ -348,7 +348,7 @@ public class EsTest {
             scrollId = scrollHits.getScrollId();
             while (scrollHits.hasSearchHits()) {
                 scrollTimes++;
-                System.out.println(StringUtils.format("第{}页，总数据条数：{}", scrollTimes, scrollHits.getTotalHits()));
+                System.out.println(SmartStringUtils.format("第{}页，总数据条数：{}", scrollTimes, scrollHits.getTotalHits()));
 
                 List<User> userList = scrollHits.getSearchHits().stream()
                         .map(SearchHit::getContent)
@@ -360,7 +360,7 @@ public class EsTest {
                 scrollId = scrollHits.getScrollId();
             }
         } finally {
-            if (StringUtils.nonNull(scrollId)) {
+            if (SmartStringUtils.nonNull(scrollId)) {
                 esRestTemplate.searchScrollClear(Collections.singletonList(scrollId));
             }
         }
@@ -404,8 +404,8 @@ public class EsTest {
         }
         ParsedMax max = aggregations.get("maxAge");
         ParsedMin min = aggregations.get("minAge");
-        System.out.println(StringUtils.format("最大年龄：{}", max.getValue()));
-        System.out.println(StringUtils.format("最小年龄：{}", min.getValue()));
+        System.out.println(SmartStringUtils.format("最大年龄：{}", max.getValue()));
+        System.out.println(SmartStringUtils.format("最小年龄：{}", min.getValue()));
     }
 
     /**
@@ -425,7 +425,7 @@ public class EsTest {
         }
         ParsedLongTerms genders = aggregations.get("genders");
         genders.getBuckets().stream()
-                .forEach(bucket -> System.out.println(StringUtils.format("{}：{}", bucket.getKeyAsString(), bucket.getDocCount())));
+                .forEach(bucket -> System.out.println(SmartStringUtils.format("{}：{}", bucket.getKeyAsString(), bucket.getDocCount())));
     }
 
     /**
@@ -448,7 +448,7 @@ public class EsTest {
         ParsedLongTerms genders = aggregations.get("genders");
         genders.getBuckets().forEach(bucket -> {
             ParsedMin min = bucket.getAggregations().get("minAge");
-            System.out.println(StringUtils.format("{}：{}", bucket.getKeyAsString(), min.getValue()));
+            System.out.println(SmartStringUtils.format("{}：{}", bucket.getKeyAsString(), min.getValue()));
         });
     }
 }

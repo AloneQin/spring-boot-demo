@@ -1,6 +1,7 @@
 package com.example.demo.controller;
 
 import com.example.demo.common.lisenser.event.MyEvent;
+import com.example.demo.common.mq.rabbit.RabbitProducer;
 import com.example.demo.common.retry.RetryTestService;
 import com.example.demo.common.retry.RetryTestService2;
 import com.example.demo.common.task.ControllableScheduleTask;
@@ -48,6 +49,8 @@ public class TestController {
     private final TestServiceFacade testServiceFacade;
 
     private final TestService testService;
+
+    private final RabbitProducer rabbitProducer;
 
     @GetMapping("/index")
     public String index() {
@@ -208,9 +211,7 @@ public class TestController {
                 // 关闭连接前发送固定消息，客户端若存活，接收此消息后可重复发起请求，以此避免长期保持长连接而浪费资源
                 sseEmitter.send("--SSE CLOSE--");
                 sseEmitter.complete();
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            } catch (InterruptedException e) {
+            } catch (Exception e) {
                 throw new RuntimeException(e);
             }
         }).start();
@@ -223,6 +224,12 @@ public class TestController {
     @GetMapping("/testStopWatch")
     public String testStopWatch() throws InterruptedException {
         testService.testStopWatch();
+        return "SUCCESS";
+    }
+
+    @GetMapping("/testRabbitSendMsg")
+    public String testRabbitSendMsg(String msg) {
+        rabbitProducer.send(msg);
         return "SUCCESS";
     }
 }

@@ -93,20 +93,20 @@ public class ExcelUtilsTest {
 
     @Test
     public void writeExcel1() {
-        String path = StringUtils.format("./target/{}", "test.xlsx");
+        String path = SmartStringUtils.format("./target/{}", "test.xlsx");
         ExcelUtils.writeExcel(path, null, "老师信息", Teacher.class, getTeachers());
     }
 
     @Test
     public void writeExcel2() {
-        String path = StringUtils.format("./target/{}", "test2.xlsx");
+        String path = SmartStringUtils.format("./target/{}", "test2.xlsx");
         // 宽度自适应
         ExcelUtils.writeExcel(path, null, "老师信息", Teacher.class, getTeachers(), new LongestMatchColumnWidthStyleStrategy());
     }
 
     @Test
     public void writeExcel3() {
-        String path = StringUtils.format("./target/{}", "test3.xlsx");
+        String path = SmartStringUtils.format("./target/{}", "test3.xlsx");
         ExcelUtils.writeExcel(path, null,"sheet", getHead(), getData());
     }
 
@@ -123,7 +123,7 @@ public class ExcelUtilsTest {
         HorizontalCellStyleStrategy horizontalCellStyleStrategy =
                 new HorizontalCellStyleStrategy(headWriteCellStyle, contentWriteCellStyle);
 
-        String path = StringUtils.format("./target/{}", "test4.xlsx");
+        String path = SmartStringUtils.format("./target/{}", "test4.xlsx");
         ExcelUtils.writeExcel(path, null, "sheet", getHead(), getData(), horizontalCellStyleStrategy);
     }
 
@@ -132,7 +132,7 @@ public class ExcelUtilsTest {
      */
     @Test
     public void writeExcel5() {
-        String path = StringUtils.format("./target/{}", "test5.xlsx");
+        String path = SmartStringUtils.format("./target/{}", "test5.xlsx");
         ExcelWriter excelWriter = EasyExcel.write(path).build();
         for (int i = 0; i < 5; i++) {
             WriteSheet writeSheet = EasyExcel.writerSheet(i,"sheet" + i).head(getHead()).build();

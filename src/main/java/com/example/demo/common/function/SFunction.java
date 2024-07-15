@@ -45,8 +45,6 @@ public interface SFunction<T, R> extends Serializable, Function<T, R> {
             return Introspector.decapitalize(implMethodName.replace(prefix, ""));
         } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
             throw new RuntimeException(e);
-        } catch (Exception e) {
-            throw e;
         }
     }
 }

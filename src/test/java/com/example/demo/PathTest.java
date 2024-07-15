@@ -2,6 +2,9 @@ package com.example.demo;
 
 import org.springframework.boot.system.ApplicationHome;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
+import org.springframework.util.ResourceUtils;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -40,6 +43,7 @@ public class PathTest {
          * 本地开发时能获取具体的文件，打成 jar 包后只能用流获取
          */
         ClassPathResource cpr = new ClassPathResource("templates" + File.separator + "天净沙·秋思.txt");
+
         // 打成 jar 包后获取文件具体路径会报错
         //System.out.println(cpr.getFile().getAbsoluteFile());
 
@@ -51,5 +55,15 @@ public class PathTest {
         }
         isr.close();
         br.close();
+
+        /**
+         * 使用 ResourceLoader 获取
+         * 必须先借助 spring bean 注入 resourceLoader
+         */
+        //ResourceLoader resourceLoader = null;
+        //Resource resource = resourceLoader.getResource("classpath:" + "xxx");
+
+        String path = ResourceUtils.getURL("classpath:aaa").getPath();
+        System.out.println(path);
     }
 }

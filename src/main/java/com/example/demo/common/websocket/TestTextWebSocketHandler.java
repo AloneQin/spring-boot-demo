@@ -1,7 +1,7 @@
 package com.example.demo.common.websocket;
 
 import com.example.demo.utils.FastjsonUtils;
-import com.example.demo.utils.StringUtils;
+import com.example.demo.utils.SmartStringUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.web.socket.TextMessage;
@@ -26,7 +26,7 @@ public class TestTextWebSocketHandler extends TextWebSocketHandler {
 
         for (int i = 0; i < 10; i++) {
             Thread.sleep(300L);
-            session.sendMessage(new TextMessage(StringUtils.format("Hello, WebSocket! no: {}, data: {}", i, FastjsonUtils.toString(requestParameterMap))));
+            session.sendMessage(new TextMessage(SmartStringUtils.format("Hello, WebSocket! no: {}, data: {}", i, FastjsonUtils.toString(requestParameterMap))));
         }
     }
 }

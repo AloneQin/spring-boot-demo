@@ -3,8 +3,7 @@ package com.example.demo.service;
 import com.example.demo.common.response.ReturnCodeEnum;
 import com.example.demo.common.trace.TraceManager;
 import com.example.demo.utils.AssertUtils;
-import com.example.demo.utils.RandomUtils;
-import com.example.demo.utils.StringUtils;
+import com.example.demo.utils.SmartStringUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StopWatch;
@@ -14,7 +13,7 @@ import org.springframework.util.StopWatch;
 public class TestService {
 
     public void checkName(String name) {
-        AssertUtils.isTrue(StringUtils.isBlank(name), ReturnCodeEnum.NAME_ILLEGAL,
+        AssertUtils.isTrue(SmartStringUtils.isBlank(name), ReturnCodeEnum.NAME_ILLEGAL,
                 () -> log.warn("the name illegal, name: {}", name)
         );
     }

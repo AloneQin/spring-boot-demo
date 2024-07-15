@@ -4,7 +4,10 @@ import com.example.demo.common.exception.BaseException;
 import com.example.demo.common.response.DefaultResponse;
 import com.example.demo.common.response.ReturnCodeEnum;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.util.CollectionUtils;
 
+import java.util.Collection;
 import java.util.Objects;
 import java.util.function.Supplier;
 
@@ -95,33 +98,33 @@ public class AssertUtils<E extends BaseException, T> {
     }
 
     /**
-     * 判断对象为<code>null</>，不是将抛出异常
+     * 判断对象为<code>null</code>，不是将抛出异常
      * @param object 待判断对象
      * @param e {@link BaseException}
      * @param <E> {@link BaseException}
      */
-    public static <E> void isNull(Object object, E e) {
+    public static <E extends BaseException> void isNull(Object object, E e) {
         if (Objects.nonNull(object)) {
-            doThrow((BaseException) e);
+            doThrow(e);
         }
     }
 
     /**
-     * 判断对象为<code>null</>，不是将抛出异常，并支持植入额外操作
+     * 判断对象为<code>null</code>，不是将抛出异常，并支持植入额外操作
      * @param object 待判断对象
      * @param e {@link BaseException}
      * @param runnable 需要植入的操作
      * @param <E> {@link BaseException}
      */
-    public static <E> void isNull(Object object, E e, Runnable runnable) {
+    public static <E extends BaseException> void isNull(Object object, E e, Runnable runnable) {
         if (Objects.nonNull(object)) {
             runnable.run();
-            doThrow((BaseException) e);
+            doThrow(e);
         }
     }
 
     /**
-     * 判断对象为<code>null</>，不是将抛出异常
+     * 判断对象为<code>null</code>，不是将抛出异常
      * @param object 待判断对象
      * @param defaultResponse {@link DefaultResponse<T>}
      */
@@ -132,7 +135,7 @@ public class AssertUtils<E extends BaseException, T> {
     }
 
     /**
-     * 判断对象为<code>null</>，不是将抛出异常，并支持植入额外操作
+     * 判断对象为<code>null</code>，不是将抛出异常，并支持植入额外操作
      * @param object 待判断对象
      * @param defaultResponse {@link DefaultResponse<T>}
      * @param runnable 需要植入的操作
@@ -145,7 +148,7 @@ public class AssertUtils<E extends BaseException, T> {
     }
 
     /**
-     * 判断对象为<code>null</>，不是将抛出异常
+     * 判断对象为<code>null</code>，不是将抛出异常
      * @param object 待判断对象
      * @param returnCodeEnum {@link ReturnCodeEnum}
      */
@@ -156,7 +159,7 @@ public class AssertUtils<E extends BaseException, T> {
     }
 
     /**
-     * 判断对象为<code>null</>，不是将抛出异常，并支持植入额外操作
+     * 判断对象为<code>null</code>，不是将抛出异常，并支持植入额外操作
      * @param object 待判断对象
      * @param returnCodeEnum {@link ReturnCodeEnum}
      * @param runnable 需要植入的操作
@@ -169,7 +172,7 @@ public class AssertUtils<E extends BaseException, T> {
     }
 
     /**
-     * 判断对象为<code>null</>，不是将抛出异常
+     * 判断对象为<code>null</code>，不是将抛出异常
      * @param object 待判断对象
      * @param code {@link DefaultResponse#getCode()}
      * @param message {@link DefaultResponse#getMessage()}
@@ -183,7 +186,7 @@ public class AssertUtils<E extends BaseException, T> {
     }
 
     /**
-     * 判断对象为<code>null</>，不是将抛出异常，并支持植入额外操作
+     * 判断对象为<code>null</code>，不是将抛出异常，并支持植入额外操作
      * @param object 待判断对象
      * @param code {@link DefaultResponse#getCode()}
      * @param message {@link DefaultResponse#getMessage()}
@@ -199,33 +202,33 @@ public class AssertUtils<E extends BaseException, T> {
     }
 
     /**
-     * 判断对象不为<code>null</>，是将抛出异常
+     * 判断对象不为<code>null</code>，是将抛出异常
      * @param object 待判断对象
      * @param e {@link BaseException}
      * @param <E> {@link BaseException}
      */
-    public static <E> void nonNull(Object object, E e) {
+    public static <E extends BaseException> void nonNull(Object object, E e) {
         if (Objects.isNull(object)) {
-            doThrow((BaseException) e);
+            doThrow(e);
         }
     }
 
     /**
-     * 判断对象不为<code>null</>，是将抛出异常，并支持植入额外操作
+     * 判断对象不为<code>null</code>，是将抛出异常，并支持植入额外操作
      * @param object 待判断对象
      * @param e {@link BaseException}
      * @param runnable 需要植入的操作
      * @param <E> {@link BaseException}
      */
-    public static <E> void nonNull(Object object, E e, Runnable runnable) {
+    public static <E extends BaseException> void nonNull(Object object, E e, Runnable runnable) {
         if (Objects.isNull(object)) {
             runnable.run();
-            doThrow((BaseException) e);
+            doThrow(e);
         }
     }
 
     /**
-     * 判断对象不为<code>null</>，是将抛出异常
+     * 判断对象不为<code>null</code>，是将抛出异常
      * @param object 待判断对象
      * @param defaultResponse {@link DefaultResponse<T>}
      */
@@ -236,7 +239,7 @@ public class AssertUtils<E extends BaseException, T> {
     }
 
     /**
-     * 判断对象不为<code>null</>，是将抛出异常，并支持植入额外操作
+     * 判断对象不为<code>null</code>，是将抛出异常，并支持植入额外操作
      * @param object 待判断对象
      * @param defaultResponse {@link DefaultResponse<T>}
      * @param runnable 需要植入的操作
@@ -249,7 +252,7 @@ public class AssertUtils<E extends BaseException, T> {
     }
 
     /**
-     * 判断对象不为<code>null</>，是将抛出异常
+     * 判断对象不为<code>null</code>，是将抛出异常
      * @param object 待判断对象
      * @param returnCodeEnum {@link ReturnCodeEnum}
      */
@@ -260,7 +263,7 @@ public class AssertUtils<E extends BaseException, T> {
     }
 
     /**
-     * 判断对象不为<code>null</>，是将抛出异常，并支持植入额外操作
+     * 判断对象不为<code>null</code>，是将抛出异常，并支持植入额外操作
      * @param object 待判断对象
      * @param returnCodeEnum {@link ReturnCodeEnum}
      * @param runnable 需要植入的操作
@@ -273,7 +276,7 @@ public class AssertUtils<E extends BaseException, T> {
     }
 
     /**
-     * 判断对象不为<code>null</>，是将抛出异常
+     * 判断对象不为<code>null</code>，是将抛出异常
      * @param object 待判断对象
      * @param code {@link DefaultResponse#getCode()}
      * @param message {@link DefaultResponse#getMessage()}
@@ -287,7 +290,7 @@ public class AssertUtils<E extends BaseException, T> {
     }
 
     /**
-     * 判断对象不为<code>null</>，是将抛出异常，并支持植入额外操作
+     * 判断对象不为<code>null</code>，是将抛出异常，并支持植入额外操作
      * @param object 待判断对象
      * @param code {@link DefaultResponse#getCode()}
      * @param message {@link DefaultResponse#getMessage()}
@@ -303,14 +306,390 @@ public class AssertUtils<E extends BaseException, T> {
     }
 
     /**
+     * 判断字符串为<code>null</code>或空串，不是将抛出异常
+     * @param str 待判断字符串
+     * @param e {@link BaseException}
+     * @param <E> {@link BaseException}
+     */
+    public static <E extends BaseException> void isEmpty(String str, E e) {
+        isTrue(StringUtils.isEmpty(str), e);
+    }
+
+    /**
+     * 判断字符串为<code>null</code>或空串，不是将抛出异常，并支持植入额外操作
+     * @param str 待判断字符串
+     * @param e {@link BaseException}
+     * @param runnable 需要植入的操作
+     * @param <E> {@link BaseException}
+     */
+    public static <E extends BaseException> void isEmpty(String str, E e, Runnable runnable) {
+        isTrue(StringUtils.isEmpty(str), e, runnable);
+    }
+
+    /**
+     * 判断字符串为<code>null</code>或空串，不是将抛出异常
+     * @param str 待判断字符串
+     * @param defaultResponse {@link DefaultResponse<T>}
+     */
+    public static <T> void isEmpty(String str, DefaultResponse<T> defaultResponse) {
+        isTrue(StringUtils.isEmpty(str), defaultResponse);
+    }
+
+    /**
+     * 判断字符串为<code>null</code>或空串，不是将抛出异常，并支持植入额外操作
+     * @param str 待判断字符串
+     * @param defaultResponse {@link DefaultResponse<T>}
+     * @param runnable 需要植入的操作
+     */
+    public static <T> void isEmpty(String str, DefaultResponse<T> defaultResponse, Runnable runnable) {
+        isTrue(StringUtils.isEmpty(str), defaultResponse, runnable);
+    }
+
+    /**
+     * 判断字符串为<code>null</code>或空串，不是将抛出异常
+     * @param str 待判断字符串
+     * @param returnCodeEnum {@link ReturnCodeEnum}
+     */
+    public static void isEmpty(String str, ReturnCodeEnum returnCodeEnum) {
+        isTrue(StringUtils.isEmpty(str), returnCodeEnum);
+    }
+
+    /**
+     * 判断字符串为<code>null</code>或空串，不是将抛出异常，并支持植入额外操作
+     * @param str 待判断字符串
+     * @param returnCodeEnum {@link ReturnCodeEnum}
+     * @param runnable 需要植入的操作
+     */
+    public static void isEmpty(String str, ReturnCodeEnum returnCodeEnum, Runnable runnable) {
+        isTrue(StringUtils.isEmpty(str), returnCodeEnum, runnable);
+    }
+
+    /**
+     * 判断字符串为<code>null</code>或空串，不是将抛出异常
+     * @param str 待判断字符串
+     * @param code {@link DefaultResponse#getCode()}
+     * @param message {@link DefaultResponse#getMessage()}
+     * @param content {@link DefaultResponse#getContent()}
+     * @param <T> {@link DefaultResponse#getContent()#getClass()}
+     */
+    public static <T> void isEmpty(String str, String code, String message, T content) {
+        isTrue(StringUtils.isEmpty(str), code, message, content);
+    }
+
+    /**
+     * 判断字符串为<code>null</code>或空串，不是将抛出异常，并支持植入额外操作
+     * @param str 待判断字符串
+     * @param code {@link DefaultResponse#getCode()}
+     * @param message {@link DefaultResponse#getMessage()}
+     * @param content {@link DefaultResponse#getContent()}
+     * @param runnable 需要植入的操作
+     * @param <T> {@link DefaultResponse#getContent()#getClass()}
+     */
+    public static <T> void isEmpty(String str, String code, String message, T content, Runnable runnable) {
+        isTrue(StringUtils.isEmpty(str), code, message, content, runnable);
+    }
+
+    /**
+     * 判断字符串不为<code>null</code>或空串，是将抛出异常
+     * @param str 待判断字符串
+     * @param e {@link BaseException}
+     * @param <E> {@link BaseException}
+     */
+    public static <E extends BaseException> void nonEmpty(String str, E e) {
+        if (StringUtils.isEmpty(str)) {
+            doThrow(e);
+        }
+    }
+
+    /**
+     * 判断字符串不为<code>null</code>或空串，是将抛出异常，并支持植入额外操作
+     * @param str 待判断字符串
+     * @param e {@link BaseException}
+     * @param runnable 需要植入的操作
+     * @param <E> {@link BaseException}
+     */
+    public static <E extends BaseException> void nonEmpty(String str, E e, Runnable runnable) {
+        if (StringUtils.isEmpty(str)) {
+            runnable.run();
+            doThrow(e);
+        }
+    }
+
+    /**
+     * 判断字符串不为<code>null</code>或空串，是将抛出异常
+     * @param str 待判断字符串
+     * @param defaultResponse {@link DefaultResponse<T>}
+     */
+    public static <T> void nonEmpty(String str, DefaultResponse<T> defaultResponse) {
+        if (StringUtils.isEmpty(str)) {
+            doThrow(defaultResponse);
+        }
+    }
+
+    /**
+     * 判断字符串不为<code>null</code>或空串，是将抛出异常，并支持植入额外操作
+     * @param str 待判断字符串
+     * @param defaultResponse {@link DefaultResponse<T>}
+     * @param runnable 需要植入的操作
+     */
+    public static <T> void nonEmpty(String str, DefaultResponse<T> defaultResponse, Runnable runnable) {
+        if (StringUtils.isEmpty(str)) {
+            runnable.run();
+            doThrow(defaultResponse);
+        }
+    }
+
+    /**
+     * 判断字符串不为<code>null</code>或空串，是将抛出异常
+     * @param str 待判断字符串
+     * @param returnCodeEnum {@link ReturnCodeEnum}
+     */
+    public static void nonEmpty(String str, ReturnCodeEnum returnCodeEnum) {
+        if (StringUtils.isEmpty(str)) {
+            doThrow(returnCodeEnum);
+        }
+    }
+
+    /**
+     * 判断字符串不为<code>null</code>或空串，是将抛出异常，并支持植入额外操作
+     * @param str 待判断字符串
+     * @param returnCodeEnum {@link ReturnCodeEnum}
+     * @param runnable 需要植入的操作
+     */
+    public static void nonEmpty(String str, ReturnCodeEnum returnCodeEnum, Runnable runnable) {
+        if (StringUtils.isEmpty(str)) {
+            runnable.run();
+            doThrow(returnCodeEnum);
+        }
+    }
+
+    /**
+     * 判断字符串不为<code>null</code>或空串，是将抛出异常
+     * @param str 待判断字符串
+     * @param code {@link DefaultResponse#getCode()}
+     * @param message {@link DefaultResponse#getMessage()}
+     * @param content {@link DefaultResponse#getContent()}
+     * @param <T> {@link DefaultResponse#getContent()#getClass()}
+     */
+    public static <T> void nonEmpty(String str, String code, String message, T content) {
+        if (StringUtils.isEmpty(str)) {
+            doThrow(code, message, content);
+        }
+    }
+
+    /**
+     * 判断字符串不为<code>null</code>或空串，是将抛出异常，并支持植入额外操作
+     * @param str 待判断字符串
+     * @param code {@link DefaultResponse#getCode()}
+     * @param message {@link DefaultResponse#getMessage()}
+     * @param content {@link DefaultResponse#getContent()}
+     * @param runnable 需要植入的操作
+     * @param <T> {@link DefaultResponse#getContent()#getClass()}
+     */
+    public static <T> void nonEmpty(String str, String code, String message, T content, Runnable runnable) {
+        if (StringUtils.isEmpty(str)) {
+            runnable.run();
+            doThrow(code, message, content);
+        }
+    }
+
+    /**
+     * 判断集合为空，不是将抛出异常
+     * @param collection 待判断集合
+     * @param e {@link BaseException}
+     * @param <E> {@link BaseException}
+     */
+    public static <E extends BaseException> void isEmpty(Collection<?> collection, E e) {
+        isTrue(CollectionUtils.isEmpty(collection), e);
+    }
+
+    /**
+     * 判断集合为空，不是将抛出异常
+     * @param collection 待判断集合
+     * @param e {@link BaseException}
+     * @param runnable 需要植入的操作
+     * @param <E> {@link BaseException}
+     */
+    public static <E extends BaseException> void isEmpty(Collection<?> collection, E e, Runnable runnable) {
+        isTrue(CollectionUtils.isEmpty(collection), e, runnable);
+    }
+
+    /**
+     * 判断集合为空，不是将抛出异常
+     * @param collection 待判断集合
+     * @param defaultResponse {@link DefaultResponse<T>}
+     */
+    public static <T> void isEmpty(Collection<?> collection, DefaultResponse<T> defaultResponse) {
+        isTrue(CollectionUtils.isEmpty(collection), defaultResponse);
+    }
+
+    /**
+     * 判断集合为空，不是将抛出异常
+     * @param collection 待判断集合
+     * @param defaultResponse {@link DefaultResponse<T>}
+     * @param runnable 需要植入的操作
+     */
+    public static <T> void isEmpty(Collection<?> collection, DefaultResponse<T> defaultResponse, Runnable runnable) {
+        isTrue(CollectionUtils.isEmpty(collection), defaultResponse, runnable);
+    }
+
+    /**
+     * 判断集合为空，不是将抛出异常
+     * @param collection 待判断集合
+     * @param returnCodeEnum {@link ReturnCodeEnum}
+     */
+    public static void isEmpty(Collection<?> collection, ReturnCodeEnum returnCodeEnum) {
+        isTrue(CollectionUtils.isEmpty(collection), returnCodeEnum);
+    }
+
+    /**
+     * 判断集合为空，不是将抛出异常
+     * @param collection 待判断集合
+     * @param returnCodeEnum {@link ReturnCodeEnum}
+     * @param runnable 需要植入的操作
+     */
+    public static void isEmpty(Collection<?> collection, ReturnCodeEnum returnCodeEnum, Runnable runnable) {
+        isTrue(CollectionUtils.isEmpty(collection), returnCodeEnum, runnable);
+    }
+
+    /**
+     * 判断集合为空，不是将抛出异常
+     * @param collection 待判断集合
+     * @param code {@link DefaultResponse#getCode()}
+     * @param message {@link DefaultResponse#getMessage()}
+     * @param content {@link DefaultResponse#getContent()}
+     * @param <T> {@link DefaultResponse#getContent()#getClass()}
+     */
+    public static <T> void isEmpty(Collection<?> collection, String code, String message, T content) {
+        isTrue(CollectionUtils.isEmpty(collection), code, message, content);
+    }
+
+    /**
+     * 判断集合为空，不是将抛出异常
+     * @param collection 待判断集合
+     * @param code {@link DefaultResponse#getCode()}
+     * @param message {@link DefaultResponse#getMessage()}
+     * @param content {@link DefaultResponse#getContent()}
+     * @param runnable 需要植入的操作
+     * @param <T> {@link DefaultResponse#getContent()#getClass()}
+     */
+    public static <T> void isEmpty(Collection<?> collection, String code, String message, T content, Runnable runnable) {
+        isTrue(CollectionUtils.isEmpty(collection), code, message, content, runnable);
+    }
+
+    /**
+     * 判断集合不为空，是将抛出异常
+     * @param collection 待判断集合
+     * @param e {@link BaseException}
+     * @param <E> {@link BaseException}
+     */
+    public static <E extends BaseException> void nonEmpty(Collection<?> collection, E e) {
+        if (CollectionUtils.isEmpty(collection)) {
+            doThrow(e);
+        }
+    }
+
+    /**
+     * 判断集合不为空，是将抛出异常
+     * @param collection 待判断集合
+     * @param e {@link BaseException}
+     * @param runnable 需要植入的操作
+     * @param <E> {@link BaseException}
+     */
+    public static <E extends BaseException> void nonEmpty(Collection<?> collection, E e, Runnable runnable) {
+        if (CollectionUtils.isEmpty(collection)) {
+            runnable.run();
+            doThrow(e);
+        }
+    }
+
+    /**
+     * 判断集合不为空，是将抛出异常
+     * @param collection 待判断集合
+     * @param defaultResponse {@link DefaultResponse<T>}
+     */
+    public static <T> void nonEmpty(Collection<?> collection, DefaultResponse<T> defaultResponse) {
+        if (CollectionUtils.isEmpty(collection)) {
+            doThrow(defaultResponse);
+        }
+    }
+
+    /**
+     * 判断集合不为空，是将抛出异常
+     * @param collection 待判断集合
+     * @param defaultResponse {@link DefaultResponse<T>}
+     * @param runnable 需要植入的操作
+     */
+    public static <T> void nonEmpty(Collection<?> collection, DefaultResponse<T> defaultResponse, Runnable runnable) {
+        if (CollectionUtils.isEmpty(collection)) {
+            runnable.run();
+            doThrow(defaultResponse);
+        }
+    }
+
+    /**
+     * 判断集合不为空，是将抛出异常
+     * @param collection 待判断集合
+     * @param returnCodeEnum {@link ReturnCodeEnum}
+     */
+    public static void nonEmpty(Collection<?> collection, ReturnCodeEnum returnCodeEnum) {
+        if (CollectionUtils.isEmpty(collection)) {
+            doThrow(returnCodeEnum);
+        }
+    }
+
+    /**
+     * 判断集合不为空，是将抛出异常
+     * @param collection 待判断集合
+     * @param returnCodeEnum {@link ReturnCodeEnum}
+     * @param runnable 需要植入的操作
+     */
+    public static void nonEmpty(Collection<?> collection, ReturnCodeEnum returnCodeEnum, Runnable runnable) {
+        if (CollectionUtils.isEmpty(collection)) {
+            runnable.run();
+            doThrow(returnCodeEnum);
+        }
+    }
+
+    /**
+     * 判断集合不为空，是将抛出异常
+     * @param collection 待判断集合
+     * @param code {@link DefaultResponse#getCode()}
+     * @param message {@link DefaultResponse#getMessage()}
+     * @param content {@link DefaultResponse#getContent()}
+     * @param <T> {@link DefaultResponse#getContent()#getClass()}
+     */
+    public static <T> void nonEmpty(Collection<?> collection, String code, String message, T content) {
+        if (CollectionUtils.isEmpty(collection)) {
+            doThrow(code, message, content);
+        }
+    }
+
+    /**
+     * 判断集合不为空，是将抛出异常
+     * @param collection 待判断集合
+     * @param code {@link DefaultResponse#getCode()}
+     * @param message {@link DefaultResponse#getMessage()}
+     * @param content {@link DefaultResponse#getContent()}
+     * @param runnable 需要植入的操作
+     * @param <T> {@link DefaultResponse#getContent()#getClass()}
+     */
+    public static <T> void nonEmpty(Collection<?> collection, String code, String message, T content, Runnable runnable) {
+        if (CollectionUtils.isEmpty(collection)) {
+            runnable.run();
+            doThrow(code, message, content);
+        }
+    }
+
+    /**
      * 判断布尔表达式为<code>true</code>，不是将抛出异常
      * @param expression 待判断表达式
      * @param e {@link BaseException}
      * @param <E> {@link BaseException}
      */
-    public static <E> void isTrue(boolean expression, E e) {
+    public static <E extends BaseException> void isTrue(boolean expression, E e) {
         if (!expression) {
-            doThrow((BaseException) e);
+            doThrow(e);
         }
     }
 
@@ -321,10 +700,10 @@ public class AssertUtils<E extends BaseException, T> {
      * @param runnable 需要植入的操作
      * @param <E> {@link BaseException}
      */
-    public static <E> void isTrue(boolean expression, E e, Runnable runnable) {
+    public static <E extends BaseException> void isTrue(boolean expression, E e, Runnable runnable) {
         if (!expression) {
             runnable.run();
-            doThrow((BaseException) e);
+            doThrow(e);
         }
     }
 
@@ -397,7 +776,7 @@ public class AssertUtils<E extends BaseException, T> {
      * @param message {@link DefaultResponse#getMessage()}
      * @param content {@link DefaultResponse#getContent()}
      * @param runnable 需要植入的操作
-     * @param <T> @param <T> {@link DefaultResponse#getContent()#getClass()}
+     * @param <T> {@link DefaultResponse#getContent()#getClass()}
      */
     public static <T> void isTrue(boolean expression, String code, String message, T content, Runnable runnable) {
         if (!expression) {
@@ -412,9 +791,9 @@ public class AssertUtils<E extends BaseException, T> {
      * @param e {@link BaseException}
      * @param <E> {@link BaseException}
      */
-    public static <E> void isFalse(boolean expression, E e) {
+    public static <E extends BaseException> void isFalse(boolean expression, E e) {
         if (expression) {
-            doThrow((BaseException) e);
+            doThrow(e);
         }
     }
 
@@ -425,10 +804,10 @@ public class AssertUtils<E extends BaseException, T> {
      * @param runnable 需要植入的操作
      * @param <E> {@link BaseException}
      */
-    public static <E> void isFalse(boolean expression, E e, Runnable runnable) {
+    public static <E extends BaseException> void isFalse(boolean expression, E e, Runnable runnable) {
         if (expression) {
             runnable.run();
-            doThrow((BaseException) e);
+            doThrow(e);
         }
     }
 
@@ -501,7 +880,7 @@ public class AssertUtils<E extends BaseException, T> {
      * @param message {@link DefaultResponse#getMessage()}
      * @param content {@link DefaultResponse#getContent()}
      * @param runnable 需要植入的操作
-     * @param <T> @param <T> {@link DefaultResponse#getContent()#getClass()}
+     * @param <T> {@link DefaultResponse#getContent()#getClass()}
      */
     public static <T> void isFalse(boolean expression, String code, String message, T content, Runnable runnable) {
         if (expression) {
@@ -516,9 +895,9 @@ public class AssertUtils<E extends BaseException, T> {
      * @param e {@link BaseException}
      * @param <E> {@link BaseException}
      */
-    public static <E> void state(Supplier<Boolean> expressionSupplier, E e) {
+    public static <E extends BaseException> void state(Supplier<Boolean> expressionSupplier, E e) {
         if (!expressionSupplier.get()) {
-            doThrow((BaseException) e);
+            doThrow(e);
         }
     }
 
@@ -529,10 +908,10 @@ public class AssertUtils<E extends BaseException, T> {
      * @param runnable 需要植入的操作
      * @param <E> {@link BaseException}
      */
-    public static <E> void state(Supplier<Boolean> expressionSupplier, E e, Runnable runnable) {
+    public static <E extends BaseException> void state(Supplier<Boolean> expressionSupplier, E e, Runnable runnable) {
         if (!expressionSupplier.get()) {
             runnable.run();
-            doThrow((BaseException) e);
+            doThrow(e);
         }
     }
 

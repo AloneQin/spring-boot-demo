@@ -16,7 +16,7 @@ public class BaseException extends RuntimeException {
         super(message);
     }
 
-    public BaseException(DefaultResponse<?> defaultResponse) {
+    public <T> BaseException(DefaultResponse<T> defaultResponse) {
         this(defaultResponse.detailMessage());
         this.defaultResponse = defaultResponse;
     }
@@ -29,7 +29,7 @@ public class BaseException extends RuntimeException {
         this(returnCodeEnum.code, returnCodeEnum.message + ": " + message, null);
     }
 
-    public BaseException(String code, String message, Object content) {
+    public <T> BaseException(String code, String message, T content) {
         this(DefaultResponse.fail(code, message, content));
     }
 }

@@ -4,7 +4,7 @@ import com.example.demo.common.exception.BaseException;
 import com.example.demo.common.response.ReturnCodeEnum;
 import com.example.demo.common.websocket.WebSocketReqMappingInfo;
 import com.example.demo.common.websocket.WebSocketRequestMapping;
-import com.example.demo.utils.StringUtils;
+import com.example.demo.utils.SmartStringUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.context.event.ApplicationStartedEvent;
 import org.springframework.context.ApplicationEvent;
@@ -66,7 +66,7 @@ public class ApplicationEventListener implements ApplicationListener<Application
                                 log.error("#annotation @WebSocketRequestMapping duplicate paths: [{}], please check the code.", path);
                                 log.error("#path-1: class: {}, method: {}()", webSocketReqMappingInfoMap.get(path).getClazz().getName(), webSocketReqMappingInfoMap.get(path).getMethod().getName());
                                 log.error("#path-2: class: {}, method: {}()", clazz.getName(), method.getName());
-                                throw new BaseException(ReturnCodeEnum.SERVER_ERROR, StringUtils.format("web socket url [{}] duplicate paths", path));
+                                throw new BaseException(ReturnCodeEnum.SERVER_ERROR, SmartStringUtils.format("web socket url [{}] duplicate paths", path));
                             }
                             webSocketReqMappingInfoMap.put(path, new WebSocketReqMappingInfo(clazz, method, classValue + methodValue, bean));
                             log.info("#annotation scan @WebSocketRequestMapping, path: [{}], class: {}, method: {}()", path, clazz.getName(), method.getName());
@@ -110,7 +110,7 @@ public class ApplicationEventListener implements ApplicationListener<Application
                                 log.error("#annotation @WebSocketRequestMapping duplicate paths: [{}], please check the code.", path);
                                 log.error("#path-1: class: {}, method: {}()", webSocketReqMappingInfoMap.get(path).getClazz().getName(), webSocketReqMappingInfoMap.get(path).getMethod().getName());
                                 log.error("#path-2: class: {}, method: {}()", clazz.getName(), method.getName());
-                                throw new BaseException(ReturnCodeEnum.SERVER_ERROR, StringUtils.format("web socket url [{}] duplicate paths", path));
+                                throw new BaseException(ReturnCodeEnum.SERVER_ERROR, SmartStringUtils.format("web socket url [{}] duplicate paths", path));
                             }
                             webSocketReqMappingInfoMap.put(path, new WebSocketReqMappingInfo(clazz, method, classValue + methodValue, entry.getValue()));
                             log.info("#annotation scan @WebSocketRequestMapping, path: [{}], class: {}, method: {}()", path, clazz.getName(), method.getName());

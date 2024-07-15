@@ -203,3 +203,17 @@ spring-boot-demo
 3. 执行`deploy.sh`脚本。
 
 **TODO: 后续考虑借助`docker`完成项目发布**
+
+## 其他
+字符图案生成网站：http://patorjk.com/
+
+* Alpha(自动大写、立体、大)
+* Isometric1（自动大写、立体、中）
+* Isometric3（自动大写、立体、中）
+* Isometric4（自动大写、立体、中）
+* BlurVision ASCII（自动大写、层次感、中）
+* ANSI Regular（自动大写、清晰、小）
+* Doom（清晰、小）
+* Ogre（清晰、小）
+* Standard（清晰、小）
+* Slant（清晰、斜体、小）

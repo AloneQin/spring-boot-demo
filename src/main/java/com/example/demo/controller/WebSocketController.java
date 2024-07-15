@@ -1,7 +1,7 @@
 package com.example.demo.controller;
 
 import com.example.demo.common.websocket.WebSocketRequestMapping;
-import com.example.demo.utils.StringUtils;
+import com.example.demo.utils.SmartStringUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.socket.TextMessage;
@@ -17,7 +17,7 @@ public class WebSocketController {
         log.info("接收到消息：{}", textMessage.getPayload());
         for (int i = 0; i < 10; i++) {
             Thread.sleep(300L);
-            webSocketSession.sendMessage(new TextMessage(StringUtils.format("Hello, WebSocket! no: {}, data: {}", i, textMessage.getPayload())));
+            webSocketSession.sendMessage(new TextMessage(SmartStringUtils.format("Hello, WebSocket! no: {}, data: {}", i, textMessage.getPayload())));
         }
     }
 

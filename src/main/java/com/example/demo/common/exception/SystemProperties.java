@@ -9,12 +9,11 @@ import org.springframework.stereotype.Component;
  */
 @Data
 @Component
-@ConfigurationProperties(prefix = "system")
+@ConfigurationProperties("system")
 public class SystemProperties {
 
     /**
      * 是否开启调试模式
-     *
      * {@code true}=发生异常时，返回具体的异常堆栈信息以帮助调试
      * {@code false}=不返回
      */

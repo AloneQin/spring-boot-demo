@@ -1,8 +1,9 @@
 package com.example.demo.utils;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
+import lombok.Cleanup;
+import org.apache.commons.codec.digest.DigestUtils;
+
+import java.io.*;
 import java.security.MessageDigest;
 
 /**
@@ -25,15 +26,12 @@ public class MD5Utils {
 		MessageDigest mdTemp = MessageDigest.getInstance("MD5");
 		mdTemp.update(strTemp);
 		byte[] md = mdTemp.digest();
-		int j = md.length;
-		char str[] = new char[j * 2];
+		char str[] = new char[md.length * 2];
 		int k = 0;
-		for (int i = 0; i < j; i++) {
-			byte byte0 = md[i];
-			str[k++] = hexDigits[byte0 >>> 4 & 0xf];
-			str[k++] = hexDigits[byte0 & 0xf];
-		}
-		
+        for (byte b : md) {
+            str[k++] = hexDigits[b >>> 4 & 0xf];
+            str[k++] = hexDigits[b & 0xf];
+        }
 		return new String(str);
 	}
 
@@ -43,26 +41,37 @@ public class MD5Utils {
 	 * @return md5
 	 * @throws Exception 异常
 	 */
-	public static String md5(File file) throws Exception {
-		String md5;
-		FileInputStream fis = null;
-		try {
-			fis = new FileInputStream(file);
-			MessageDigest md = MessageDigest.getInstance("MD5");
-			byte[] buffer = new byte[1024];
-			int length;
-			while ((length = fis.read(buffer, 0, 1024)) != -1) {
-				md.update(buffer, 0, length);
-			}
-
-			md5 = bufferToHex(md.digest());
-		} finally {
-			if (fis != null) {
-				fis.close();
-			}
+	public static String md5OfFile(File file) throws Exception {
+		@Cleanup FileInputStream fis = new FileInputStream(file);
+		MessageDigest md = MessageDigest.getInstance("MD5");
+		byte[] buffer = new byte[1024];
+		int length;
+		while ((length = fis.read(buffer, 0, 1024)) != -1) {
+			md.update(buffer, 0, length);
 		}
-		
-		return md5;
+		return bufferToHex(md.digest());
+	}
+
+	/**
+	 * 获取文件的 md5 值
+	 * @param path 文件路径
+	 * @return md5
+	 */
+	public static String md5OfFile(String path) {
+        try {
+            return DigestUtils.md5Hex(new FileInputStream(path));
+        } catch (IOException e) {
+            throw new RuntimeException("get file md5 error", e);
+        }
+    }
+
+
+	public static String md5OfInputStream(InputStream inputStream) {
+		try {
+			return DigestUtils.md5Hex(inputStream);
+		} catch (IOException e) {
+			throw new RuntimeException("get file md5 error", e);
+		}
 	}
 	
 	/**
@@ -79,6 +88,7 @@ public class MD5Utils {
 
 	public static void main(String[] args) throws Exception {
 		System.out.println(md5("hello, jay"));
-		System.out.println(md5(new File("/Users/alone/work/test/1.png")));
+		// 3f3b8b4daa2017adb92d7993a7adc320
+		System.out.println(md5OfFile(new File("D:/work/dev/test/test2-1.pptx")));
 	}
 }
