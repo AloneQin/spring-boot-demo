@@ -4,11 +4,16 @@ import lombok.Data;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.Range;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 @Data
 public class PeopleVO {
+
+    @NotNull(message = "ID不能为空")
+    private Integer id;
 
     @NotNull(message = "姓名不能为空", groups = Group1.class)
     @Length(min = 1, max = 10, message = "名称长度必须在1-10之间", groups = Group1.class)
@@ -20,6 +25,12 @@ public class PeopleVO {
 
     @NotBlank(message = "地址不能为空", groups = {Group1.class, Group2.class})
     private String address;
+
+    @Valid
+    private WorkVO work;
+
+    @Valid
+    private List<ChildVO> children;
 
     public interface Group1 {
 

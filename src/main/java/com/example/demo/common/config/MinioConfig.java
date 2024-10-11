@@ -24,6 +24,4 @@ public class MinioConfig {
                 .build();
     }
 
-
-
 }

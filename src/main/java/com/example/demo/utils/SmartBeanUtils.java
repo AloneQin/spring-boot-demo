@@ -2,7 +2,6 @@ package com.example.demo.utils;
 
 import com.alibaba.fastjson.TypeReference;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.example.demo.common.function.SFunction;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.util.CollectionUtils;
@@ -68,7 +67,7 @@ public class SmartBeanUtils {
         if (Objects.isNull(sourcePage) || Objects.isNull(targetSupplier)) {
             return null;
         }
-        return copyProperties(sourcePage, Page<T>::new)
+        return Objects.requireNonNull(copyProperties(sourcePage, Page<T>::new))
                 .setRecords(copyPropertiesList(sourcePage.getRecords(), targetSupplier));
     }
 
@@ -108,20 +107,8 @@ public class SmartBeanUtils {
                     field.set(target, newValue);
                 }
             } catch (IllegalAccessException e) {
-                log.error("copyValueNonNull catch", e);
+                log.error("#copyValueNonNull, catch exception", e);
             }
         });
     }
-
-    /**
-     * 根据对象字段获取字段名称
-     * @param sFunction 可序列化的函数式接口
-     * @return 字段名称
-     * @param <R> 对象类型
-     * @param <T> 字段类型
-     */
-    public static <R, T> String getFieldName(SFunction<R, T> sFunction) {
-        return SFunction.getFieldName(sFunction);
-    }
-
 }

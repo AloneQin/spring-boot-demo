@@ -21,6 +21,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.URL;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
@@ -36,7 +38,6 @@ import java.util.Map;
 public class MyRestController {
 
     private final MinioManager minioManager;
-    
 
     /**
      * 形参（根据参数名称）获取参数，最常用的参数获取方式
@@ -77,6 +78,17 @@ public class MyRestController {
     }
 
     /**
+     * 请求地址拼接参数和表单格式，可以传对象，仅限非常简单的参数，特殊符号均需要转码，不支持复杂对象
+     * 建议用转义后的JSON字符串
+     * @param demoVO 对象
+     */
+    @GetMapping("/getPara5")
+    public DemoVO getPara5(DemoVO demoVO, String json) {
+        log.info("getPara5, json: {}", URLDecoder.decode(json, StandardCharsets.UTF_8));
+        return demoVO;
+    }
+
+    /**
      * @RequestHeader 获取请求头中的参数
      */
     @GetMapping("/getHeader")
@@ -94,21 +106,9 @@ public class MyRestController {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-
         log.info("file name: {}", file.getOriginalFilename());
         log.info("file size: {}", file.getSize());
-
-        Path path = Paths.get(savePath + file.getOriginalFilename());
-
-//        try {
-//            // 文件拷贝
-//            file.transferTo(path);
-//            return "SUCCESS";
-//        } catch (IOException e) {
-//            log.error("文件上传失败: ", e);
-//            return "FAIL";
-//        }
-        return "--";
+        return "SUCCESS";
     }
 
     /**

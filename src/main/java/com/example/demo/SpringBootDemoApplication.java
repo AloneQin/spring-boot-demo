@@ -5,6 +5,7 @@ import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.core.env.Environment;
 import org.springframework.retry.annotation.EnableRetry;
 import org.springframework.scheduling.annotation.EnableAsync;
@@ -19,18 +20,19 @@ import java.util.Optional;
 @EnableWebSocket
 @EnableScheduling
 @SpringBootApplication
+@EnableAspectJAutoProxy(exposeProxy = true)
 @MapperScan({"com.example.demo.dao.mysql.mapper"})
 public class SpringBootDemoApplication {
 
     public static void main(String[] args) {
         ConfigurableApplicationContext context = SpringApplication.run(SpringBootDemoApplication.class, args);
-        goodLuck(context, args);
+        goodLuck(context);
     }
 
-    public static void goodLuck(ConfigurableApplicationContext context, String[] args) {
+    public static void goodLuck(ConfigurableApplicationContext context) {
         Environment env = context.getEnvironment();
         String applicationName = env.getProperty("spring.application.name");
-        String contextPath = env.getProperty("server.servlet.context-path");
+        String contextPath = Optional.ofNullable(env.getProperty("server.servlet.context-path")).orElse("");
         String port = env.getProperty("server.port");
         log.info("\n=======================================================================\n" +
                 "                                                                          \n" +
@@ -42,8 +44,10 @@ public class SpringBootDemoApplication {
                 "                                                                          \n" +
                 "                 The moonlight is so beautiful tonight.                   \n" +
                 "                                                                          \n" +
-                "Application [{}] is ready: http://localhost:{}{}/"                            +
-                "\n=======================================================================\n",
-                applicationName, port, Optional.ofNullable(contextPath).orElse(""));
+                "Application [{}] is ready, welcome to visit.                              \n" +
+                "URL    : http://localhost:{}{}/                                           \n" +
+                "swagger: http://localhost:{}{}/swagger-ui/index.html                      \n" +
+                "=======================================================================\n",
+                applicationName, port, contextPath, port, contextPath);
     }
 }

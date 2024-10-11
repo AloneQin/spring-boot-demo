@@ -2,10 +2,12 @@ package com.example.demo.dao.mysql.wrapper;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.example.demo.model.dto.PhonePriceStatDTO;
 import com.example.demo.model.po.PhonePO;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -29,4 +31,13 @@ public interface PhoneDAO extends IService<PhonePO> {
 
     Integer findCount();
 
+    List<PhonePO> findByCountry(String country);
+
+    List<PhonePO> findByNested();
+
+    List<Map<String, Object>> findChinaProductOfMonth();
+
+    List<PhonePriceStatDTO> countPriceRangeNum();
+
+    List<PhonePriceStatDTO> countPriceRange();
 }

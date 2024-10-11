@@ -37,10 +37,10 @@ class SmartCollectionUtilsTest {
         };
 
 
-        // 数组转集合
+        // 集合转数组
         String[] array = list2.toArray(new String[]{});
 
-        // 集合转数组
+        // 数组转集合
         List<String> list6 = Arrays.stream(array).collect(Collectors.toList());
 
         // 集合转 Map

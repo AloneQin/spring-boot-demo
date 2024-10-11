@@ -4,6 +4,9 @@ import com.alibaba.fastjson.JSON;
 import com.example.demo.common.response.DefaultResponse;
 import com.example.demo.common.response.ReturnCodeEnum;
 import com.example.demo.utils.Base64Utils;
+import com.example.demo.utils.FastjsonUtils;
+import com.example.demo.utils.SmartBeanUtils;
+import com.example.demo.utils.SmartStringUtils;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.validator.internal.engine.path.PathImpl;
@@ -92,7 +95,7 @@ public class GlobalErrorController implements ErrorController {
     @RequestMapping
     public Object error(HttpServletRequest request, HttpServletResponse response) {
         // 封装返回结构
-        DefaultResponse defaultResponse;
+        DefaultResponse<?> defaultResponse;
         boolean expectedFlag = true;
         ErrorAttributeInfo errorAttributeInfo = getErrorAttributes(request);
         Throwable throwable = errorAttributeInfo.getThrowable();
@@ -132,7 +135,10 @@ public class GlobalErrorController implements ErrorController {
                 && defaultResponse.getContent() == null) {
             try {
                 // base64 转码，避免查看明文信息时需要对字符串转义字符进行反转义处理
-                defaultResponse.setContent(Base64Utils.encode(errorAttributeInfo.getTrace()));
+                DefaultResponse<Object> copyDefaultResponse = DefaultResponse.fail(defaultResponse.getCode(), defaultResponse.getMessage(), null);
+                copyDefaultResponse.setTraceId(defaultResponse.getTraceId());
+                copyDefaultResponse.setContent(Base64Utils.encode(errorAttributeInfo.getTrace()));
+                defaultResponse = copyDefaultResponse;
             } catch (UnsupportedEncodingException e) {
                 log.error("#error, fail to base64 encode, can not return exception stack trace");
             }
@@ -146,23 +152,30 @@ public class GlobalErrorController implements ErrorController {
         return defaultResponse;
     }
 
+    public static void main(String[] args) {
+        List<Object> l = new ArrayList<>();
+        List<?> a = new ArrayList<>();
+        l.add(1);
+        l.add("s");
+        a = l;
+    }
+
     /**
      * 获取服务错误信息并进行封装
      * @param request HttpServletRequest
-     * @return
+     * @return 错误属性信息
      */
     private ErrorAttributeInfo getErrorAttributes(HttpServletRequest request) {
         ServletWebRequest servletWebRequest = new ServletWebRequest(request);
         Map<String, Object> errorAttributeMap = errorAttributes.getErrorAttributes(servletWebRequest, ErrorAttributeOptions.of(ErrorAttributeOptions.Include.values()));
-        String jsonStr = JSON.toJSONString(errorAttributeMap);
-        ErrorAttributeInfo errorAttributeInfo = JSON.parseObject(jsonStr, ErrorAttributeInfo.class);
+        String jsonStr = FastjsonUtils.toString(errorAttributeMap);
+        ErrorAttributeInfo errorAttributeInfo = FastjsonUtils.toObject(jsonStr, ErrorAttributeInfo.class);
         errorAttributeInfo.setThrowable(errorAttributes.getError(servletWebRequest));
-
         return errorAttributeInfo;
     }
 
     /**
-     * 获取参数校验异常的返回结构
+     * 获取参数校验异常返回结构
      * 当捕获{@link ConstraintViolationException}异常时，返回错误信息为{@link Set}无序
      * 故这种情况下错误信息不一定是按判断逻辑排序的
      *
@@ -170,31 +183,27 @@ public class GlobalErrorController implements ErrorController {
      * @see BindException Bean中的参数校验失败(非JSON形式，即不使用@RequestBody)
      * @see MethodArgumentNotValidException Bean中的参数校验失败(JSON形式，使用@RequestBody)
      * @param throwable 参数校验异常
-     * @return
+     * @return 通用返回结构
      */
-    private DefaultResponse getParamErrorResponse(Throwable throwable) {
+    private DefaultResponse<?> getParamErrorResponse(Throwable throwable) {
         List<ParamError> paramErrorList = new ArrayList<>();
         if (throwable instanceof ConstraintViolationException) {
             Set<ConstraintViolation<?>> violationSet = ((ConstraintViolationException) throwable).getConstraintViolations();
             Object[] violationArray = violationSet.toArray();
-            for (int i = 0; i < violationArray.length; i++) {
-                ConstraintViolation<?> violation = (ConstraintViolation<?>) violationArray[i];
+            for (Object obj : violationArray) {
+                ConstraintViolation<?> violation = (ConstraintViolation<?>) obj;
                 PathImpl pathImpl = (PathImpl) violation.getPropertyPath();
                 String paramName = pathImpl.getLeafNode().getName();
                 paramErrorList.add(new ParamError(paramName, violation.getMessageTemplate()));
             }
         } else if (throwable instanceof BindException) {
-            BindingResult bindingResult = null;
-            if (throwable instanceof BindException) {
-                bindingResult = ((BindException) throwable).getBindingResult();
-            }
+            BindingResult bindingResult = ((BindException) throwable).getBindingResult();
+
             List<FieldError> fieldErrorList = bindingResult.getFieldErrors();
-            for (int i = 0; i < fieldErrorList.size(); i++) {
-                FieldError fieldError = fieldErrorList.get(i);
+            for (FieldError fieldError : fieldErrorList) {
                 paramErrorList.add(new ParamError(fieldError.getField(), fieldError.getDefaultMessage()));
             }
         }
-
         return DefaultResponse.fail(ReturnCodeEnum.PARAM_ERROR, paramErrorList);
     }
 }

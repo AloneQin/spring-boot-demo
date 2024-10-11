@@ -1,5 +1,6 @@
 package com.example.demo.es;
 
+import com.example.demo.common.function.SFunction;
 import com.example.demo.dao.es.UserDAO;
 import com.example.demo.model.pojo.Menu;
 import com.example.demo.model.pojo.Permission;
@@ -79,7 +80,6 @@ public class EsTest {
 
     /**
      * save() 方法无 id 时为新增，有 id 时为修改
-     * @throws ParseException
      */
     @Test
     public void add() throws ParseException {
@@ -371,10 +371,10 @@ public class EsTest {
         NativeSearchQuery query = new NativeSearchQueryBuilder()
                 .withQuery(QueryBuilders.matchQuery("note", "good"))
                 // 过滤字段法-1
-                .withFields(SmartBeanUtils.getFieldName(User::getId), SmartBeanUtils.getFieldName(User::getName))
+                .withFields(SFunction.getFieldName(User::getId), SFunction.getFieldName(User::getName))
                 // 过滤字段法-2
-                .withSourceFilter(new FetchSourceFilterBuilder().withIncludes(SmartBeanUtils.getFieldName(User::getId),
-                        SmartBeanUtils.getFieldName(User::getName)).build())
+                .withSourceFilter(new FetchSourceFilterBuilder().withIncludes(SFunction.getFieldName(User::getId),
+                        SFunction.getFieldName(User::getName)).build())
                 .build();
 
         // 打印查询语句
@@ -395,8 +395,8 @@ public class EsTest {
     @Test
     public void metric() {
         NativeSearchQuery query = new NativeSearchQueryBuilder()
-                .addAggregation(AggregationBuilders.max("maxAge").field(SmartBeanUtils.getFieldName(User::getAge)))
-                .addAggregation(AggregationBuilders.min("minAge").field(SmartBeanUtils.getFieldName(User::getAge)))
+                .addAggregation(AggregationBuilders.max("maxAge").field(SFunction.getFieldName(User::getAge)))
+                .addAggregation(AggregationBuilders.min("minAge").field(SFunction.getFieldName(User::getAge)))
                 .build();
         Aggregations aggregations = esRestTemplate.search(query, User.class).getAggregations();
         if (aggregations == null) {
@@ -417,15 +417,14 @@ public class EsTest {
     @Test
     public void bucket() {
         NativeSearchQuery query = new NativeSearchQueryBuilder()
-                .addAggregation(AggregationBuilders.terms("genders").field(SmartBeanUtils.getFieldName(User::getGender)))
+                .addAggregation(AggregationBuilders.terms("genders").field(SFunction.getFieldName(User::getGender)))
                 .build();
         Aggregations aggregations = esRestTemplate.search(query, User.class).getAggregations();
         if (aggregations == null) {
             return;
         }
         ParsedLongTerms genders = aggregations.get("genders");
-        genders.getBuckets().stream()
-                .forEach(bucket -> System.out.println(SmartStringUtils.format("{}：{}", bucket.getKeyAsString(), bucket.getDocCount())));
+        genders.getBuckets().forEach(bucket -> System.out.println(SmartStringUtils.format("{}：{}", bucket.getKeyAsString(), bucket.getDocCount())));
     }
 
     /**
@@ -436,8 +435,8 @@ public class EsTest {
      */
     @Test
     public void aggregation() {
-        TermsAggregationBuilder builder = AggregationBuilders.terms("genders").field(SmartBeanUtils.getFieldName(User::getGender))
-                .subAggregation(AggregationBuilders.min("minAge").field(SmartBeanUtils.getFieldName(User::getAge)));
+        TermsAggregationBuilder builder = AggregationBuilders.terms("genders").field(SFunction.getFieldName(User::getGender))
+                .subAggregation(AggregationBuilders.min("minAge").field(SFunction.getFieldName(User::getAge)));
         NativeSearchQuery query = new NativeSearchQueryBuilder()
                 .addAggregation(builder)
                 .build();

@@ -27,7 +27,7 @@ public class ApplicationEventListener implements ApplicationListener<Application
 
     @Override
     public void onApplicationEvent(ApplicationEvent event) {
-        log.info("#onApplicationEvent, listen event: [{}]", event.getClass().getName());
+        log.debug("#onApplicationEvent, listen event: [{}]", event.getClass().getName());
         if (event instanceof ApplicationStartedEvent) {
             // 应用启动完成
             log.info("#onApplicationEvent, application init completed.");

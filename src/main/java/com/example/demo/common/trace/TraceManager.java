@@ -24,8 +24,8 @@ public class TraceManager {
     }
 
     public static void putTraceId(String traceId) {
-        if (SmartStringUtils.isBlank(traceId)) {
-            MDC.put(TRACE_ID, RandomUtils.getUUID(true));
+        if (SmartStringUtils.isEmpty(traceId)) {
+            MDC.put(TRACE_ID, RandomUtils.getUUID16().toUpperCase());
         } else {
             MDC.put(TRACE_ID, traceId);
         }

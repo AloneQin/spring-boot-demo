@@ -16,7 +16,7 @@ public class BaseException extends RuntimeException {
         super(message);
     }
 
-    public <T> BaseException(DefaultResponse<T> defaultResponse) {
+    public BaseException(DefaultResponse<?> defaultResponse) {
         this(defaultResponse.detailMessage());
         this.defaultResponse = defaultResponse;
     }

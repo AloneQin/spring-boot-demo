@@ -17,6 +17,29 @@
     </resultMap>
 
     <select id="selectByName" parameterType="string" resultMap="BaseResultMap">
-        select * from phone where name = #{name}
+        select * from phone where name like CONCAT('%', #{name}, '%')
+    </select>
+
+    <select id="countPriceRange" resultType="com.example.demo.model.dto.PhonePriceStatDTO">
+        SELECT
+            price_range,
+            num,
+            total,
+            CONCAT(FORMAT(num / total * 100, 2), '%') AS percent
+        FROM
+            (SELECT
+                 CASE
+                     WHEN price BETWEEN 0 AND 4000 THEN '0-4k'
+                     WHEN price BETWEEN 4001 AND 5000 THEN '4-5k'
+                     WHEN price BETWEEN 5001 AND 6000 THEN '5-6k'
+                     ELSE '6k+'
+                     END AS price_range,
+                 COUNT(*) AS num
+             FROM
+                 phone
+             GROUP BY price_range
+             ORDER BY num DESC , price_range DESC) t1
+                JOIN
+             (SELECT COUNT(0) AS total FROM phone) t2
     </select>
 </mapper>

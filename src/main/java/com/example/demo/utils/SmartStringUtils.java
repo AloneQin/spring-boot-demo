@@ -3,6 +3,7 @@ package com.example.demo.utils;
 import org.springframework.util.StringUtils;
 
 import java.util.Objects;
+import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -94,29 +95,29 @@ public class SmartStringUtils extends StringUtils {
 	/**
 	 * 字符串判空
 	 * @param str 待判定字符串
-	 * @return
+	 * @return true or false
 	 */
-	public static boolean isBlank(String str) {
-		if (str == null || str.length() == 0) {
-			return true;
-		}
-		return false;
+	public static boolean isEmpty(String str) {
+		return str == null || str.isEmpty();
 	}
 
 	/**
 	 * 字符串判非空
 	 * @param str 待判定字符串
-	 * @return
+	 * @return true or false
 	 */
-	public static boolean nonBlank(String str) {
-		return !isBlank(str);
+	public static boolean nonEmpty(String str) {
+		return !isEmpty(str);
 	}
-	
+
 	/**
-	 * 格式化sql，去除模板引擎中的制表符\t与换行符\n
+	 * 格式化sql，去除模板引擎中的换行符、制表符、多空格
 	 */
 	public static String formatSql(String sql) {
-		return sql.replace("\n", "").replace("\t", "");
+		return sql.replaceAll("\n", "")
+				.replaceAll("\r", "")
+				.replaceAll("\t", "")
+				.replaceAll("\\s+", " ");
 	}
 
 	/**
@@ -136,5 +137,31 @@ public class SmartStringUtils extends StringUtils {
             str = str.replaceFirst("\\{}", param.toString());
         }
 		return str;
+	}
+
+	/**
+	 * 下划线转驼峰
+	 * @param underline 下划线字符串
+	 * @return 驼峰字符串
+	 */
+	public static String underline2Camel(String underline) {
+		return com.baomidou.mybatisplus.core.toolkit.StringUtils.underlineToCamel(underline);
+	}
+
+	/**
+	 * 驼峰转下划线
+     * @param camel 驼峰字符串
+	 * @return 下划线字符串
+	 */
+	public static String camel2underline(String camel) {
+		return com.baomidou.mybatisplus.core.toolkit.StringUtils.camelToUnderline(camel);
+	}
+
+	public static void main(String[] args) {
+		String camel = "priceRange";
+		String underline = "price_range";
+		System.out.println(camel2underline(camel));
+		System.out.println(underline2Camel(underline));
+		System.out.println(Objects.equals(null, null));
 	}
 }

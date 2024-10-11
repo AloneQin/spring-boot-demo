@@ -8,6 +8,7 @@ import com.example.demo.common.task.ControllableScheduleTask;
 import com.example.demo.service.TestService;
 import com.example.demo.service.facade.TestServiceFacade;
 import lombok.AllArgsConstructor;
+import lombok.Value;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.scheduling.annotation.Async;
@@ -17,15 +18,16 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.async.DeferredResult;
+import org.springframework.web.method.HandlerMethod;
+import org.springframework.web.servlet.mvc.method.RequestMappingInfo;
+import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Enumeration;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * 测试控制器
@@ -51,6 +53,8 @@ public class TestController {
     private final TestService testService;
 
     private final RabbitProducer rabbitProducer;
+
+    private final RequestMappingHandlerMapping requestMappingHandlerMapping;
 
     @GetMapping("/index")
     public String index() {
@@ -146,16 +150,21 @@ public class TestController {
     @GetMapping("/testTraceId")
     @Async("threadPoolTaskExecutor")
     public void testTraceId() {
-        log.info("#test async thread 1");
         threadPoolTaskExecutor.execute(() -> {
-            log.info("#test async thread 2");
+            try {
+                Thread.sleep(500L);
+                log.info("#test async thread 1");
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
         });
+        log.info("#test async thread 2");
     }
 
     /**
      * xss 测试
      * @param input 模拟参数，如：<script>alert("xss");</script>
-     * @return
+     * @return 返回原始参数
      */
     @GetMapping("/testXss")
     public String testXss(String input) {
@@ -176,7 +185,7 @@ public class TestController {
     /**
      * 延时响应测试
      * @param seconds 延时秒数
-     * @return
+     * @return 返回延时秒数
      */
     @GetMapping("/testDeferredResult")
     public DeferredResult<String> testDeferredResult(Integer seconds) {
@@ -230,6 +239,37 @@ public class TestController {
     @GetMapping("/testRabbitSendMsg")
     public String testRabbitSendMsg(String msg) {
         rabbitProducer.send(msg);
+        return "SUCCESS";
+    }
+
+    /**
+     * 获取项目所有的接口映射
+     * @return Map<Path, Method>
+     */
+    @GetMapping("/getMappings")
+    public Map<String, String> getMappings() {
+        Map<RequestMappingInfo, HandlerMethod> handlerMethods = requestMappingHandlerMapping.getHandlerMethods();
+        return handlerMethods.entrySet().stream()
+                .collect(Collectors.toMap(e -> e.getKey().toString(), e -> e.getValue().toString()));
+    }
+
+    /**
+     * 测试日志
+     * @param msg 入参
+     * @return msg
+     */
+    @GetMapping("/msg")
+    public String testLog(String msg) {
+        log.debug("debug, msg: {}", msg);
+        log.info("info, msg: {}", msg);
+        log.warn("warn, msg: {}", msg);
+        log.error("error, msg: {}", msg);
+        return msg;
+    }
+
+    @GetMapping("/testAsync")
+    public String testAsync() {
+        testService.testAsync();
         return "SUCCESS";
     }
 }

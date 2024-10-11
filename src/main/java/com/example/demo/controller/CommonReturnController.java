@@ -5,14 +5,16 @@ import com.example.demo.common.exception.ParamValidatedException;
 import com.example.demo.common.response.DefaultResponse;
 import com.example.demo.common.response.MyReturnCode;
 import com.example.demo.common.response.ReturnCodeEnum;
+import com.example.demo.model.vo.ChildVO;
 import com.example.demo.model.vo.PeopleVO;
+import com.example.demo.model.vo.PhoneVO;
+import com.example.demo.model.vo.WorkVO;
 import com.example.demo.utils.AssertUtils;
 import com.example.demo.utils.FastjsonUtils;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.Range;
-import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,7 +26,6 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.validation.ConstraintViolation;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
-import javax.validation.groups.Default;
 import java.util.*;
 
 /**
@@ -87,7 +88,6 @@ public class CommonReturnController {
     @GetMapping("/expectedException")
     public DefaultResponse<Void> expectedException(String token) {
         AssertUtils.nonNull(token, ReturnCodeEnum.NEED_LOGIN, () -> log.warn("token is null"));
-
         return DefaultResponse.success();
     }
 
@@ -97,7 +97,6 @@ public class CommonReturnController {
     @GetMapping("/subReturnCodeException")
     public DefaultResponse<Void> subReturnCodeException(String token) {
         AssertUtils.nonNull(token, MyReturnCode.ORDER_STATUS_ERROR, () -> log.warn("token is null"));
-
         return DefaultResponse.success();
     }
 
@@ -110,38 +109,52 @@ public class CommonReturnController {
                                            @NotNull(message = "年龄不能为空")
                                                @Range(min = 1, max = 150, message = "年龄必须在[1-150]之间") Integer age) {
         log.info("name: {}, age: {}", name, age);
-
         return DefaultResponse.success();
     }
 
     /**
-     * 非 JSON 对象传参校验展示
+     * 对象嵌套传参校验展示
+     * 在子属性下添加 @Valid 支持嵌套校验
      */
-    @GetMapping("/objectValidated")
-    public DefaultResponse<Void> objectValidated(@Valid PeopleVO peopleVo) {
+    @PostMapping("/objectValidated")
+    public DefaultResponse<Void> objectValidated(@RequestBody @Validated PeopleVO peopleVo) {
         log.info(FastjsonUtils.toString(peopleVo));
-
         return DefaultResponse.success();
     }
 
     /**
-     * JSON 对象传参校验展示
+     * 对象分组传参校验展示
+     * 在子属性下添加 @Valid 支持嵌套校验
      */
     @PostMapping("/jsonObjectValidated")
-    public DefaultResponse<Void> jsonObjectValidated(@RequestBody @Valid PeopleVO peopleVo) {
+    public DefaultResponse<Void> jsonObjectValidated(@RequestBody @Validated(value = {PeopleVO.Group1.class}) PeopleVO peopleVo) {
         log.info(FastjsonUtils.toString(peopleVo));
+        return DefaultResponse.success();
+    }
 
+    /**
+     * 校验集合
+     * 校验集合需要将 @Valid 放在集合前，并将 @Validated 放在类上
+     */
+    @PostMapping("/collectValidated")
+    public DefaultResponse<Void> collectValidated(@RequestBody @Valid List<PeopleVO> list) {
+        log.info(FastjsonUtils.toString(list));
+
+        Set<ConstraintViolation<List<PeopleVO>>> set = validatorFactoryBean.validate(list);
+        set.forEach(constraintViolation -> {
+            log.info("fieldName: {}, message: {}", constraintViolation.getPropertyPath().toString(), constraintViolation.getMessage());
+        });
         return DefaultResponse.success();
     }
 
     /**
      * 自定义手动校验
+     * @Valid 由 javax 提供，不支持分组（注解本身不支持，但可以通过手动校验来让其支持），支持嵌套，可以用于成员属性
+     * @Validated 由 spring 提供，不支持嵌套，支持分组，不可用于成员属性
+     *
      */
-    @GetMapping("/customValidated")
-    public DefaultResponse<Void> customValidated() {
-        PeopleVO peopleVo = new PeopleVO();
-        peopleVo.setName("");
-
+    @PostMapping("/customValidated")
+    public DefaultResponse<Void> customValidated(@RequestBody PeopleVO peopleVo) {
         Set<ConstraintViolation<PeopleVO>> set = validatorFactoryBean.validate(peopleVo, PeopleVO.Group1.class);
         set.forEach(constraintViolation -> {
             log.info("group1, fieldName: {}, message: {}", constraintViolation.getPropertyPath().toString(), constraintViolation.getMessage());
@@ -155,6 +168,16 @@ public class CommonReturnController {
         Set<ConstraintViolation<PeopleVO>> set3 = validatorFactoryBean.validate(peopleVo, PeopleVO.Group1.class, PeopleVO.Group2.class);
         set3.forEach(constraintViolation -> {
             log.info("all, fieldName: {}, message: {}", constraintViolation.getPropertyPath().toString(), constraintViolation.getMessage());
+        });
+
+        Set<ConstraintViolation<ChildVO>> set4 = validatorFactoryBean.validate(peopleVo.getChildren().get(0), PeopleVO.Group1.class);
+        set4.forEach(constraintViolation -> {
+            log.info("4, fieldName: {}, message: {}", constraintViolation.getPropertyPath().toString(), constraintViolation.getMessage());
+        });
+
+        Set<ConstraintViolation<ChildVO>> set5 = validatorFactoryBean.validate(peopleVo.getChildren().get(1), PeopleVO.Group2.class);
+        set5.forEach(constraintViolation -> {
+            log.info("5, fieldName: {}, message: {}", constraintViolation.getPropertyPath().toString(), constraintViolation.getMessage());
         });
 
         return DefaultResponse.success();

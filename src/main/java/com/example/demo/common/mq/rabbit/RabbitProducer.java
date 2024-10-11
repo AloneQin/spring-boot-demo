@@ -28,11 +28,9 @@ public class RabbitProducer {
         }, new CorrelationData("id_" + System.currentTimeMillis()));
     }
 
-    private final RabbitTemplate.ConfirmCallback confirmCallback = (correlationData, ack, cause) -> {
-        log.info("#confirmCallback, correlationData: {}, ack: {}, cause: {}", correlationData, ack, cause);
-    };
+    private final RabbitTemplate.ConfirmCallback confirmCallback = (correlationData, ack, cause) ->
+            log.info("#confirmCallback, correlationData: {}, ack: {}, cause: {}", correlationData, ack, cause);
 
-    private final RabbitTemplate.ReturnsCallback returnsCallback = returnedMessage -> {
-        log.info("#returnsCallback, returnedMessage: {}", returnedMessage);
-    };
+    private final RabbitTemplate.ReturnsCallback returnsCallback = returnedMessage ->
+            log.info("#returnsCallback, returnedMessage: {}", returnedMessage);
 }

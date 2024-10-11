@@ -4,16 +4,18 @@ import com.example.demo.common.response.ReturnCodeEnum;
 import com.example.demo.common.trace.TraceManager;
 import com.example.demo.utils.AssertUtils;
 import com.example.demo.utils.SmartStringUtils;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StopWatch;
 
 @Slf4j
 @Service
+@AllArgsConstructor
 public class TestService {
 
     public void checkName(String name) {
-        AssertUtils.isTrue(SmartStringUtils.isBlank(name), ReturnCodeEnum.NAME_ILLEGAL,
+        AssertUtils.isTrue(SmartStringUtils.isEmpty(name), ReturnCodeEnum.NAME_ILLEGAL,
                 () -> log.warn("the name illegal, name: {}", name)
         );
     }
@@ -37,5 +39,17 @@ public class TestService {
         log.info("simple summary: {}", stopWatch.shortSummary());
         // 输出时间单位：纳秒，1 ms = 1000,000 ns
         log.info("pretty summary:\n{}", stopWatch.prettyPrint());
+    }
+
+    public void testAsync() {
+        testAsync2();
+    }
+
+    public void testAsync2() {
+    }
+
+    public static void main(String[] args) {
+        String[] split = "1".split(",");
+        System.out.println(split);
     }
 }

@@ -26,9 +26,11 @@ public class MyBatisPlusGeneratorUtils {
         // IdType.ASSIGN_UUID 长度32
         String uuid = generator.nextUUID(null);
         System.out.println(uuid + " " + uuid.length());
+
+        generator();
     }
 
-    public static void enerator() {
+    public static void generator() {
         FastAutoGenerator
                 // 数据库连接方式
                 .create("jdbc:mysql://localhost:3306/spring-boot-demo?useUnicode=true&characterEncoding=UTF-8&useSSL=true&serverTimezone=GMT%2B8&nullCatalogMeansCurrent=true",
@@ -51,22 +53,22 @@ public class MyBatisPlusGeneratorUtils {
                                 // 父包模块名
 //                        .moduleName("")
                                 // Entity 包名
-                                .entity("domain.po")
+                                .entity("model.po")
                                 // Mapper 包名
-                                .mapper("dao.mapper")
+                                .mapper("dao.mysql.mapper")
                                 // Mapper XML 包名
-                                .xml("dao.mapper")
+                                .xml("mapper")
                                 // Service 包名
-                                .service("dao.wrapper")
+                                .service("dao.mysql.wrapper")
                                 // Service Impl 包名
-                                .serviceImpl("dao.wrapper.impl")
+                                .serviceImpl("dao.mysql.wrapper.impl")
                                 // Controller 包名（多余文件，需手动删除）
                                 .controller("")
                 )
                 // 策略配置
                 .strategyConfig(builder -> builder
                                 // 需要生成的表名
-                                .addInclude("phone")
+                                .addInclude("log")
                                 // 去除表前缀
                                 .addTablePrefix("")
                                 // 去除表后缀

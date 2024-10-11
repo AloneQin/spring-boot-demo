@@ -58,7 +58,7 @@ public class PhoneService {
 
     @Transactional(rollbackFor = Exception.class)
     public void modifyPhone(PhoneDTO phoneDTO) {
-        AssertUtils.nonNull(phoneDTO.getId(), new ParamValidatedException(Arrays.asList(new ParamError("id", MsgConst.MUST_NULL))));
+        AssertUtils.nonNull(phoneDTO.getId(), new ParamValidatedException(List.of(new ParamError("id", MsgConst.MUST_NULL))));
         checkPhoneExists(phoneDTO.getId(), phoneDTO.getName());
 
         PhonePO phonePO = SmartBeanUtils.copyProperties(phoneDTO, PhonePO::new);
@@ -104,6 +104,6 @@ public class PhoneService {
         phoneDAO.updateById(phonePO);
 
         // 发生异常 update 数据并不会回滚，因为调用 testModifyPhone() 方法的对象 this 始终是原始实例，不是代理对象，所以事务不会生效
-        Arrays.asList().get(100);
+        List.of().get(100);
     }
 }

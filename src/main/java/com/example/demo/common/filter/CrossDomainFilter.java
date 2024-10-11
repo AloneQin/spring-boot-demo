@@ -43,7 +43,7 @@ public class CrossDomainFilter implements Filter {
         log.info("#doCrossDomain, origin: {}, remoteAddr: {}, remoteHost: {}, remotePort:{}",
                 origin, request.getRemoteAddr(), request.getRemoteHost(), request.getRemotePort());
         boolean isAllow = false;
-        if (isAllow = ALLOW_DOMAIN_LIST.contains(origin)) {
+        if (isAllow == ALLOW_DOMAIN_LIST.contains(origin)) {
             // 允许跨域的域名
             response.setHeader("Access-Control-Allow-Origin", origin);
             // 允许携带 cookie 认证
