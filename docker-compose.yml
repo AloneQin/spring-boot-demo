@@ -1,0 +1,18 @@
+#version: "3"
+services:
+  spring-boot-demo-1:
+    build: .
+    #image: spring-boot-demo-1
+    container_name: spring-boot-demo-1
+    ports:
+      - "8001:8888"
+    volumes:
+      - /work/app/docker-compose:/work/app/target
+  spring-boot-demo-2:
+    build: .
+    #image: spring-boot-demo-2
+    container_name: spring-boot-demo-2
+    ports:
+      - "8002:8888"
+    volumes:
+      - /work/app/docker-compose:/work/app/target

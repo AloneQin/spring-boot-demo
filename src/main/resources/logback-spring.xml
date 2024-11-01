@@ -42,7 +42,7 @@
 		<!-- 日志文件大小、日期滚动策略 -->
 		<rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
 			<!-- 日志文件输出的文件名 -->
-			<fileNamePattern>${LOG_HOME}/${APPLICATION_NAME}.%d{yyyy-MM-dd_HH}.%i.log</fileNamePattern>
+			<fileNamePattern>${LOG_HOME}/${APPLICATION_NAME}/${APPLICATION_NAME}.%d{yyyy-MM-dd_HH}.%i.log</fileNamePattern>
 			<!-- 日志文件保留天数 -->
 			<maxHistory>30</maxHistory>
 			<!-- 单个日志文件允许大小 -->
@@ -64,7 +64,7 @@
 		<!-- 日志文件大小、日期滚动策略 -->
 		<rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
 			<!-- 日志文件输出的文件名 -->
-			<fileNamePattern>${LOG_HOME}/${APPLICATION_NAME}.error.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+			<fileNamePattern>${LOG_HOME}/${APPLICATION_NAME}/${APPLICATION_NAME}.error.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
 			<!-- 日志文件保留天数 -->
 			<maxHistory>30</maxHistory>
 			<!-- 单个日志文件允许大小 -->
@@ -79,8 +79,9 @@
 	</appender>
 
 	<!-- 指定包的日志输出级别 -->
-	<!-- 打印SQL日志 -->
-<!--	<logger name="com.example.demo.dao.mysql.mapper" level="DEBUG" />-->
+	<!-- 打印 MyBatis DAO 日志 -->
+	<!--<logger name="com.example.demo.dao.mysql.mapper" level="DEBUG" />-->
+	<!-- 打印 P6Spy 日志 -->
 	<logger name="com.example.demo.common.config.P6SpyLoggerConfig" level="DEBUG" />-->
 
 	<!-- 本地 -->

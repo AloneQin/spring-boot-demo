@@ -13,7 +13,7 @@ import java.io.FileOutputStream;
 import java.io.InputStream;
 
 /**
- * https://mp.baomidou.com/guide/generator-new.html#%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8
+ * <a href="https://mp.baomidou.com/guide/generator-new.html#%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8">...</a>
  */
 @SpringBootTest
 public class MyBatisPlusGeneratorUtils {
@@ -27,7 +27,7 @@ public class MyBatisPlusGeneratorUtils {
         String uuid = generator.nextUUID(null);
         System.out.println(uuid + " " + uuid.length());
 
-        generator();
+        //generator();
     }
 
     public static void generator() {
