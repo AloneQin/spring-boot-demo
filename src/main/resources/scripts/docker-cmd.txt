@@ -1,0 +1,15 @@
+## fat jar
+
+# 创建镜像
+docker build -t spring-boot-demo .
+
+# 启动容器
+docker run -d --name spring-boot-demo --net host -v /work/app:/work/app/target spring-boot-demo
+
+## thin jar
+
+# 创建镜像
+docker build -t spring-boot-demo-thin .
+
+# 启动容器
+docker run -d --name spring-boot-demo-thin --net host -v /work/app/spring-boot-demo/thin:/work/app spring-boot-demo-thin

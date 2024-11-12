@@ -47,7 +47,7 @@ public class PhoneService {
 
     @Transactional(rollbackFor = Exception.class)
     public void addPhone(PhoneDTO phoneDTO) {
-        AssertUtils.isNull(phoneDTO.getId(), new ParamValidatedException(Arrays.asList(new ParamError("id", MsgConst.MUST_NULL))));
+        AssertUtils.isNull(phoneDTO.getId(), new ParamValidatedException(List.of(new ParamError("id", MsgConst.MUST_NULL))));
         checkPhoneExists(null, phoneDTO.getName());
 
         PhonePO phonePO = SmartBeanUtils.copyProperties(phoneDTO, PhonePO::new);

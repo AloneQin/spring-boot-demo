@@ -10,7 +10,7 @@ import com.example.demo.dao.mysql.wrapper.PhoneDAO;
 import com.example.demo.model.dto.PhonePriceStatDTO;
 import com.example.demo.model.po.PhonePO;
 import com.example.demo.utils.SmartStringUtils;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -28,7 +28,7 @@ import java.util.stream.Collectors;
  * @since 2021-12-06
  */
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class PhoneDAOImpl extends ServiceImpl<PhoneMapper, PhonePO> implements PhoneDAO {
 
     private final PhoneMapper phoneMapper;

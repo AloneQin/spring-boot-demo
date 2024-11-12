@@ -253,8 +253,8 @@ public class LocalDateTimeUtils {
      * @param dateStr 时间字符串
      * @return 本地时间
      */
-    public static LocalTime str2localTime(String dateStr) {
-        return str2localTime(dateStr, null);
+    public static LocalTime str2LocalTime(String dateStr) {
+        return str2LocalTime(dateStr, null);
     }
 
     /**
@@ -263,7 +263,7 @@ public class LocalDateTimeUtils {
      * @param pattern 时间格式
      * @return 本地时间
      */
-    public static LocalTime str2localTime(String dateStr, String pattern) {
+    public static LocalTime str2LocalTime(String dateStr, String pattern) {
         DateTimeFormatter formatter;
         if (Objects.nonNull(pattern)) {
             formatter = DateTimeFormatter.ofPattern(pattern);

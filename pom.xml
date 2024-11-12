@@ -196,6 +196,39 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <version>2.5.0</version>
+                <configuration>
+                    <!--指定模式，保证目标jar配置为 Main-Class: org.springframework.boot.loader.PropertiesLauncher-->
+                    <layout>ZIP</layout>
+                    <!--配置打成jar包时包含的依赖，此处设置一个不存在的依赖，那么打出的 jar 包将是不包含任何依赖的瘦身包-->
+                    <includes>
+                        <include>
+                            <groupId>nothing</groupId>
+                            <artifactId>nothing</artifactId>
+                        </include>
+                    </includes>
+                </configuration>
+            </plugin>
+
+            <!--maven dependency plugin-->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <!--
+                    将项目依赖全部拷贝到 jar 包同级目录 lib 目录下
+                    执行时，通过指定依赖路径引入外部相关依赖：java "-Dloader.path=./lib" -jar spring-boot-demo.jar
+                -->
+                <executions>
+                    <execution>
+                        <id>copy</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>copy-dependencies</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${project.build.directory}/lib</outputDirectory>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
 
             <!--mybatis generator plugin-->
