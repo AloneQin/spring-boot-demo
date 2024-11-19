@@ -1,6 +1,8 @@
 package com.example.demo.model.vo;
 
 import com.example.demo.common.metadata.constant.MsgConst;
+import com.example.demo.common.sensitive.Sensitive;
+import com.example.demo.common.sensitive.SensitiveEnum;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -25,6 +27,7 @@ public class PhoneVO {
      * 手机编号
      */
     @NotNull(message = MsgConst.NOT_NULL_MSG)
+    @Sensitive(strategy = SensitiveEnum.PHONE_CODE)
     @ApiModelProperty(name = "phoneCode", value = "手机编号", required = true, example = "24d3901c-42a4-4584-92f1-af835e1a2efa")
     private String phoneCode;
 
