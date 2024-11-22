@@ -45,6 +45,11 @@ public class PhoneService {
         return SmartBeanUtils.copyPropertiesList(phonePOList, PhoneDTO::new);
     }
 
+    public List<PhoneDTO> getPhoneByProdDate(LocalDate prodDate) {
+        List<PhonePO> phonePOList = phoneDAO.findByProdDate(prodDate);
+        return SmartBeanUtils.copyPropertiesList(phonePOList, PhoneDTO::new);
+    }
+
     @Transactional(rollbackFor = Exception.class)
     public void addPhone(PhoneDTO phoneDTO) {
         AssertUtils.isNull(phoneDTO.getId(), new ParamValidatedException(List.of(new ParamError("id", MsgConst.MUST_NULL))));

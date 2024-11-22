@@ -6,6 +6,7 @@ import com.example.demo.model.dto.PhonePriceStatDTO;
 import com.example.demo.model.po.PhonePO;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
@@ -22,6 +23,8 @@ public interface PhoneDAO extends IService<PhonePO> {
     Page<PhonePO> pageByCondition(Integer pageSize, Integer pageNum, String name, String brand, String remark);
 
     List<PhonePO> findByName(String name);
+
+    List<PhonePO> findByProdDate(LocalDate prodDate);
 
     List<PhonePO> findByIdAndName(Integer id, String name);
 

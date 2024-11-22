@@ -12,6 +12,7 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,6 +26,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import java.time.LocalDate;
 import java.util.List;
 
 /**
@@ -70,6 +72,12 @@ public class PhoneController {
     @GetMapping("/phoneByName")
     public List<PhoneVO> getPhoneByName(@NotBlank(message = MsgConst.NOT_NULL_MSG) String name) {
         List<PhoneDTO> phoneDTOList = phoneService.getPhoneByName(name);
+        return SmartBeanUtils.copyPropertiesList(phoneDTOList, PhoneVO::new);
+    }
+
+    @GetMapping("/phoneByProdDate")
+    public List<PhoneVO> getPhoneByProdDate(@NotNull(message = MsgConst.NOT_NULL_MSG) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE, pattern = "yyyy-MM-dd") LocalDate prodDate) {
+        List<PhoneDTO> phoneDTOList = phoneService.getPhoneByProdDate(prodDate);
         return SmartBeanUtils.copyPropertiesList(phoneDTOList, PhoneVO::new);
     }
 

@@ -8,10 +8,7 @@ import org.springframework.util.CollectionUtils;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
@@ -48,7 +45,7 @@ public class SmartBeanUtils {
      */
     public static <T> List<T> copyPropertiesList(List<?> sourceList, Supplier<T> targetSupplier) {
         if (CollectionUtils.isEmpty(sourceList) || Objects.isNull(targetSupplier)) {
-            return Collections.emptyList();
+            return new ArrayList<>();
         }
         return sourceList.stream()
                 .map(source -> copyProperties(source, targetSupplier))

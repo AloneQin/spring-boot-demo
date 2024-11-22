@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -45,6 +46,13 @@ public class PhoneDAOImpl extends ServiceImpl<PhoneMapper, PhonePO> implements P
     @Override
     public List<PhonePO> findByName(String name) {
         return phoneMapper.selectByName(name);
+    }
+
+    @Override
+    public List<PhonePO> findByProdDate(LocalDate prodDate) {
+        return new LambdaQueryChainWrapper<>(phoneMapper)
+                .eq(Objects.nonNull(prodDate), PhonePO::getProdDate, prodDate)
+                .list();
     }
 
     @Override

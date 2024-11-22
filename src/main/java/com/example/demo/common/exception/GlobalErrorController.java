@@ -13,6 +13,7 @@ import org.hibernate.validator.internal.engine.path.PathImpl;
 import org.springframework.boot.web.error.ErrorAttributeOptions;
 import org.springframework.boot.web.servlet.error.ErrorAttributes;
 import org.springframework.boot.web.servlet.error.ErrorController;
+import org.springframework.core.NestedRuntimeException;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindException;
@@ -125,8 +126,8 @@ public class GlobalErrorController implements ErrorController {
         }
 
         // 一些特殊异常 Servlet 并不会打印堆栈，为帮助调试，打印相关堆栈
-        if (throwable instanceof ServletException || throwable instanceof BindException) {
-            log.warn("catch exception", throwable);
+        if (throwable instanceof ServletException || throwable instanceof BindException || throwable instanceof NestedRuntimeException) {
+            log.error("catch exception", throwable);
         }
 
         // 若开启调试模式展示异常，并且主体空余，则返回异常堆栈信息

@@ -204,6 +204,14 @@ spring-boot-demo
 
 **TODO: 后续考虑借助`docker`完成项目发布**
 
+## 瘦身包
+通过将依赖抽取到外部可打瘦身包，避免每次打的`jar`包过大，详见`pom.xml`插件`maven-dependency-plugin`相关配置。
+
+## 远程调试
+遵循JVM规范进行远程调试，在启动命令中添加`agentlib`命令。
+
+如`java -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005 "-Dloader.path=./lib" -jar spring-boot-demo.jar`
+
 ## 其他
 字符图案生成网站：http://patorjk.com/
 
