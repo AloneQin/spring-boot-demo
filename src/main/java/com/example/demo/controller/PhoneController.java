@@ -28,6 +28,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * 手机控制器
@@ -85,14 +86,14 @@ public class PhoneController {
     @ApiOperation(value = "添加手机")
     public void addPhone(@RequestBody @Valid PhoneVO phoneVo) {
         PhoneDTO phoneDTO = SmartBeanUtils.copyProperties(phoneVo, PhoneDTO::new);
-        phoneService.addPhone(phoneDTO);
+        phoneService.addPhone(Objects.requireNonNull(phoneDTO));
     }
 
     @PutMapping("/phone")
     @ApiOperation(value = "修改手机")
     public void modifyPhone(@RequestBody @Valid PhoneVO phoneVo) {
         PhoneDTO phoneDTO = SmartBeanUtils.copyProperties(phoneVo, PhoneDTO::new);
-        phoneService.modifyPhone(phoneDTO);
+        phoneService.modifyPhone(Objects.requireNonNull(phoneDTO));
     }
 
     @DeleteMapping("/phone")

@@ -1,5 +1,6 @@
 package com.example.demo.common.response;
 
+import com.example.demo.common.config.ApplicationConfigContext;
 import com.example.demo.common.trace.TraceManager;
 import com.example.demo.utils.FastjsonUtils;
 import lombok.Getter;
@@ -35,11 +36,17 @@ public class DefaultResponse<T> {
      */
     private String traceId;
 
+    /**
+     * 应用名称
+     */
+    private String application;
+
     private DefaultResponse(String code, String message, T content) {
         this.code = code;
         this.message = message;
         this.content = content;
         this.traceId = TraceManager.getTraceId();
+        this.application = ApplicationConfigContext.applicationName();
     }
 
     public static <T> DefaultResponse<T> success(T content) {

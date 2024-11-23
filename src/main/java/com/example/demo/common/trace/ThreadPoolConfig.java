@@ -15,15 +15,18 @@ public class ThreadPoolConfig {
     /**
      * 核心线程池数
      */
-    private int corePoolSize = Runtime.getRuntime().availableProcessors();
+    private final int corePoolSize = Runtime.getRuntime().availableProcessors();
+
     /**
      * 最大线程池数
      */
-    private int maxPoolSize = corePoolSize * 2;
+    private final int maxPoolSize = corePoolSize * 2;
+
     /**
      * 任务队列容量
      */
     private static final int QUEUE_CAPACITY = 50;
+
     /**
      * 非核心线程的存活时间
      */

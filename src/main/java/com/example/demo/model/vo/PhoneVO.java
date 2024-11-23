@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+import org.springframework.format.annotation.NumberFormat;
 
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
@@ -56,6 +57,7 @@ public class PhoneVO {
     /**
      * 售价
      */
+    @NumberFormat(pattern = "#.##")
     @NotNull(message = MsgConst.NOT_NULL_MSG)
     @ApiModelProperty(name = "price", value = "售价", required = true, example = "6299.00")
     private BigDecimal price;

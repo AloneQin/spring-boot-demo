@@ -15,13 +15,12 @@ public class SmartStringUtils extends StringUtils {
 	/**
      * 正则匹配用户名
      * ^[a-zA-z][a-zA-Z0-9_]{6,20}$: 字母、数字、下划线、必须以字母开头、长度 6-20 位
-     *
+	 * 链接：
+	 * <a href="http://www.codeceo.com/article/useful-regular-expression.html">example1</a>
+	 * <a href="http://www.jb51.net/article/72867.htm">example2</a>
+	 *
      * @param userName 用户名
      * @return true or false
-     *
-     * 链接：
-     * <a href="http://www.codeceo.com/article/useful-regular-expression.html">example1</a>
-     * <a href="http://www.jb51.net/article/72867.htm">example2</a>
      */
 	public static boolean isUserName(String userName) {
 		if (userName == null) {
