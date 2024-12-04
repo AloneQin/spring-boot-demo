@@ -11,14 +11,15 @@ import com.alibaba.excel.write.metadata.WriteSheet;
 import com.alibaba.excel.write.metadata.style.WriteCellStyle;
 import com.alibaba.excel.write.style.HorizontalCellStyleStrategy;
 import com.alibaba.excel.write.style.column.LongestMatchColumnWidthStyleStrategy;
+import lombok.Cleanup;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.ss.usermodel.FillPatternType;
 import org.apache.poi.ss.usermodel.IndexedColors;
 import org.junit.Test;
 import org.springframework.core.io.ClassPathResource;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -139,6 +140,21 @@ public class ExcelUtilsTest {
             excelWriter.write(getData(), writeSheet);
         }
         excelWriter.finish();
+    }
+
+    @Test
+    @SneakyThrows
+    public void writeExcel6() {
+        String path = SmartStringUtils.format("./target/{}", "test6.xlsx");
+        @Cleanup ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        ExcelWriter excelWriter = EasyExcel.write(byteArrayOutputStream, Teacher.class)
+                .registerWriteHandler(new LongestMatchColumnWidthStyleStrategy())
+                .build();
+        WriteSheet writeSheet = EasyExcel.writerSheet("Sheet1").build();
+        excelWriter.write(getTeachers(), writeSheet);
+        excelWriter.finish();
+        @Cleanup InputStream inputStream = new ByteArrayInputStream(byteArrayOutputStream.toByteArray());
+        IOUtils.copyFile(inputStream, path);
     }
 
     class DateTimeConverter implements Converter<Long> {

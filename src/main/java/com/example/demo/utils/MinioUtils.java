@@ -264,4 +264,16 @@ public class MinioUtils {
             removeFile(minioClient, bucketName, item.objectName());
         });
     }
+
+    /**
+     * 获取文件信息
+     * @param minioClient 客户端
+     * @param bucketName 桶名称
+     * @param objectName 对象名称
+     * @return 文件信息
+     */
+    @SneakyThrows
+    public static StatObjectResponse getObjectInfo(MinioClient minioClient, String bucketName, String objectName) {
+        return minioClient.statObject(StatObjectArgs.builder().bucket(bucketName).object(objectName).build());
+    }
 }

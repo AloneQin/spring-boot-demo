@@ -17,7 +17,7 @@ public class Teacher {
     @ExcelProperty("工号（唯一编号）")
     private String no;
 
-    @ExcelProperty(value = "工号（唯一编号）", converter = ExcelUtilsTest.DateTimeConverter.class)
+//    @ExcelProperty(value = "工号（唯一编号）", converter = ExcelUtilsTest.DateTimeConverter.class)
     private Long birthday;
 
 }

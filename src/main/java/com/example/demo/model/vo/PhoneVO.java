@@ -1,9 +1,11 @@
 package com.example.demo.model.vo;
 
+import com.example.demo.common.handler.BigDecimalJsonSerializer;
 import com.example.demo.common.metadata.constant.MsgConst;
 import com.example.demo.common.sensitive.Sensitive;
 import com.example.demo.common.sensitive.SensitiveEnum;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -57,7 +59,7 @@ public class PhoneVO {
     /**
      * 售价
      */
-    @NumberFormat(pattern = "#.##")
+    @JsonSerialize(using = BigDecimalJsonSerializer.class)
     @NotNull(message = MsgConst.NOT_NULL_MSG)
     @ApiModelProperty(name = "price", value = "售价", required = true, example = "6299.00")
     private BigDecimal price;

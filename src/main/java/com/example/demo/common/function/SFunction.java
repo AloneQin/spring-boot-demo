@@ -1,11 +1,14 @@
 package com.example.demo.common.function;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.example.demo.utils.SmartStringUtils;
 import lombok.SneakyThrows;
 
 import java.beans.Introspector;
 import java.io.Serializable;
+import java.lang.annotation.Annotation;
 import java.lang.invoke.SerializedLambda;
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.Objects;
 import java.util.function.Function;
@@ -22,6 +25,14 @@ import java.util.function.Function;
 @FunctionalInterface
 public interface SFunction<T, R> extends Serializable, Function<T, R> {
 
+    @SneakyThrows
+    private static <T, R> SerializedLambda getSerializedLambda(SFunction<T, R> sFunction) {
+        // 通过 writeReplace() 方法以便获取 SerializedLambda 对象
+        Method method = sFunction.getClass().getDeclaredMethod("writeReplace");
+        method.setAccessible(true);
+        return (SerializedLambda) method.invoke(sFunction);
+    }
+
     /**
      * 获取字段名称
      * @param sFunction 可序列化的函数式接口
@@ -29,12 +40,8 @@ public interface SFunction<T, R> extends Serializable, Function<T, R> {
      * @param <T> 输入类型
      * @param <R> 输出类型
      */
-    @SneakyThrows
     static <T, R> String getFieldName(SFunction<T, R> sFunction, FormatCastEnum formatCastEnum) {
-        // 通过 writeReplace() 方法以便获取 SerializedLambda 对象
-        Method method = sFunction.getClass().getDeclaredMethod("writeReplace");
-        method.setAccessible(true);
-        SerializedLambda serializedLambda = (SerializedLambda) method.invoke(sFunction);
+        SerializedLambda serializedLambda = getSerializedLambda(sFunction);
         String implMethodName = serializedLambda.getImplMethodName();
         String prefix = "";
         if (implMethodName.startsWith("is")) {
@@ -57,6 +64,29 @@ public interface SFunction<T, R> extends Serializable, Function<T, R> {
 
     static <T, R> String getFieldName(SFunction<T, R> sFunction) {
         return getFieldName(sFunction, null);
+    }
+
+    /**
+     * 获取字段注解值
+     * @param sFunction 可序列化的函数式接口
+     * @param annotationClass 注解类
+     * @param methodName 注解方法名
+     * @return 注解值
+     * @param <T> 输入类型
+     * @param <R> 输出类型
+     */
+    @SneakyThrows
+    static <T, R> Object getFieldAnnotationValue(SFunction<T, R> sFunction, Class<? extends Annotation> annotationClass, String methodName) {
+        String fieldName = getFieldName(sFunction);
+        SerializedLambda serializedLambda = getSerializedLambda(sFunction);
+        Field field = Class.forName(serializedLambda.getImplClass().replace("/", ".")).getDeclaredField(fieldName);
+        field.setAccessible(true);
+        Annotation annotation = field.getAnnotation(annotationClass);
+        return Objects.nonNull(annotation) ? annotation.annotationType().getMethod(methodName).invoke(annotation) : null;
+    }
+
+    static <T, R> String getTableFieldValue(SFunction<T, R> sFunction) {
+        return (String) getFieldAnnotationValue(sFunction, TableField.class, "value");
     }
 
     /**
