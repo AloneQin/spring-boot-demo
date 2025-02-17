@@ -17,7 +17,7 @@ public class ReflectUtils {
      * @return 类类型
      * @throws ClassNotFoundException 类不存在异常
      */
-    public static Class getClazz(String fullPath) throws ClassNotFoundException {
+    public static Class<?> getClazz(String fullPath) throws ClassNotFoundException {
         return Class.forName(fullPath);
     }
 
@@ -26,7 +26,7 @@ public class ReflectUtils {
      * @param clazz 类类型
      * @return 属性数组
      */
-    public static Field[] getAllField(Class clazz) {
+    public static Field[] getAllField(Class<?> clazz) {
         return clazz.getDeclaredFields();
     }
 
@@ -37,7 +37,7 @@ public class ReflectUtils {
      * @return 属性
      * @throws NoSuchFieldException 字段不存在异常
      */
-    public static Field getFieldByName(Class clazz, String fieldName) throws NoSuchFieldException {
+    public static Field getFieldByName(Class<?> clazz, String fieldName) throws NoSuchFieldException {
         return clazz.getDeclaredField(fieldName);
     }
 

@@ -32,10 +32,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * 全局错误处理控制器，项目的所有错误都会转发到此控制器
@@ -57,11 +54,6 @@ public class GlobalErrorController implements ErrorController {
     private final SystemProperties systemProperties;
 
     private final ErrorAttributes errorAttributes;
-
-//    @Override
-//    public String getErrorPath() {
-//        return ERROR_PAGE;
-//    }
 
     /**
      * 返回网页
@@ -100,6 +92,7 @@ public class GlobalErrorController implements ErrorController {
         boolean expectedFlag = true;
         ErrorAttributeInfo errorAttributeInfo = getErrorAttributes(request);
         Throwable throwable = errorAttributeInfo.getThrowable();
+        log.error("#error, errorAttributeInfo: {}, global catch exception: ", errorAttributeInfo, throwable);
         if (throwable instanceof BaseException) {
             // 自定义异常
             BaseException exception = (BaseException) errorAttributeInfo.getThrowable();
@@ -125,10 +118,10 @@ public class GlobalErrorController implements ErrorController {
             defaultResponse = DefaultResponse.fail(returnCodeEnum);
         }
 
-        // 一些特殊异常 Servlet 并不会打印堆栈，为帮助调试，打印相关堆栈
+        /*// 一些特殊异常 Servlet 并不会打印堆栈，为帮助调试，打印相关堆栈
         if (throwable instanceof ServletException || throwable instanceof BindException || throwable instanceof NestedRuntimeException) {
             log.error("catch exception", throwable);
-        }
+        }*/
 
         // 若开启调试模式展示异常，并且主体空余，则返回异常堆栈信息
         if (systemProperties.getDebugMode()
@@ -141,7 +134,7 @@ public class GlobalErrorController implements ErrorController {
                 copyDefaultResponse.setContent(Base64Utils.encode(errorAttributeInfo.getTrace()));
                 defaultResponse = copyDefaultResponse;
             } catch (UnsupportedEncodingException e) {
-                log.error("#error, fail to base64 encode, can not return exception stack trace");
+                log.error("#error, fail to base64 encode, can not return exception stack trace", e);
             }
         }
 

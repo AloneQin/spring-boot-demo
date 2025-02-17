@@ -1,11 +1,14 @@
 package com.example.demo.common.exception;
 
+import com.example.demo.utils.FastjsonUtils;
+import com.example.demo.utils.SmartBeanUtils;
 import lombok.Data;
 import org.springframework.boot.web.servlet.error.DefaultErrorAttributes;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.WebRequest;
 
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * 错误属性信息，将{@link DefaultErrorAttributes}中 Map 的 key 映射为对象
@@ -60,4 +63,13 @@ public class ErrorAttributeInfo {
      */
     private Throwable throwable;
 
+    @Override
+    public String toString() {
+        ErrorAttributeInfo copy = SmartBeanUtils.copyProperties(this, ErrorAttributeInfo::new);
+        if (copy != null) {
+            copy.setTrace(null);
+            copy.setThrowable(null);
+        }
+        return FastjsonUtils.toString(copy);
+    }
 }

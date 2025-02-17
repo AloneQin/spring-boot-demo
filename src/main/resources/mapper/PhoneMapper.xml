@@ -42,4 +42,8 @@
                 JOIN
              (SELECT COUNT(0) AS total FROM phone) t2
     </select>
+
+    <update id="updatePriceById">
+        update phone set price = price + #{updatePrice} where id = #{id}
+    </update>
 </mapper>

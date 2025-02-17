@@ -1,6 +1,6 @@
 package com.example.demo.common.minio;
 
-import com.example.demo.common.config.MinioProperties;
+import com.example.demo.common.prop.MinioProperties;
 import com.example.demo.utils.MinioUtils;
 import io.minio.MinioClient;
 import io.minio.ObjectWriteResponse;

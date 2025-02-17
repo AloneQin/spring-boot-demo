@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.util.Optional;
 
 /**
  * HttpServletResponse 工具类
@@ -90,11 +91,7 @@ public class ResponseUtils {
      * @return 输入流
      */
     public static InputStream stringToStream(String inputStr) {
-        if (inputStr == null) {
-            return null;
-        }
-
-        return new ByteArrayInputStream(inputStr.getBytes());
+        return Optional.ofNullable(inputStr).map(s -> new ByteArrayInputStream(s.getBytes())).orElse(null);
     }
 
     /**

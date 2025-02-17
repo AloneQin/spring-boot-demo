@@ -43,4 +43,6 @@ public interface PhoneDAO extends IService<PhonePO> {
     List<PhonePriceStatDTO> countPriceRangeNum();
 
     List<PhonePriceStatDTO> countPriceRange();
+
+    int updatePriceById(Integer id, BigDecimal updatePrice);
 }

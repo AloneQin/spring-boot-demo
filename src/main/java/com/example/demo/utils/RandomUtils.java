@@ -114,7 +114,7 @@ public class RandomUtils {
 		StringBuilder builder = new StringBuilder();
 		String uuid = getUUID(true);
 		String[] arr = uuid.split("");
-		for (int i = 0; i < arr.length; i=i+2) {
+		for (int i = 0; i < arr.length; i = i + 2) {
 			builder.append(arr[i]);
 		}
 		return builder.toString();
@@ -122,7 +122,7 @@ public class RandomUtils {
 	
 	public static void main(String[] args) {
 		for (int i = 0; i < 5; i++) {
-			System.out.println(getNumRandom(6) + " " + getUUID(false));
+			System.out.println(getNumRandom(6) + " " + getUUID(true));
 		}
 		System.out.println(FastjsonUtils.toString(lowerCaseChars));
 		System.out.println(getUUID16());

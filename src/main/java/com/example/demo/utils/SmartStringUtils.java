@@ -110,6 +110,24 @@ public class SmartStringUtils extends StringUtils {
 	}
 
 	/**
+	 * 字符串判空，包含全空格
+	 * @param str 待判定字符串
+	 * @return true or false
+	 */
+	public static boolean isBlank(String str) {
+		return isEmpty(str) || str.trim().isEmpty();
+	}
+
+	/**
+	 * 字符串判非空，包含全非空格
+	 * @param str 待判定字符串
+	 * @return true or false
+	 */
+	public static boolean nonBlank(String str) {
+		return !isBlank(str);
+	}
+
+	/**
 	 * 格式化sql，去除模板引擎中的换行符、制表符、多空格
 	 */
 	public static String formatSql(String sql) {

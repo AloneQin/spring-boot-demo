@@ -5,6 +5,7 @@ import com.example.demo.model.po.PhonePO;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.springframework.stereotype.Repository;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -22,4 +23,5 @@ public interface PhoneMapper extends BaseMapper<PhonePO> {
 
     List<PhonePriceStatDTO> countPriceRange();
 
+    int updatePriceById(Integer id, BigDecimal updatePrice);
 }

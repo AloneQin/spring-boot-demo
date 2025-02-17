@@ -10,6 +10,7 @@ import com.example.demo.model.vo.PeopleVO;
 import com.example.demo.model.vo.PhoneVO;
 import com.example.demo.model.vo.WorkVO;
 import com.example.demo.utils.AssertUtils;
+import com.example.demo.utils.ExceptionUtils;
 import com.example.demo.utils.FastjsonUtils;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -193,4 +194,11 @@ public class CommonReturnController {
         return DefaultResponse.success();
     }
 
+    @GetMapping("/testAssertUtils")
+    public DefaultResponse<Void> testAssertUtils(Integer param) {
+        AssertUtils.nonNull(param, ReturnCodeEnum.PARAM_ERROR);
+        AssertUtils.isTrue(Objects.isNull(param), DefaultResponse.fail(ReturnCodeEnum.PARAM_ERROR, "param is not null"), (Object[] params) -> log.warn("#testAssertUtils, param is not null, param: {}", params[0]), param);
+
+        return DefaultResponse.success();
+    }
 }

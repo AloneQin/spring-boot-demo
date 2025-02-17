@@ -4,7 +4,6 @@ import org.springframework.amqp.core.Binding;
 import org.springframework.amqp.core.BindingBuilder;
 import org.springframework.amqp.core.FanoutExchange;
 import org.springframework.amqp.core.Queue;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -16,7 +15,6 @@ import org.springframework.context.annotation.Configuration;
  *            若多个消费者监听同一个队列，会以轮询的方式发送给消费者，另类一对一
  */
 @Configuration
-@ConditionalOnProperty(name = "spring.rabbitmq.enabled", havingValue = "true")
 public class RabbitFanoutExchangeConfig {
 
     public static final String TEST_FANOUT_QUEUE = "test_fanout_queue";

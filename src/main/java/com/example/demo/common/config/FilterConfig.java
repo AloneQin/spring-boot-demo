@@ -20,8 +20,8 @@ public class FilterConfig {
      * @return
      */
     @Bean
-    public FilterRegistrationBean TraceIdFilterRegistrationBean() {
-        FilterRegistrationBean<TraceIdFilter> registrationBean = new FilterRegistrationBean();
+    public FilterRegistrationBean<TraceIdFilter> TraceIdFilterRegistrationBean() {
+        FilterRegistrationBean<TraceIdFilter> registrationBean = new FilterRegistrationBean<>();
         registrationBean.setFilter(new TraceIdFilter());
         registrationBean.setOrder(FilterConfigEnum.TRACE_ID_FILTER.order);
         registrationBean.addUrlPatterns(FilterConfigEnum.TRACE_ID_FILTER.urlPatterns);
@@ -33,11 +33,11 @@ public class FilterConfig {
      * @return
      */
     @Bean
-    public FilterRegistrationBean urlFilterRegistrationBean() {
-        FilterRegistrationBean<UrlFilter> registrationBean = new FilterRegistrationBean();
+    public FilterRegistrationBean<UrlFilter> urlFilterRegistrationBean() {
+        FilterRegistrationBean<UrlFilter> registrationBean = new FilterRegistrationBean<>();
         registrationBean.setFilter(new UrlFilter());
-        registrationBean.setOrder(FilterConfigEnum.URL_FILTER.order);
-        registrationBean.addUrlPatterns(FilterConfigEnum.URL_FILTER.urlPatterns);
+        registrationBean.setOrder(Integer.MIN_VALUE);
+        registrationBean.addUrlPatterns("/*");
         return registrationBean;
     }
 
@@ -46,8 +46,8 @@ public class FilterConfig {
      * @return
      */
     @Bean
-    public FilterRegistrationBean crossDomainFilterRegistrationBean() {
-        FilterRegistrationBean<CrossDomainFilter> registrationBean = new FilterRegistrationBean();
+    public FilterRegistrationBean<CrossDomainFilter> crossDomainFilterRegistrationBean() {
+        FilterRegistrationBean<CrossDomainFilter> registrationBean = new FilterRegistrationBean<>();
         registrationBean.setFilter(new CrossDomainFilter());
         registrationBean.setOrder(FilterConfigEnum.CROSS_DOMAIN_FILTER.order);
         registrationBean.addUrlPatterns(FilterConfigEnum.CROSS_DOMAIN_FILTER.urlPatterns);
@@ -59,8 +59,8 @@ public class FilterConfig {
      * @return
      */
     @Bean
-    public FilterRegistrationBean testFilterRegistrationBean() {
-        FilterRegistrationBean<TestFilter> registrationBean = new FilterRegistrationBean();
+    public FilterRegistrationBean<TestFilter> testFilterRegistrationBean() {
+        FilterRegistrationBean<TestFilter> registrationBean = new FilterRegistrationBean<>();
         registrationBean.setFilter(new TestFilter());
         registrationBean.setOrder(FilterConfigEnum.TEST_FILTER.order);
         registrationBean.addUrlPatterns(FilterConfigEnum.TEST_FILTER.urlPatterns);

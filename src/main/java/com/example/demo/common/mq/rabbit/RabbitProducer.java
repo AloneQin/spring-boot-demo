@@ -1,19 +1,22 @@
 package com.example.demo.common.mq.rabbit;
 
-import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.core.MessageDeliveryMode;
 import org.springframework.amqp.core.MessageProperties;
 import org.springframework.amqp.rabbit.connection.CorrelationData;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
+
+import javax.annotation.Resource;
 
 @Slf4j
 @Component
-@AllArgsConstructor
 public class RabbitProducer {
 
-    private final RabbitTemplate rabbitTemplate;
+    @Lazy
+    @Resource
+    private RabbitTemplate rabbitTemplate;
 
     public void send(String msg) {
         rabbitTemplate.setConfirmCallback(confirmCallback);

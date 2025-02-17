@@ -58,8 +58,18 @@ public class ExcelUtilsTest {
         ExcelUtils.readExcelAllByPage(cpr.getInputStream(), Student.class, 1, 1, entityList -> {
             log.info("Read All Page: " + FastjsonUtils.toString(entityList));
         });
-
         System.out.println(FastjsonUtils.toStringFormat(getHead()));
+
+        List<Tenant> tenantList = ExcelUtils.readExcelAll("D:\\work\\doc\\项目\\智飞\\需要补索引的企业.xlsx", Tenant.class, 1, ArrayList::new);
+        StringBuilder stringBuilder = new StringBuilder();
+        tenantList.forEach(tenant -> {
+            stringBuilder.append(tenant.getC1()).append(",");
+        });
+        String str = stringBuilder.toString();
+        if (str.endsWith(",")) {
+            str = str.substring(0, str.length() - 1);
+        }
+        System.out.println(str);
     }
 
     private static List<List<String>> getHead() {

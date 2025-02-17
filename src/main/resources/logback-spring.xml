@@ -10,7 +10,7 @@
 	<!-- 编码 -->
 	<property name="ENCODING" value="UTF-8" />
 	<!-- 日志格式-普通 -->
-	<property name="LOG_PATTERN_NORMAL" value="%d{yyyy-MM-dd HH:mm:ss.SSS} %5p ${PID} [%15.15t] [%X{TRACE_ID}] %-30.30logger{29} %4.4L: %m%n" />
+	<property name="LOG_PATTERN_NORMAL" value="%d{yyyy-MM-dd HH:mm:ss.SSS} %5p ${PID} [%15.15t] [%X{TRACE_ID}] %-40.40logger{39} %4.4L: %m%n" />
 	<!-- 日志格式-彩色
 		%d：日期
 		%p：日志级别（5=指定最大宽度、highlight=根据日志级别高亮显示）
@@ -24,7 +24,7 @@
 		color：%blue(蓝)、%cyan(青)、%faint(淡白)、%green(绿)、%magenta(品红)、%red(红)、%yellow(黄)、%boldXxx(对应颜色并加粗)
 		更多内置信息查看 {@link ch.qos.logback.classic.PatternLayout#defaultConverterMap} 类
 	-->
-	<property name="LOG_PATTERN_COLOR" value="%d{yyyy-MM-dd HH:mm:ss.SSS} %highlight(%5p) %magenta(${PID}) %blue([%15.15t]) %boldGreen([%X{TRACE_ID}]) %cyan(%-30.30logger{29}) %yellow(%4.4L): %m%n"/>
+	<property name="LOG_PATTERN_COLOR" value="%d{yyyy-MM-dd HH:mm:ss.SSS} %highlight(%5p) %magenta(${PID}) %blue([%15.15t]) %boldGreen([%X{TRACE_ID}]) %cyan(%-40.40logger{39}) %yellow(%4.4L): %m%n"/>
 
 	<!-- 读取 springboot 配置 -->
 	<springProperty name="APPLICATION_NAME" scope="context" source="spring.application.name" />
@@ -82,14 +82,14 @@
 	<!-- 打印 MyBatis DAO 日志 -->
 	<!--<logger name="com.example.demo.dao.mysql.mapper" level="DEBUG" />-->
 	<!-- 打印 P6Spy 日志 -->
-	<logger name="com.example.demo.common.config.P6SpyLoggerConfig" level="DEBUG" />-->
+	<logger name="com.example.demo.common.config.P6SpyLoggerConfig" level="DEBUG" />
+	<!-- 关闭 tomcat 日志 -->
+	<logger name="org.apache.catalina.core.ContainerBase" level="OFF" />
 
-	<!-- 本地 -->
-	<springProfile name="default">
-		<root level="INFO">
-			<appender-ref ref="CONSOLE" />
-		</root>
-	</springProfile>
+	<!-- 默认 -->
+	<root level="INFO">
+		<appender-ref ref="CONSOLE" />
+	</root>
 
 	<!-- 其他环境 -->
 	<springProfile name="dev|test|prod">

@@ -1,5 +1,7 @@
 package com.example.demo.utils;
 
+import lombok.Cleanup;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.PrintWriter;
@@ -16,18 +18,12 @@ public class ExceptionUtils {
      * @param throwable 错误 or 异常
      * @return 堆栈信息
      */
+    @SneakyThrows
     public static String getStackTrace(Throwable throwable) {
-        StringWriter stringWriter = new StringWriter();
-        PrintWriter printWriter = new PrintWriter(stringWriter);
-        try {
-            throwable.printStackTrace(printWriter);
-            return stringWriter.toString();
-        } catch (Exception e) {
-            log.error("getStackTrace, catch exception", e);
-        } finally {
-            printWriter.close();
-        }
-        return "unknown";
+        @Cleanup StringWriter stringWriter = new StringWriter();
+        @Cleanup PrintWriter printWriter = new PrintWriter(stringWriter);
+        throwable.printStackTrace(printWriter);
+        return stringWriter.toString();
     }
 
 }

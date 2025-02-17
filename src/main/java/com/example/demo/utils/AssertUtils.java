@@ -17,7 +17,7 @@ import java.util.function.Supplier;
  * @param <T> {@link DefaultResponse#getContent()#getClass()}
  */
 @Slf4j
-public class AssertUtils<E extends BaseException, T> {
+public class AssertUtils<E extends BaseException, T, P> {
 
     /**
      * 抛出异常
@@ -40,6 +40,7 @@ public class AssertUtils<E extends BaseException, T> {
     /**
      * 抛出异常
      * @param defaultResponse {@link DefaultResponse<T>}
+     * @param <T> {@link DefaultResponse#getContent()#getClass()}
      */
     public static <T> void doThrow(DefaultResponse<T> defaultResponse) {
         throw new BaseException(defaultResponse);
@@ -49,9 +50,24 @@ public class AssertUtils<E extends BaseException, T> {
      * 抛出异常，并支持植入额外操作
      * @param defaultResponse {@link DefaultResponse<T>}
      * @param runnable 需要植入的操作
+     * @param <T> {@link DefaultResponse#getContent()#getClass()}
      */
     public static <T> void doThrow(DefaultResponse<T> defaultResponse, Runnable runnable) {
         runnable.run();
+        throw new BaseException(defaultResponse);
+    }
+
+    /**
+     * 抛出异常，并支持植入传递可变参数的额外操作
+     * @param defaultResponse {@link DefaultResponse<T>}
+     * @param consumer 需要植入传递可变参数额外操作
+     * @param params 可变参数
+     * @param <T> {@link DefaultResponse#getContent()#getClass()}
+     * @param <P> 参数类型
+     */
+    @SafeVarargs
+    public static <T, P> void doThrow(DefaultResponse<T> defaultResponse, MultiConsumer<P> consumer, P... params) {
+        consumer.accept(params);
         throw new BaseException(defaultResponse);
     }
 
@@ -70,6 +86,19 @@ public class AssertUtils<E extends BaseException, T> {
      */
     public static void doThrow(ReturnCodeEnum returnCodeEnum, Runnable runnable) {
         runnable.run();
+        throw new BaseException(returnCodeEnum);
+    }
+
+    /**
+     * 抛出异常，并支持植入传递可变参数的额外操作
+     * @param returnCodeEnum {@link ReturnCodeEnum}
+     * @param consumer 需要植入传递可变参数额外操作
+     * @param params 可变参数
+     * @param <P> 参数类型
+     */
+    @SafeVarargs
+    public static <P> void doThrow(ReturnCodeEnum returnCodeEnum, MultiConsumer<P> consumer, P... params) {
+        consumer.accept(params);
         throw new BaseException(returnCodeEnum);
     }
 
@@ -94,6 +123,22 @@ public class AssertUtils<E extends BaseException, T> {
      */
     public static <T> void doThrow(String code, String message, T content, Runnable runnable) {
         runnable.run();
+        throw new BaseException(code, message, content);
+    }
+
+    /**
+     * 抛出异常，并支持植入传递可变参数的额外操作
+     * @param code {@link DefaultResponse#getCode()}
+     * @param message {@link DefaultResponse#getMessage()}
+     * @param content {@link DefaultResponse#getContent()}
+     * @param consumer 需要植入传递可变参数额外操作
+     * @param params 可变参数
+     * @param <T> {@link DefaultResponse#getContent()#getClass()}
+     * @param <P> 参数类型
+     */
+    @SafeVarargs
+    public static <T, P> void doThrow(String code, String message, T content, MultiConsumer<P> consumer, P... params) {
+        consumer.accept(params);
         throw new BaseException(code, message, content);
     }
 
@@ -124,9 +169,27 @@ public class AssertUtils<E extends BaseException, T> {
     }
 
     /**
+     * 判断对象为<code>null</code>，不是将抛出异常，并支持植入传递可变参数的额外操作
+     * @param object 待判断对象
+     * @param e {@link BaseException}
+     * @param consumer 需要植入传递可变参数额外操作
+     * @param params 可变参数
+     * @param <E> {@link BaseException}
+     * @param <P> 参数类型
+     */
+    @SafeVarargs
+    public static <E extends BaseException, P> void isNull(Object object, E e, MultiConsumer<P> consumer, P... params) {
+        if (Objects.nonNull(object)) {
+            consumer.accept(params);
+            doThrow(e);
+        }
+    }
+
+    /**
      * 判断对象为<code>null</code>，不是将抛出异常
      * @param object 待判断对象
      * @param defaultResponse {@link DefaultResponse<T>}
+     * @param <T> {@link DefaultResponse#getContent()#getClass()}
      */
     public static <T> void isNull(Object object, DefaultResponse<T> defaultResponse) {
         if (Objects.nonNull(object)) {
@@ -139,10 +202,28 @@ public class AssertUtils<E extends BaseException, T> {
      * @param object 待判断对象
      * @param defaultResponse {@link DefaultResponse<T>}
      * @param runnable 需要植入的操作
+     * @param <T> {@link DefaultResponse#getContent()#getClass()}
      */
     public static <T> void isNull(Object object, DefaultResponse<T> defaultResponse, Runnable runnable) {
         if (Objects.nonNull(object)) {
             runnable.run();
+            doThrow(defaultResponse);
+        }
+    }
+
+    /**
+     * 判断对象为<code>null</code>，不是将抛出异常，并支持植入传递可变参数的额外操作
+     * @param object 待判断对象
+     * @param defaultResponse {@link DefaultResponse<T>}
+     * @param consumer 需要植入传递可变参数额外操作
+     * @param params 可变参数
+     * @param <T> {@link DefaultResponse#getContent()#getClass()}
+     * @param <P> 参数类型
+     */
+    @SafeVarargs
+    public static <T, P> void isNull(Object object, DefaultResponse<T> defaultResponse, MultiConsumer<P> consumer, P... params) {
+        if (Objects.nonNull(object)) {
+            consumer.accept(params);
             doThrow(defaultResponse);
         }
     }
@@ -167,6 +248,22 @@ public class AssertUtils<E extends BaseException, T> {
     public static void isNull(Object object, ReturnCodeEnum returnCodeEnum, Runnable runnable) {
         if (Objects.nonNull(object)) {
             runnable.run();
+            doThrow(returnCodeEnum);
+        }
+    }
+
+    /**
+     * 判断对象为<code>null</code>，不是将抛出异常，并支持植入传递可变参数的额外操作
+     * @param object 待判断对象
+     * @param returnCodeEnum {@link ReturnCodeEnum}
+     * @param consumer 需要植入传递可变参数额外操作
+     * @param params 可变参数
+     * @param <P> 参数类型
+     */
+    @SafeVarargs
+    public static <P> void isNull(Object object, ReturnCodeEnum returnCodeEnum, MultiConsumer<P> consumer, P... params) {
+        if (Objects.nonNull(object)) {
+            consumer.accept(params);
             doThrow(returnCodeEnum);
         }
     }
@@ -202,6 +299,25 @@ public class AssertUtils<E extends BaseException, T> {
     }
 
     /**
+     * 判断对象为<code>null</code>，不是将抛出异常，并支持植入传递可变参数的额外操作
+     * @param object 待判断对象
+     * @param code {@link DefaultResponse#getCode()}
+     * @param message {@link DefaultResponse#getMessage()}
+     * @param content {@link DefaultResponse#getContent()}
+     * @param consumer 需要植入传递可变参数额外操作
+     * @param params 可变参数
+     * @param <T> {@link DefaultResponse#getContent()#getClass()}
+     * @param <P> 参数类型
+     */
+    @SafeVarargs
+    public static <T, P> void isNull(Object object, String code, String message, T content, MultiConsumer<P> consumer, P... params) {
+        if (Objects.nonNull(object)) {
+            consumer.accept(params);
+            doThrow(code, message, content);
+        }
+    }
+
+    /**
      * 判断对象不为<code>null</code>，是将抛出异常
      * @param object 待判断对象
      * @param e {@link BaseException}
@@ -228,9 +344,27 @@ public class AssertUtils<E extends BaseException, T> {
     }
 
     /**
+     * 判断对象不为<code>null</code>，是将抛出异常，并支持植入传递可变参数的额外操作
+     * @param object 待判断对象
+     * @param e {@link BaseException}
+     * @param consumer 需要植入传递可变参数额外操作
+     * @param params 可变参数
+     * @param <E> {@link BaseException}
+     * @param <P> 参数类型
+     */
+    @SafeVarargs
+    public static <E extends BaseException, P> void nonNull(Object object, E e, MultiConsumer<P> consumer, P... params) {
+        if (Objects.isNull(object)) {
+            consumer.accept(params);
+            doThrow(e);
+        }
+    }
+
+    /**
      * 判断对象不为<code>null</code>，是将抛出异常
      * @param object 待判断对象
      * @param defaultResponse {@link DefaultResponse<T>}
+     * @param <T> {@link DefaultResponse#getContent()#getClass()}
      */
     public static <T> void nonNull(Object object, DefaultResponse<T> defaultResponse) {
         if (Objects.isNull(object)) {
@@ -243,10 +377,28 @@ public class AssertUtils<E extends BaseException, T> {
      * @param object 待判断对象
      * @param defaultResponse {@link DefaultResponse<T>}
      * @param runnable 需要植入的操作
+     * @param <T> {@link DefaultResponse#getContent()#getClass()}
      */
     public static <T> void nonNull(Object object, DefaultResponse<T> defaultResponse, Runnable runnable) {
         if (Objects.isNull(object)) {
             runnable.run();
+            doThrow(defaultResponse);
+        }
+    }
+
+    /**
+     * 判断对象不为<code>null</code>，是将抛出异常，并支持植入传递可变参数的额外操作
+     * @param object 待判断对象
+     * @param defaultResponse {@link DefaultResponse<T>}
+     * @param consumer 需要植入传递可变参数额外操作
+     * @param params 可变参数
+     * @param <T> {@link DefaultResponse#getContent()#getClass()}
+     * @param <P> 参数类型
+     */
+    @SafeVarargs
+    public static <T, P> void nonNull(Object object, DefaultResponse<T> defaultResponse, MultiConsumer<P> consumer, P... params) {
+        if (Objects.isNull(object)) {
+            consumer.accept(params);
             doThrow(defaultResponse);
         }
     }
@@ -271,6 +423,22 @@ public class AssertUtils<E extends BaseException, T> {
     public static void nonNull(Object object, ReturnCodeEnum returnCodeEnum, Runnable runnable) {
         if (Objects.isNull(object)) {
             runnable.run();
+            doThrow(returnCodeEnum);
+        }
+    }
+
+    /**
+     * 判断对象不为<code>null</code>，是将抛出异常，并支持植入传递可变参数的额外操作
+     * @param object 待判断对象
+     * @param returnCodeEnum {@link ReturnCodeEnum}
+     * @param consumer 需要植入传递可变参数额外操作
+     * @param params 可变参数
+     * @param <P> 参数类型
+     */
+    @SafeVarargs
+    public static <P> void nonNull(Object object, ReturnCodeEnum returnCodeEnum, MultiConsumer<P> consumer, P... params) {
+        if (Objects.isNull(object)) {
+            consumer.accept(params);
             doThrow(returnCodeEnum);
         }
     }
@@ -306,6 +474,25 @@ public class AssertUtils<E extends BaseException, T> {
     }
 
     /**
+     * 判断对象不为<code>null</code>，是将抛出异常，并支持植入传递可变参数的额外操作
+     * @param object 待判断对象
+     * @param code {@link DefaultResponse#getCode()}
+     * @param message {@link DefaultResponse#getMessage()}
+     * @param content {@link DefaultResponse#getContent()}
+     * @param consumer 需要植入传递可变参数额外操作
+     * @param params 可变参数
+     * @param <T> {@link DefaultResponse#getContent()#getClass()}
+     * @param <P> 参数类型
+     */
+    @SafeVarargs
+    public static <T, P> void nonNull(Object object, String code, String message, T content, MultiConsumer<P> consumer, P... params) {
+        if (Objects.isNull(object)) {
+            consumer.accept(params);
+            doThrow(code, message, content);
+        }
+    }
+
+    /**
      * 判断字符串为<code>null</code>或空串，不是将抛出异常
      * @param str 待判断字符串
      * @param e {@link BaseException}
@@ -327,9 +514,24 @@ public class AssertUtils<E extends BaseException, T> {
     }
 
     /**
+     * 判断字符串为<code>null</code>或空串，不是将抛出异常，并支持植入传递可变参数的额外操作
+     * @param str 待判断字符串
+     * @param e {@link BaseException}
+     * @param consumer 需要植入传递可变参数额外操作
+     * @param params 可变参数
+     * @param <E> {@link BaseException}
+     * @param <P> 参数类型
+     */
+    @SafeVarargs
+    public static <E extends BaseException, P> void isEmpty(String str, E e, MultiConsumer<P> consumer, P... params) {
+        isTrue(StringUtils.isEmpty(str), e, consumer, params);
+    }
+
+    /**
      * 判断字符串为<code>null</code>或空串，不是将抛出异常
      * @param str 待判断字符串
      * @param defaultResponse {@link DefaultResponse<T>}
+     * @param <T> {@link DefaultResponse#getContent()#getClass()}
      */
     public static <T> void isEmpty(String str, DefaultResponse<T> defaultResponse) {
         isTrue(StringUtils.isEmpty(str), defaultResponse);
@@ -340,9 +542,24 @@ public class AssertUtils<E extends BaseException, T> {
      * @param str 待判断字符串
      * @param defaultResponse {@link DefaultResponse<T>}
      * @param runnable 需要植入的操作
+     * @param <T> {@link DefaultResponse#getContent()#getClass()}
      */
     public static <T> void isEmpty(String str, DefaultResponse<T> defaultResponse, Runnable runnable) {
         isTrue(StringUtils.isEmpty(str), defaultResponse, runnable);
+    }
+
+    /**
+     * 判断字符串为<code>null</code>或空串，不是将抛出异常，并支持植入传递可变参数的额外操作
+     * @param str 待判断字符串
+     * @param defaultResponse {@link DefaultResponse<T>}
+     * @param consumer 需要植入传递可变参数额外操作
+     * @param params 可变参数
+     * @param <T> {@link DefaultResponse#getContent()#getClass()}
+     * @param <P> 参数类型
+     */
+    @SafeVarargs
+    public static <T, P> void isEmpty(String str, DefaultResponse<T> defaultResponse, MultiConsumer<P> consumer, P... params) {
+        isTrue(StringUtils.isEmpty(str), defaultResponse, consumer, params);
     }
 
     /**
@@ -362,6 +579,19 @@ public class AssertUtils<E extends BaseException, T> {
      */
     public static void isEmpty(String str, ReturnCodeEnum returnCodeEnum, Runnable runnable) {
         isTrue(StringUtils.isEmpty(str), returnCodeEnum, runnable);
+    }
+
+    /**
+     * 判断字符串为<code>null</code>或空串，不是将抛出异常，并支持植入传递可变参数的额外操作
+     * @param str 待判断字符串
+     * @param returnCodeEnum {@link ReturnCodeEnum}
+     * @param consumer 需要植入传递可变参数额外操作
+     * @param params 可变参数
+     * @param <P> 参数类型
+     */
+    @SafeVarargs
+    public static <P> void isEmpty(String str, ReturnCodeEnum returnCodeEnum, MultiConsumer<P> consumer, P... params) {
+        isTrue(StringUtils.isEmpty(str), returnCodeEnum, consumer, params);
     }
 
     /**
@@ -387,6 +617,22 @@ public class AssertUtils<E extends BaseException, T> {
      */
     public static <T> void isEmpty(String str, String code, String message, T content, Runnable runnable) {
         isTrue(StringUtils.isEmpty(str), code, message, content, runnable);
+    }
+
+    /**
+     * 判断字符串为<code>null</code>或空串，不是将抛出异常，并支持植入传递可变参数的额外操作
+     * @param str 待判断字符串
+     * @param code {@link DefaultResponse#getCode()}
+     * @param message {@link DefaultResponse#getMessage()}
+     * @param content {@link DefaultResponse#getContent()}
+     * @param consumer 需要植入传递可变参数额外操作
+     * @param params 可变参数
+     * @param <T> {@link DefaultResponse#getContent()#getClass()}
+     * @param <P> 参数类型
+     */
+    @SafeVarargs
+    public static <T, P> void isEmpty(String str, String code, String message, T content, MultiConsumer<P> consumer, P... params) {
+        isTrue(StringUtils.isEmpty(str), code, message, content, consumer, params);
     }
 
     /**
@@ -416,9 +662,27 @@ public class AssertUtils<E extends BaseException, T> {
     }
 
     /**
+     * 判断字符串不为<code>null</code>或空串，是将抛出异常，并支持植入传递可变参数的额外操作
+     * @param str 待判断字符串
+     * @param e {@link BaseException}
+     * @param consumer 需要植入传递可变参数额外操作
+     * @param params 可变参数
+     * @param <E> {@link BaseException}
+     * @param <P> 参数类型
+     */
+    @SafeVarargs
+    public static <E extends BaseException, P> void nonEmpty(String str, E e, MultiConsumer<P> consumer, P... params) {
+        if (StringUtils.isEmpty(str)) {
+            consumer.accept(params);
+            doThrow(e);
+        }
+    }
+
+    /**
      * 判断字符串不为<code>null</code>或空串，是将抛出异常
      * @param str 待判断字符串
      * @param defaultResponse {@link DefaultResponse<T>}
+     * @param <T> {@link DefaultResponse#getContent()#getClass()}
      */
     public static <T> void nonEmpty(String str, DefaultResponse<T> defaultResponse) {
         if (StringUtils.isEmpty(str)) {
@@ -431,10 +695,28 @@ public class AssertUtils<E extends BaseException, T> {
      * @param str 待判断字符串
      * @param defaultResponse {@link DefaultResponse<T>}
      * @param runnable 需要植入的操作
+     * @param <T> {@link DefaultResponse#getContent()#getClass()}
      */
     public static <T> void nonEmpty(String str, DefaultResponse<T> defaultResponse, Runnable runnable) {
         if (StringUtils.isEmpty(str)) {
             runnable.run();
+            doThrow(defaultResponse);
+        }
+    }
+
+    /**
+     * 判断字符串不为<code>null</code>或空串，是将抛出异常，并支持植入传递可变参数的额外操作
+     * @param str 待判断字符串
+     * @param defaultResponse {@link DefaultResponse<T>}
+     * @param consumer 需要植入传递可变参数额外操作
+     * @param params 可变参数
+     * @param <T> {@link DefaultResponse#getContent()#getClass()}
+     * @param <P> 参数类型
+     */
+    @SafeVarargs
+    public static <T, P> void nonEmpty(String str, DefaultResponse<T> defaultResponse, MultiConsumer<P> consumer, P... params) {
+        if (StringUtils.isEmpty(str)) {
+            consumer.accept(params);
             doThrow(defaultResponse);
         }
     }
@@ -459,6 +741,22 @@ public class AssertUtils<E extends BaseException, T> {
     public static void nonEmpty(String str, ReturnCodeEnum returnCodeEnum, Runnable runnable) {
         if (StringUtils.isEmpty(str)) {
             runnable.run();
+            doThrow(returnCodeEnum);
+        }
+    }
+
+    /**
+     * 判断字符串不为<code>null</code>或空串，是将抛出异常，并支持植入传递可变参数的额外操作
+     * @param str 待判断字符串
+     * @param returnCodeEnum {@link ReturnCodeEnum}
+     * @param consumer 需要植入传递可变参数额外操作
+     * @param params 可变参数
+     * @param <P> 参数类型
+     */
+    @SafeVarargs
+    public static <P> void nonEmpty(String str, ReturnCodeEnum returnCodeEnum, MultiConsumer<P> consumer, P... params) {
+        if (StringUtils.isEmpty(str)) {
+            consumer.accept(params);
             doThrow(returnCodeEnum);
         }
     }
@@ -494,6 +792,25 @@ public class AssertUtils<E extends BaseException, T> {
     }
 
     /**
+     * 判断字符串不为<code>null</code>或空串，是将抛出异常，并支持植入传递可变参数的额外操作
+     * @param str 待判断字符串
+     * @param code {@link DefaultResponse#getCode()}
+     * @param message {@link DefaultResponse#getMessage()}
+     * @param content {@link DefaultResponse#getContent()}
+     * @param consumer 需要植入传递可变参数额外操作
+     * @param params 可变参数
+     * @param <T> {@link DefaultResponse#getContent()#getClass()}
+     * @param <P> 参数类型
+     */
+    @SafeVarargs
+    public static <T, P> void nonEmpty(String str, String code, String message, T content, MultiConsumer<P> consumer, P... params) {
+        if (StringUtils.isEmpty(str)) {
+            consumer.accept(params);
+            doThrow(code, message, content);
+        }
+    }
+
+    /**
      * 判断集合为空，不是将抛出异常
      * @param collection 待判断集合
      * @param e {@link BaseException}
@@ -504,7 +821,7 @@ public class AssertUtils<E extends BaseException, T> {
     }
 
     /**
-     * 判断集合为空，不是将抛出异常
+     * 判断集合为空，不是将抛出异常，并支持植入额外操作
      * @param collection 待判断集合
      * @param e {@link BaseException}
      * @param runnable 需要植入的操作
@@ -515,22 +832,52 @@ public class AssertUtils<E extends BaseException, T> {
     }
 
     /**
-     * 判断集合为空，不是将抛出异常
+     * 判断集合为空，不是将抛出异常，并支持植入传递可变参数的额外操作
      * @param collection 待判断集合
-     * @param defaultResponse {@link DefaultResponse<T>}
+     * @param e {@link BaseException}
+     * @param consumer 需要植入传递可变参数额外操作
+     * @param params 可变参数
+     * @param <E> {@link BaseException}
+     * @param <P> 参数类型
      */
-    public static <T> void isEmpty(Collection<?> collection, DefaultResponse<T> defaultResponse) {
-        isTrue(CollectionUtils.isEmpty(collection), defaultResponse);
+    @SafeVarargs
+    public static <E extends BaseException, P> void isEmpty(Collection<?> collection, E e, MultiConsumer<P> consumer, P... params) {
+        isTrue(CollectionUtils.isEmpty(collection), e, consumer, params);
     }
 
     /**
      * 判断集合为空，不是将抛出异常
      * @param collection 待判断集合
      * @param defaultResponse {@link DefaultResponse<T>}
+     * @param <T> {@link DefaultResponse#getContent()#getClass()}
+     */
+    public static <T> void isEmpty(Collection<?> collection, DefaultResponse<T> defaultResponse) {
+        isTrue(CollectionUtils.isEmpty(collection), defaultResponse);
+    }
+
+    /**
+     * 判断集合为空，不是将抛出异常，并支持植入额外操作
+     * @param collection 待判断集合
+     * @param defaultResponse {@link DefaultResponse<T>}
      * @param runnable 需要植入的操作
+     * @param <T> {@link DefaultResponse#getContent()#getClass()}
      */
     public static <T> void isEmpty(Collection<?> collection, DefaultResponse<T> defaultResponse, Runnable runnable) {
         isTrue(CollectionUtils.isEmpty(collection), defaultResponse, runnable);
+    }
+
+    /**
+     * 判断集合为空，不是将抛出异常，并支持植入传递可变参数的额外操作
+     * @param collection 待判断集合
+     * @param defaultResponse {@link DefaultResponse<T>}
+     * @param consumer 需要植入传递可变参数额外操作
+     * @param params 可变参数
+     * @param <T> {@link DefaultResponse#getContent()#getClass()}
+     * @param <P> 参数类型
+     */
+    @SafeVarargs
+    public static <T, P> void isEmpty(Collection<?> collection, DefaultResponse<T> defaultResponse, MultiConsumer<P> consumer, P... params) {
+        isTrue(CollectionUtils.isEmpty(collection), defaultResponse, consumer, params);
     }
 
     /**
@@ -550,6 +897,19 @@ public class AssertUtils<E extends BaseException, T> {
      */
     public static void isEmpty(Collection<?> collection, ReturnCodeEnum returnCodeEnum, Runnable runnable) {
         isTrue(CollectionUtils.isEmpty(collection), returnCodeEnum, runnable);
+    }
+
+    /**
+     * 判断集合为空，不是将抛出异常，并支持植入传递可变参数的额外操作
+     * @param collection 待判断集合
+     * @param returnCodeEnum {@link ReturnCodeEnum}
+     * @param consumer 需要植入传递可变参数额外操作
+     * @param params 可变参数
+     * @param <P> 参数类型
+     */
+    @SafeVarargs
+    public static <P> void isEmpty(Collection<?> collection, ReturnCodeEnum returnCodeEnum, MultiConsumer<P> consumer, P... params) {
+        isTrue(CollectionUtils.isEmpty(collection), returnCodeEnum, consumer, params);
     }
 
     /**
@@ -575,6 +935,22 @@ public class AssertUtils<E extends BaseException, T> {
      */
     public static <T> void isEmpty(Collection<?> collection, String code, String message, T content, Runnable runnable) {
         isTrue(CollectionUtils.isEmpty(collection), code, message, content, runnable);
+    }
+
+    /**
+     * 判断集合为空，不是将抛出异常，并支持植入传递可变参数的额外操作
+     * @param collection 待判断集合
+     * @param code {@link DefaultResponse#getCode()}
+     * @param message {@link DefaultResponse#getMessage()}
+     * @param content {@link DefaultResponse#getContent()}
+     * @param consumer 需要植入传递可变参数额外操作
+     * @param params 可变参数
+     * @param <T> {@link DefaultResponse#getContent()#getClass()}
+     * @param <P> 参数类型
+     */
+    @SafeVarargs
+    public static <T, P> void isEmpty(Collection<?> collection, String code, String message, T content, MultiConsumer<P> consumer, P... params) {
+        isTrue(CollectionUtils.isEmpty(collection), code, message, content, consumer, params);
     }
 
     /**
@@ -604,9 +980,27 @@ public class AssertUtils<E extends BaseException, T> {
     }
 
     /**
+     * 判断集合不为空，是将抛出异常，并支持植入传递可变参数的额外操作
+     * @param collection 待判断集合
+     * @param e {@link BaseException}
+     * @param consumer 需要植入传递可变参数额外操作
+     * @param params 可变参数
+     * @param <E> {@link BaseException}
+     * @param <P> 参数类型
+     */
+    @SafeVarargs
+    public static <E extends BaseException, P> void nonEmpty(Collection<?> collection, E e, MultiConsumer<P> consumer, P... params) {
+        if (CollectionUtils.isEmpty(collection)) {
+            consumer.accept(params);
+            doThrow(e);
+        }
+    }
+
+    /**
      * 判断集合不为空，是将抛出异常
      * @param collection 待判断集合
      * @param defaultResponse {@link DefaultResponse<T>}
+     * @param <T> {@link DefaultResponse#getContent()#getClass()}
      */
     public static <T> void nonEmpty(Collection<?> collection, DefaultResponse<T> defaultResponse) {
         if (CollectionUtils.isEmpty(collection)) {
@@ -619,10 +1013,28 @@ public class AssertUtils<E extends BaseException, T> {
      * @param collection 待判断集合
      * @param defaultResponse {@link DefaultResponse<T>}
      * @param runnable 需要植入的操作
+     * @param <T> {@link DefaultResponse#getContent()#getClass()}
      */
     public static <T> void nonEmpty(Collection<?> collection, DefaultResponse<T> defaultResponse, Runnable runnable) {
         if (CollectionUtils.isEmpty(collection)) {
             runnable.run();
+            doThrow(defaultResponse);
+        }
+    }
+
+    /**
+     * 判断集合不为空，是将抛出异常，并支持植入传递可变参数的额外操作
+     * @param collection 待判断集合
+     * @param defaultResponse {@link DefaultResponse<T>}
+     * @param consumer 需要植入传递可变参数额外操作
+     * @param params 可变参数
+     * @param <T> {@link DefaultResponse#getContent()#getClass()}
+     * @param <P> 参数类型
+     */
+    @SafeVarargs
+    public static <T, P> void nonEmpty(Collection<?> collection, DefaultResponse<T> defaultResponse, MultiConsumer<P> consumer, P... params) {
+        if (CollectionUtils.isEmpty(collection)) {
+            consumer.accept(params);
             doThrow(defaultResponse);
         }
     }
@@ -647,6 +1059,22 @@ public class AssertUtils<E extends BaseException, T> {
     public static void nonEmpty(Collection<?> collection, ReturnCodeEnum returnCodeEnum, Runnable runnable) {
         if (CollectionUtils.isEmpty(collection)) {
             runnable.run();
+            doThrow(returnCodeEnum);
+        }
+    }
+
+    /**
+     * 判断集合不为空，是将抛出异常，并支持植入传递可变参数的额外操作
+     * @param collection 待判断集合
+     * @param returnCodeEnum {@link ReturnCodeEnum}
+     * @param consumer 需要植入传递可变参数额外操作
+     * @param params 可变参数
+     * @param <P> 参数类型
+     */
+    @SafeVarargs
+    public static <P> void nonEmpty(Collection<?> collection, ReturnCodeEnum returnCodeEnum, MultiConsumer<P> consumer, P... params) {
+        if (CollectionUtils.isEmpty(collection)) {
+            consumer.accept(params);
             doThrow(returnCodeEnum);
         }
     }
@@ -682,6 +1110,25 @@ public class AssertUtils<E extends BaseException, T> {
     }
 
     /**
+     * 判断集合不为空，是将抛出异常，并支持植入传递可变参数的额外操作
+     * @param collection 待判断集合
+     * @param code {@link DefaultResponse#getCode()}
+     * @param message {@link DefaultResponse#getMessage()}
+     * @param content {@link DefaultResponse#getContent()}
+     * @param consumer 需要植入传递可变参数额外操作
+     * @param params 可变参数
+     * @param <T> {@link DefaultResponse#getContent()#getClass()}
+     * @param <P> 参数类型
+     */
+    @SafeVarargs
+    public static <T, P> void nonEmpty(Collection<?> collection, String code, String message, T content, MultiConsumer<P> consumer, P... params) {
+        if (CollectionUtils.isEmpty(collection)) {
+            consumer.accept(params);
+            doThrow(code, message, content);
+        }
+    }
+
+    /**
      * 判断布尔表达式为<code>true</code>，不是将抛出异常
      * @param expression 待判断表达式
      * @param e {@link BaseException}
@@ -708,6 +1155,23 @@ public class AssertUtils<E extends BaseException, T> {
     }
 
     /**
+     * 判断布尔表达式为<code>true</code>，不是将抛出异常，并支持植入传递可变参数的额外操作
+     * @param expression 待判断表达式
+     * @param e {@link BaseException}
+     * @param consumer 需要植入传递可变参数额外操作
+     * @param params 可变参数
+     * @param <E> {@link BaseException}
+     * @param <P> 参数类型
+     */
+    @SafeVarargs
+    public static <E extends BaseException, P> void isTrue(boolean expression, E e, MultiConsumer<P> consumer, P... params) {
+        if (!expression) {
+            consumer.accept(params);
+            doThrow(e);
+        }
+    }
+
+    /**
      * 判断布尔表达式为<code>true</code>，不是将抛出异常
      * @param expression 待判断表达式
      * @param defaultResponse {@link DefaultResponse<T>}
@@ -723,10 +1187,28 @@ public class AssertUtils<E extends BaseException, T> {
      * @param expression 待判断表达式
      * @param defaultResponse {@link DefaultResponse<T>}
      * @param runnable 需要植入的操作
+     * @param <T> {@link DefaultResponse#getContent()#getClass()}
      */
     public static <T> void isTrue(boolean expression, DefaultResponse<T> defaultResponse, Runnable runnable) {
         if (!expression) {
             runnable.run();
+            doThrow(defaultResponse);
+        }
+    }
+
+    /**
+     * 判断布尔表达式为<code>true</code>，不是将抛出异常，并支持植入传递可变参数的额外操作
+     * @param expression 待判断表达式
+     * @param defaultResponse {@link DefaultResponse<T>}
+     * @param consumer 需要植入传递可变参数额外操作
+     * @param params 可变参数
+     * @param <T> {@link DefaultResponse#getContent()#getClass()}
+     * @param <P> 参数类型
+     */
+    @SafeVarargs
+    public static <T, P> void isTrue(boolean expression, DefaultResponse<T> defaultResponse, MultiConsumer<P> consumer, P... params) {
+        if (!expression) {
+            consumer.accept(params);
             doThrow(defaultResponse);
         }
     }
@@ -751,6 +1233,22 @@ public class AssertUtils<E extends BaseException, T> {
     public static void isTrue(boolean expression, ReturnCodeEnum returnCodeEnum, Runnable runnable) {
         if (!expression) {
             runnable.run();
+            doThrow(returnCodeEnum);
+        }
+    }
+
+    /**
+     * 判断布尔表达式为<code>true</code>，不是将抛出异常，并支持植入传递可变参数的额外操作
+     * @param expression 待判断表达式
+     * @param returnCodeEnum {@link ReturnCodeEnum}
+     * @param consumer 需要植入传递可变参数额外操作
+     * @param params 可变参数
+     * @param <P> 参数类型
+     */
+    @SafeVarargs
+    public static <P> void isTrue(boolean expression, ReturnCodeEnum returnCodeEnum, MultiConsumer<P> consumer, P... params) {
+        if (!expression) {
+            consumer.accept(params);
             doThrow(returnCodeEnum);
         }
     }
@@ -786,6 +1284,25 @@ public class AssertUtils<E extends BaseException, T> {
     }
 
     /**
+     * 判断布尔表达式为<code>true</code>，不是将抛出异常，并支持植入传递可变参数的额外操作
+     * @param expression 待判断表达式
+     * @param code {@link DefaultResponse#getCode()}
+     * @param message {@link DefaultResponse#getMessage()}
+     * @param content {@link DefaultResponse#getContent()}
+     * @param consumer 需要植入传递可变参数额外操作
+     * @param params 可变参数
+     * @param <T> {@link DefaultResponse#getContent()#getClass()}
+     * @param <P> 参数类型
+     */
+    @SafeVarargs
+    public static <T, P> void isTrue(boolean expression, String code, String message, T content, MultiConsumer<P> consumer, P... params) {
+        if (!expression) {
+            consumer.accept(params);
+            doThrow(code, message, content);
+        }
+    }
+
+    /**
      * 判断布尔表达式为<code>false</code>，不是将抛出异常
      * @param expression 待判断表达式
      * @param e {@link BaseException}
@@ -812,9 +1329,27 @@ public class AssertUtils<E extends BaseException, T> {
     }
 
     /**
+     * 判断布尔表达式为<code>false</code>，不是将抛出异常，并支持植入传递可变参数的额外操作
+     * @param expression 待判断表达式
+     * @param e {@link BaseException}
+     * @param consumer 需要植入传递可变参数额外操作
+     * @param params 可变参数
+     * @param <E> {@link BaseException}
+     * @param <P> 参数类型
+     */
+    @SafeVarargs
+    public static <E extends BaseException, P> void isFalse(boolean expression, E e, MultiConsumer<P> consumer, P... params) {
+        if (expression) {
+            consumer.accept(params);
+            doThrow(e);
+        }
+    }
+
+    /**
      * 判断布尔表达式为<code>false</code>，不是将抛出异常
      * @param expression 待判断表达式
      * @param defaultResponse {@link DefaultResponse<T>}
+     * @param <T> {@link DefaultResponse#getContent()#getClass()}
      */
     public static <T> void isFalse(boolean expression, DefaultResponse<T> defaultResponse) {
         if (expression) {
@@ -827,10 +1362,28 @@ public class AssertUtils<E extends BaseException, T> {
      * @param expression 待判断表达式
      * @param defaultResponse {@link DefaultResponse<T>}
      * @param runnable 需要植入的操作
+     * @param <T> {@link DefaultResponse#getContent()#getClass()}
      */
     public static <T> void isFalse(boolean expression, DefaultResponse<T> defaultResponse, Runnable runnable) {
         if (expression) {
             runnable.run();
+            doThrow(defaultResponse);
+        }
+    }
+
+    /**
+     * 判断布尔表达式为<code>false</code>，不是将抛出异常，并支持植入传递可变参数的额外操作
+     * @param expression 待判断表达式
+     * @param defaultResponse {@link DefaultResponse<T>}
+     * @param consumer 需要植入传递可变参数额外操作
+     * @param params 可变参数
+     * @param <T> {@link DefaultResponse#getContent()#getClass()}
+     * @param <P> 参数类型
+     */
+    @SafeVarargs
+    public static <T, P> void isFalse(boolean expression, DefaultResponse<T> defaultResponse, MultiConsumer<P> consumer, P... params) {
+        if (expression) {
+            consumer.accept(params);
             doThrow(defaultResponse);
         }
     }
@@ -855,6 +1408,22 @@ public class AssertUtils<E extends BaseException, T> {
     public static void isFalse(boolean expression, ReturnCodeEnum returnCodeEnum, Runnable runnable) {
         if (expression) {
             runnable.run();
+            doThrow(returnCodeEnum);
+        }
+    }
+
+    /**
+     * 判断布尔表达式为<code>false</code>，不是将抛出异常，并支持植入传递可变参数的额外操作
+     * @param expression 待判断表达式
+     * @param returnCodeEnum {@link ReturnCodeEnum}
+     * @param consumer 需要植入传递可变参数额外操作
+     * @param params 可变参数
+     * @param <P> 参数类型
+     */
+    @SafeVarargs
+    public static <P> void isFalse(boolean expression, ReturnCodeEnum returnCodeEnum, MultiConsumer<P> consumer, P... params) {
+        if (expression) {
+            consumer.accept(params);
             doThrow(returnCodeEnum);
         }
     }
@@ -890,6 +1459,25 @@ public class AssertUtils<E extends BaseException, T> {
     }
 
     /**
+     * 判断布尔表达式为<code>false</code>，不是将抛出异常，并支持植入传递可变参数的额外操作
+     * @param expression 待判断表达式
+     * @param code {@link DefaultResponse#getCode()}
+     * @param message {@link DefaultResponse#getMessage()}
+     * @param content {@link DefaultResponse#getContent()}
+     * @param consumer 需要植入传递可变参数额外操作
+     * @param params 可变参数
+     * @param <T> {@link DefaultResponse#getContent()#getClass()}
+     * @param <P> 参数类型
+     */
+    @SafeVarargs
+    public static <T, P> void isFalse(boolean expression, String code, String message, T content, MultiConsumer<P> consumer, P... params) {
+        if (expression) {
+            consumer.accept(params);
+            doThrow(code, message, content);
+        }
+    }
+
+    /**
      * 判断布尔表达式提供者为<code>true</code>，不是将抛出异常
      * @param expressionSupplier 布尔表达式提供者
      * @param e {@link BaseException}
@@ -916,9 +1504,27 @@ public class AssertUtils<E extends BaseException, T> {
     }
 
     /**
+     * 判断布尔表达式提供者为<code>true</code>，不是将抛出异常，并支持植入传递可变参数的额外操作
+     * @param expressionSupplier 布尔表达式提供者
+     * @param e {@link BaseException}
+     * @param consumer 需要植入传递可变参数额外操作
+     * @param params 可变参数
+     * @param <E> {@link BaseException}
+     * @param <P> 参数类型
+     */
+    @SafeVarargs
+    public static <E extends BaseException, P> void state(Supplier<Boolean> expressionSupplier, E e, MultiConsumer<P> consumer, P... params) {
+        if (!expressionSupplier.get()) {
+            consumer.accept(params);
+            doThrow(e);
+        }
+    }
+
+    /**
      * 判断布尔表达式提供者为<code>true</code>，不是将抛出异常
      * @param expressionSupplier 布尔表达式提供者
      * @param defaultResponse {@link DefaultResponse<T>}
+     * @param <T> {@link DefaultResponse#getContent()#getClass()}
      */
     public static <T> void state(Supplier<Boolean> expressionSupplier, DefaultResponse<T> defaultResponse) {
         if (!expressionSupplier.get()) {
@@ -931,10 +1537,28 @@ public class AssertUtils<E extends BaseException, T> {
      * @param expressionSupplier 布尔表达式提供者
      * @param defaultResponse {@link DefaultResponse<T>}
      * @param runnable 需要植入的操作
+     * @param <T> {@link DefaultResponse#getContent()#getClass()}
      */
     public static <T> void state(Supplier<Boolean> expressionSupplier, DefaultResponse<T> defaultResponse, Runnable runnable) {
         if (!expressionSupplier.get()) {
             runnable.run();
+            doThrow(defaultResponse);
+        }
+    }
+
+    /**
+     * 判断布尔表达式提供者为<code>true</code>，不是将抛出异常，并支持植入传递可变参数的额外操作
+     * @param expressionSupplier 布尔表达式提供者
+     * @param defaultResponse {@link DefaultResponse<T>}
+     * @param consumer 需要植入传递可变参数额外操作
+     * @param params 可变参数
+     * @param <T> {@link DefaultResponse#getContent()#getClass()}
+     * @param <P> 参数类型
+     */
+    @SafeVarargs
+    public static <T, P> void state(Supplier<Boolean> expressionSupplier, DefaultResponse<T> defaultResponse, MultiConsumer<P> consumer, P... params) {
+        if (!expressionSupplier.get()) {
+            consumer.accept(params);
             doThrow(defaultResponse);
         }
     }
@@ -959,6 +1583,22 @@ public class AssertUtils<E extends BaseException, T> {
     public static void state(Supplier<Boolean> expressionSupplier, ReturnCodeEnum returnCodeEnum, Runnable runnable) {
         if (!expressionSupplier.get()) {
             runnable.run();
+            doThrow(returnCodeEnum);
+        }
+    }
+
+    /**
+     * 判断布尔表达式提供者为<code>true</code>，不是将抛出异常，并支持植入传递可变参数的额外操作
+     * @param expressionSupplier 布尔表达式提供者
+     * @param returnCodeEnum {@link ReturnCodeEnum}
+     * @param consumer 需要植入传递可变参数额外操作
+     * @param params 可变参数
+     * @param <P> 参数类型
+     */
+    @SafeVarargs
+    public static <P> void state(Supplier<Boolean> expressionSupplier, ReturnCodeEnum returnCodeEnum, MultiConsumer<P> consumer, P... params) {
+        if (!expressionSupplier.get()) {
+            consumer.accept(params);
             doThrow(returnCodeEnum);
         }
     }
@@ -991,5 +1631,35 @@ public class AssertUtils<E extends BaseException, T> {
             runnable.run();
             doThrow(code, message, content);
         }
+    }
+
+    /**
+     * 判断布尔表达式提供者为<code>true</code>，不是将抛出异常，并支持植入传递可变参数的额外操作
+     * @param expressionSupplier 布尔表达式提供者
+     * @param code {@link DefaultResponse#getCode()}
+     * @param message {@link DefaultResponse#getMessage()}
+     * @param content {@link DefaultResponse#getContent()}
+     * @param consumer 需要植入传递可变参数额外操作
+     * @param params 可变参数
+     * @param <T> {@link DefaultResponse#getContent()#getClass()}
+     * @param <P> 参数类型
+     */
+    @SafeVarargs
+    public static <T, P> void state(Supplier<Boolean> expressionSupplier, String code, String message, T content, MultiConsumer<P> consumer, P... params) {
+        if (!expressionSupplier.get()) {
+            consumer.accept(params);
+            doThrow(code, message, content);
+        }
+    }
+
+    /**
+     * 支持可变参数的函数式接口
+     * @param <P> 参数类型
+     */
+    @FunctionalInterface
+    public interface MultiConsumer<P> {
+
+        void accept(P... params);
+
     }
 }

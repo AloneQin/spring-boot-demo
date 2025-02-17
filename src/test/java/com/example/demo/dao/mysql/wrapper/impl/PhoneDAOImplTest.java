@@ -72,4 +72,10 @@ class PhoneDAOImplTest {
         List<PhonePriceStatDTO> list = phoneDAO.countPriceRange();
         System.out.println(FastjsonUtils.toStringFormat(list));
     }
+
+    @Test
+    void updatePriceById() {
+        int i = phoneDAO.updatePriceById(6, new BigDecimal(-1));
+        System.out.println(i);
+    }
 }

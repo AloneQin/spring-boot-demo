@@ -99,6 +99,7 @@ public class PhoneDAOImpl extends ServiceImpl<PhoneMapper, PhonePO> implements P
     @Override
     public List<PhonePO> findByCountry(String country) {
         return new LambdaQueryChainWrapper<>(phoneMapper)
+                // 添加自定义操作
                 .func(Objects.nonNull(country), wrapper -> {
                     if ("US".equals(country)) {
                         wrapper.eq(PhonePO::getBrand, "apple");
@@ -163,4 +164,10 @@ public class PhoneDAOImpl extends ServiceImpl<PhoneMapper, PhonePO> implements P
     public List<PhonePriceStatDTO> countPriceRange() {
         return phoneMapper.countPriceRange();
     }
+
+    @Override
+    public int updatePriceById(Integer id, BigDecimal updatePrice) {
+        return phoneMapper.updatePriceById(id, updatePrice);
+    }
+
 }

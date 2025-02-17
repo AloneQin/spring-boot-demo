@@ -40,7 +40,7 @@ public class CrossDomainFilter implements Filter {
 
     private void doCrossDomain(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws IOException, ServletException {
         String origin = request.getHeader("Origin");
-        log.info("#doCrossDomain, origin: {}, remoteAddr: {}, remoteHost: {}, remotePort:{}",
+        log.debug("#doCrossDomain, origin: {}, remoteAddr: {}, remoteHost: {}, remotePort:{}",
                 origin, request.getRemoteAddr(), request.getRemoteHost(), request.getRemotePort());
         boolean isAllow = false;
         if (isAllow == ALLOW_DOMAIN_LIST.contains(origin)) {
@@ -54,7 +54,7 @@ public class CrossDomainFilter implements Filter {
             String allowHeaders = String.format("Content-Type,Authorization,%s", "token");
             response.setHeader("Access-Control-Allow-Headers", allowHeaders);
         }
-        log.info("#doCrossDomain, origin: {}, isAllow: {}", origin, isAllow);
+        log.debug("#doCrossDomain, origin: {}, isAllow: {}", origin, isAllow);
 
         if ("OPTIONS".equals(request.getMethod())) {
             HttpMethod.OPTIONS.name();

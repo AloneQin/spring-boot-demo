@@ -2,13 +2,13 @@ package com.example.demo.controller;
 
 import com.example.demo.common.lisenser.event.MyEvent;
 import com.example.demo.common.mq.rabbit.RabbitProducer;
+import com.example.demo.common.prop.CustomProperties;
 import com.example.demo.common.retry.RetryTestService;
 import com.example.demo.common.retry.RetryTestService2;
 import com.example.demo.common.task.ControllableScheduleTask;
 import com.example.demo.service.TestService;
 import com.example.demo.service.facade.TestServiceFacade;
-import lombok.AllArgsConstructor;
-import lombok.Value;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.scheduling.annotation.Async;
@@ -34,7 +34,7 @@ import java.util.stream.Collectors;
  */
 @Slf4j
 @RestController
-@AllArgsConstructor
+@RequiredArgsConstructor
 @RequestMapping("/test")
 public class TestController {
 
@@ -55,6 +55,8 @@ public class TestController {
     private final RabbitProducer rabbitProducer;
 
     private final RequestMappingHandlerMapping requestMappingHandlerMapping;
+
+    private final CustomProperties customProperties;
 
     @GetMapping("/index")
     public String index() {
@@ -205,7 +207,7 @@ public class TestController {
     /**
      * sse 消息推送
      * <p> 服务器发送事件(Server-Sent Events)机制，基于 HTTP 协议，只能传输文本信息，不支持 IE 浏览器
-     * @return
+     * @return 返回 SseEmitter
      */
     @GetMapping("/testSseEmitter")
     public SseEmitter testSseEmitter() {
@@ -270,6 +272,12 @@ public class TestController {
     @GetMapping("/testAsync")
     public String testAsync() {
         testService.testAsync();
+        return "SUCCESS";
+    }
+
+    @GetMapping("/testProperties")
+    public String testProperties() {
+        System.out.println(customProperties.toString());
         return "SUCCESS";
     }
 }

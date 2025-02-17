@@ -79,10 +79,10 @@ public class MD5Utils {
 	 */
 	public static String bufferToHex(byte[] bytes) {
 		StringBuilder sb = new StringBuilder(bytes.length * 2);
-		for (int i = 0; i < bytes.length; i++) {
-			sb.append(hexDigits[(bytes[i] & 0xf0) >>> 4]);
-			sb.append(hexDigits[bytes[i] & 0x0f]);
-		}
+        for (byte aByte : bytes) {
+            sb.append(hexDigits[(aByte & 0xf0) >>> 4]);
+            sb.append(hexDigits[aByte & 0x0f]);
+        }
 		return sb.toString();
 	}
 
