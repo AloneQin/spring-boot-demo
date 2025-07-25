@@ -110,4 +110,9 @@ public class PhoneController {
     public void testTransactionLapse() {
         phoneService.testTransactionLapse();
     }
+
+    @GetMapping("/testLocalCache")
+    public void testLocalCache() {
+        phoneService.testLocalCache();
+    }
 }

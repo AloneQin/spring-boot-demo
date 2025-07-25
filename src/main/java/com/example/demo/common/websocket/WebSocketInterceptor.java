@@ -1,6 +1,6 @@
 package com.example.demo.common.websocket;
 
-import com.example.demo.common.trace.TraceManager;
+import com.example.demo.common.trace.TraceContext;
 import com.example.demo.utils.FastjsonUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
@@ -37,8 +37,8 @@ public class WebSocketInterceptor implements HandshakeInterceptor {
     public boolean beforeHandshake(@NotNull ServerHttpRequest request, @NotNull ServerHttpResponse response, @NotNull WebSocketHandler webSocketHandler, @NotNull Map<String, Object> attributes) throws Exception {
         log.info("#[WebSocket] - Before Handshake: The handshake begins, ready to make a connection.");
         // 设置 traceId
-        TraceManager.putTraceId((String) attributes.get(TraceManager.TRACE_ID));
-        Optional.ofNullable(TraceManager.getTraceId()).ifPresent(traceId -> attributes.put(TraceManager.TRACE_ID, traceId));
+        TraceContext.putTraceId((String) attributes.get(TraceContext.TRACE_ID));
+        Optional.ofNullable(TraceContext.getTraceId()).ifPresent(traceId -> attributes.put(TraceContext.TRACE_ID, traceId));
         if (request instanceof ServletServerHttpRequest) {
             String path = request.getURI().getPath();
             attributes.put(URI, path);

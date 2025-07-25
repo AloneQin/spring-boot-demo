@@ -17,7 +17,6 @@ public class FilterConfig {
 
     /**
      * traceId 过滤器注册
-     * @return
      */
     @Bean
     public FilterRegistrationBean<TraceIdFilter> TraceIdFilterRegistrationBean() {
@@ -30,20 +29,18 @@ public class FilterConfig {
 
     /**
      * URL 过滤器注册
-     * @return
      */
     @Bean
     public FilterRegistrationBean<UrlFilter> urlFilterRegistrationBean() {
         FilterRegistrationBean<UrlFilter> registrationBean = new FilterRegistrationBean<>();
         registrationBean.setFilter(new UrlFilter());
-        registrationBean.setOrder(Integer.MIN_VALUE);
+        registrationBean.setOrder(FilterConfigEnum.URL_FILTER.order);
         registrationBean.addUrlPatterns("/*");
         return registrationBean;
     }
 
     /**
      * 跨域过滤器
-     * @return
      */
     @Bean
     public FilterRegistrationBean<CrossDomainFilter> crossDomainFilterRegistrationBean() {
@@ -56,7 +53,6 @@ public class FilterConfig {
 
     /**
      * test 过滤器注册
-     * @return
      */
     @Bean
     public FilterRegistrationBean<TestFilter> testFilterRegistrationBean() {

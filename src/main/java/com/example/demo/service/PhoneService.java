@@ -1,18 +1,21 @@
 package com.example.demo.service;
 
+import com.alicp.jetcache.Cache;
+import com.alicp.jetcache.anno.CacheType;
+import com.alicp.jetcache.anno.CreateCache;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.demo.common.exception.ParamError;
 import com.example.demo.common.exception.ParamValidatedException;
 import com.example.demo.common.metadata.constant.MsgConst;
 import com.example.demo.common.response.ReturnCodeEnum;
-import com.example.demo.common.trace.TraceManager;
+import com.example.demo.common.trace.TraceContext;
 import com.example.demo.dao.mysql.wrapper.PhoneDAO;
 import com.example.demo.model.dto.PhoneDTO;
 import com.example.demo.model.po.PhonePO;
 import com.example.demo.utils.AssertUtils;
 import com.example.demo.utils.FastjsonUtils;
 import com.example.demo.utils.SmartBeanUtils;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,15 +23,18 @@ import org.springframework.util.CollectionUtils;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 @Slf4j
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class PhoneService {
 
     private final PhoneDAO phoneDAO;
+
+    @CreateCache(name = "phoneCache", expire = 3600, cacheType = CacheType.LOCAL)
+    private Cache<String, PhonePO> phoneDTOCache;
 
     public Page<PhoneDTO> getPhoneList(Integer pageSize, Integer pageNum, String name, String brand, String remark) {
         Page<PhonePO> phonePOPage = phoneDAO.pageByCondition(pageSize, pageNum, name, brand, remark);
@@ -105,10 +111,19 @@ public class PhoneService {
         if (phoneDAO.getById(phonePO.getId()) == null) {
             phoneDAO.save(phonePO);
         }
-        phonePO.setRemark(TraceManager.getTraceId());
+        phonePO.setRemark(TraceContext.getTraceId());
         phoneDAO.updateById(phonePO);
 
         // 发生异常 update 数据并不会回滚，因为调用 testModifyPhone() 方法的对象 this 始终是原始实例，不是代理对象，所以事务不会生效
         List.of().get(100);
+    }
+
+    public void testLocalCache() {
+        PhonePO phonePO = phoneDTOCache.get("one");
+        if (Objects.isNull(phonePO)) {
+            phonePO = phoneDAO.findOne();
+            phoneDTOCache.put("one", phonePO);
+        }
+        System.out.println(FastjsonUtils.toString(phonePO));
     }
 }

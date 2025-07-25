@@ -45,7 +45,7 @@ public class FastjsonUtils {
      * @return 输出字符串
      */
     public static String toStringKeepNull(Object obj) {
-        return toString(obj, SerializerFeature.WriteMapNullValue);
+        return toString(obj, SerializerFeature.SortField, SerializerFeature.WriteMapNullValue);
     }
 
     /**

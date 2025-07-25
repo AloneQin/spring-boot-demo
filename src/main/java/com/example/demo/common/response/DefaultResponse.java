@@ -1,7 +1,7 @@
 package com.example.demo.common.response;
 
 import com.example.demo.common.config.ApplicationConfigContext;
-import com.example.demo.common.trace.TraceManager;
+import com.example.demo.common.trace.TraceContext;
 import com.example.demo.utils.FastjsonUtils;
 import lombok.Getter;
 import lombok.Setter;
@@ -45,7 +45,7 @@ public class DefaultResponse<T> {
         this.code = code;
         this.message = message;
         this.content = content;
-        this.traceId = TraceManager.getTraceId();
+        this.traceId = TraceContext.getTraceId();
         this.application = ApplicationConfigContext.applicationName();
     }
 

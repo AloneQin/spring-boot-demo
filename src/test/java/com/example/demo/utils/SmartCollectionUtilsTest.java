@@ -20,6 +20,7 @@ class SmartCollectionUtilsTest {
         List<String> list4 = List.of("1", "2");
         // 允许修改元素
         List<String> list5 = Stream.of("b", "a").collect(Collectors.toList());
+        list5.add("k");
 
         Set<String> set1 = Collections.emptySet();
         Set<String> set2 = Collections.singleton("1");

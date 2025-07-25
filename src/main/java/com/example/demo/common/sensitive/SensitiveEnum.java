@@ -12,6 +12,12 @@ import java.util.function.Function;
 public enum SensitiveEnum {
 
     /**
+     * 默认策略
+     * 不做任何脱敏处理
+     */
+    NONE(s -> s),
+
+    /**
      * 手机编号
      * 保留 4 位尾号，其他以 "*" 代替
      */

@@ -1,5 +1,6 @@
 package com.example.demo.common.config;
 
+import com.example.demo.common.exception.DebugModeManager;
 import com.p6spy.engine.logging.Category;
 import com.p6spy.engine.spy.appender.FormattedLogger;
 import lombok.extern.slf4j.Slf4j;
@@ -22,7 +23,9 @@ public class P6SpyLoggerConfig extends FormattedLogger {
     @Override
     public void logSQL(int connectionId, String now, long elapsed, Category category, String prepared, String sql, String url) {
         final String msg = strategy.formatMessage(connectionId, now, elapsed, category.toString(), prepared, sql, url);
-        log.debug("#logSQL: {}", msg);
+        if (DebugModeManager.isDebug()) {
+            log.debug("#logSQL: {}", msg);
+        }
     }
 
     @Override

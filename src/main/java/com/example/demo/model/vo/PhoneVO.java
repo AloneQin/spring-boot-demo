@@ -4,12 +4,12 @@ import com.example.demo.common.handler.BigDecimalJsonSerializer;
 import com.example.demo.common.metadata.constant.MsgConst;
 import com.example.demo.common.sensitive.Sensitive;
 import com.example.demo.common.sensitive.SensitiveEnum;
+import com.example.demo.common.sid.JsonNum2Str;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
-import org.springframework.format.annotation.NumberFormat;
 
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
@@ -23,6 +23,7 @@ public class PhoneVO {
     /**
      * 主键
      */
+    @JsonNum2Str
     @ApiModelProperty(name = "id", value = "ID（自增长）", required = false, example = "1")
     private Integer id;
 
@@ -81,4 +82,6 @@ public class PhoneVO {
      */
     @ApiModelProperty(name = "updatedTime", value = "修改时间", required = false, example = "2020-11-20 15:32:11")
     private LocalDateTime updatedTime;
+
+    private BigDecimal ddddddd;
 }

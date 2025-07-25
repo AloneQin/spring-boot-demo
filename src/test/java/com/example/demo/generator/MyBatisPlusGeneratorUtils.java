@@ -19,15 +19,15 @@ import java.io.InputStream;
 public class MyBatisPlusGeneratorUtils {
 
     public static void main(String[] args) {
-        DefaultIdentifierGenerator generator = new DefaultIdentifierGenerator();
-        // IdType.ASSIGN_ID 长度19
-        Long id = generator.nextId(null);
-        System.out.println(id + " " + id.toString().length());
-        // IdType.ASSIGN_UUID 长度32
-        String uuid = generator.nextUUID(null);
-        System.out.println(uuid + " " + uuid.length());
+//        DefaultIdentifierGenerator generator = new DefaultIdentifierGenerator();
+//        // IdType.ASSIGN_ID 长度19
+//        Long id = generator.nextId(null);
+//        System.out.println(id + " " + id.toString().length());
+//        // IdType.ASSIGN_UUID 长度32
+//        String uuid = generator.nextUUID(null);
+//        System.out.println(uuid + " " + uuid.length());
 
-        //generator();
+        generator();
     }
 
     public static void generator() {
@@ -68,7 +68,7 @@ public class MyBatisPlusGeneratorUtils {
                 // 策略配置
                 .strategyConfig(builder -> builder
                                 // 需要生成的表名
-                                .addInclude("log")
+                                .addInclude("sys_user")
                                 // 去除表前缀
                                 .addTablePrefix("")
                                 // 去除表后缀

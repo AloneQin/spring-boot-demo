@@ -13,15 +13,15 @@ public class MDCTaskDecorator implements TaskDecorator {
     @NotNull
     @Override
     public Runnable decorate(@NotNull Runnable runnable) {
-        Map<String, String> map = TraceManager.getCopyOfContextMap();
+        Map<String, String> map = TraceContext.getCopyOfContextMap();
         return () -> {
             try {
-                TraceManager.setContextMap(map);
-                String traceId = TraceManager.getTraceId();
-                TraceManager.putTraceId(traceId);
+                TraceContext.setContextMap(map);
+                String traceId = TraceContext.getTraceId();
+                TraceContext.putTraceId(traceId);
                 runnable.run();
             } finally {
-                TraceManager.clear();
+                TraceContext.clear();
             }
         };
     }

@@ -10,13 +10,13 @@
 	<!-- 编码 -->
 	<property name="ENCODING" value="UTF-8" />
 	<!-- 日志格式-普通 -->
-	<property name="LOG_PATTERN_NORMAL" value="%d{yyyy-MM-dd HH:mm:ss.SSS} %5p ${PID} [%15.15t] [%X{TRACE_ID}] %-40.40logger{39} %4.4L: %m%n" />
+	<property name="LOG_PATTERN_NORMAL" value="%d{yyyy-MM-dd HH:mm:ss.SSS} %5p ${PID} [%15.15t] [%X{X-TRACE-ID}] %-40.40logger{39} %4.4L: %m%n" />
 	<!-- 日志格式-彩色
 		%d：日期
 		%p：日志级别（5=指定最大宽度、highlight=根据日志级别高亮显示）
 		${PID}：进程id
 		%t：线程名称（15.15=等宽）
-		%X{TRACE_ID}：自定义变量TRACE_ID
+		%X{X-TRACE-ID}：自定义变量X-TRACE-ID
 		%logger：包名类名（30.30=等宽、{29}=从右边指定精度，即从右往左取29长度）
 		%L：行号（4.4=等宽）
 		%m：应用日志
@@ -24,7 +24,7 @@
 		color：%blue(蓝)、%cyan(青)、%faint(淡白)、%green(绿)、%magenta(品红)、%red(红)、%yellow(黄)、%boldXxx(对应颜色并加粗)
 		更多内置信息查看 {@link ch.qos.logback.classic.PatternLayout#defaultConverterMap} 类
 	-->
-	<property name="LOG_PATTERN_COLOR" value="%d{yyyy-MM-dd HH:mm:ss.SSS} %highlight(%5p) %magenta(${PID}) %blue([%15.15t]) %boldGreen([%X{TRACE_ID}]) %cyan(%-40.40logger{39}) %yellow(%4.4L): %m%n"/>
+	<property name="LOG_PATTERN_COLOR" value="%d{yyyy-MM-dd HH:mm:ss.SSS} %highlight(%5p) %magenta(${PID}) %blue([%15.15t]) %boldGreen([%X{X-TRACE-ID}]) %cyan(%-40.40logger{39}) %yellow(%4.4L): %m%n"/>
 
 	<!-- 读取 springboot 配置 -->
 	<springProperty name="APPLICATION_NAME" scope="context" source="spring.application.name" />

@@ -3,7 +3,7 @@ package com.example.demo.common.websocket;
 import com.example.demo.common.exception.BaseException;
 import com.example.demo.common.lisenser.ApplicationEventListener;
 import com.example.demo.common.response.ReturnCodeEnum;
-import com.example.demo.common.trace.TraceManager;
+import com.example.demo.common.trace.TraceContext;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.web.socket.*;
@@ -34,7 +34,7 @@ public class WebSocketServerHandler implements WebSocketHandler {
     @Override
     public void handleMessage(@NotNull WebSocketSession webSocketSession, @NotNull WebSocketMessage<?> webSocketMessage) throws Exception {
         // 设置 traceId
-        Optional.ofNullable((String) webSocketSession.getAttributes().get(TraceManager.TRACE_ID)).ifPresent(TraceManager::putTraceId);
+        Optional.ofNullable((String) webSocketSession.getAttributes().get(TraceContext.TRACE_ID)).ifPresent(TraceContext::putTraceId);
         // 根据自定义注解信息，根据路由将请求映射到不同的控制器上，并自动转换其消息类型
         sendToMethod(webSocketSession, webSocketMessage);
 
@@ -60,8 +60,8 @@ public class WebSocketServerHandler implements WebSocketHandler {
     @Override
     public void afterConnectionClosed(@NotNull WebSocketSession webSocketSession, @NotNull CloseStatus closeStatus) throws Exception {
         log.info("#[WebSocket] - The connection is closed.");
-        TraceManager.clear();
-        webSocketSession.getAttributes().remove(TraceManager.TRACE_ID);
+        TraceContext.clear();
+        webSocketSession.getAttributes().remove(TraceContext.TRACE_ID);
     }
 
     /**

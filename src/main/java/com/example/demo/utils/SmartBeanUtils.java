@@ -4,6 +4,7 @@ import com.alibaba.fastjson.TypeReference;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
+import org.springframework.lang.NonNull;
 import org.springframework.util.CollectionUtils;
 
 import java.lang.reflect.Field;
@@ -30,6 +31,22 @@ public class SmartBeanUtils {
         if (Objects.isNull(source) || Objects.isNull(targetSupplier)) {
             return null;
         }
+        T target = targetSupplier.get();
+        BeanUtils.copyProperties(source, target);
+        return target;
+    }
+
+    /**
+     * 拷贝对象属性，需保证入参均不为<code>null<code/><br/>
+     * 返回新对象，对象属性为基本类型及{@link String}时为深拷贝，为引用类型时为浅拷贝
+     * @param source 源对象
+     * @param targetSupplier 目标供应者
+     * @param <T> 目标泛型
+     * @return 目标对象
+     */
+    public static <T> T copyPropertiesNonNull(@NonNull Object source, @NonNull Supplier<T> targetSupplier) {
+        Objects.requireNonNull(source, "source object must not be null");
+        Objects.requireNonNull(targetSupplier, "target supplier must not be null");
         T target = targetSupplier.get();
         BeanUtils.copyProperties(source, target);
         return target;
@@ -78,6 +95,18 @@ public class SmartBeanUtils {
      */
     public static <T> T copyPropertiesGeneric(Object source, TypeReference<T> typeReference) {
         return FastjsonUtils.toObject(FastjsonUtils.toString(source), typeReference);
+    }
+
+    /**
+     * 拷贝泛型对象属性<br/>
+     * 支持简单泛型对象，并且均为深拷贝
+     * @param source 源对象
+     * @param clazz 源对象泛型类型
+     * @param <T> 源对象泛型
+     * @return 源对象
+     */
+    public static <T> T copyPropertiesGeneric(Object source, Class<T> clazz) {
+        return FastjsonUtils.toObject(FastjsonUtils.toString(source), clazz);
     }
 
     /**

@@ -19,7 +19,11 @@ public class SensitiveSerializer extends JsonSerializer<String> implements Conte
 
     @Override
     public void serialize(String s, JsonGenerator jsonGenerator, SerializerProvider serializerProvider) throws IOException {
-        jsonGenerator.writeString(sensitiveEnum.strategy.apply(s));
+        if (Objects.nonNull(sensitiveEnum)) {
+            jsonGenerator.writeString(sensitiveEnum.strategy.apply(s));
+        } else {
+            jsonGenerator.writeNull();
+        }
     }
 
     @Override

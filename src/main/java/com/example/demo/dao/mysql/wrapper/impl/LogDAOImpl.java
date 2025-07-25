@@ -17,4 +17,5 @@ import org.springframework.stereotype.Service;
 @Service
 public class LogDAOImpl extends ServiceImpl<LogMapper, LogPO> implements LogDAO {
 
+
 }

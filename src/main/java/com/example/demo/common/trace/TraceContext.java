@@ -8,16 +8,16 @@ import org.slf4j.MDC;
 import java.util.Map;
 
 /**
- * 跟踪标识管理者<br/>
- * MDC: logback 提供的哈希表，存储键值对，在当前线程有效，日志打印时格式（%X{key}，如：%X{TRACE_ID}）
+ * 跟踪标识上下文<br/>
+ * MDC: logback 提供的哈希表，存储键值对，在当前线程有效，日志打印时格式（%X{key}，如：%X{X-TRACE-ID}）
  */
 @Slf4j
-public class TraceManager {
+public class TraceContext {
 
     /**
      * 日志跟踪标识
      */
-    public static final String TRACE_ID = "TRACE_ID";
+    public static final String TRACE_ID = "X-TRACE-ID";
 
     public static void putTraceId() {
         putTraceId(null);

@@ -6,6 +6,7 @@ import com.example.demo.common.prop.CustomProperties;
 import com.example.demo.common.retry.RetryTestService;
 import com.example.demo.common.retry.RetryTestService2;
 import com.example.demo.common.task.ControllableScheduleTask;
+import com.example.demo.model.vo.DemoVO;
 import com.example.demo.service.TestService;
 import com.example.demo.service.facade.TestServiceFacade;
 import lombok.RequiredArgsConstructor;
@@ -279,5 +280,11 @@ public class TestController {
     public String testProperties() {
         System.out.println(customProperties.toString());
         return "SUCCESS";
+    }
+
+    @GetMapping("/testValueSerializer")
+    public DemoVO testValueSerializer() {
+        DemoVO demo = new DemoVO();
+        return demo;
     }
 }

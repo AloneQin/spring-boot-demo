@@ -1,17 +1,18 @@
 package com.example.demo.service;
 
 import com.example.demo.common.response.ReturnCodeEnum;
-import com.example.demo.common.trace.TraceManager;
+import com.example.demo.common.trace.TraceContext;
+import com.example.demo.dao.mysql.mapper.CommonMapper;
 import com.example.demo.utils.AssertUtils;
 import com.example.demo.utils.SmartStringUtils;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StopWatch;
 
 @Slf4j
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class TestService {
 
     public void checkName(String name) {
@@ -21,7 +22,7 @@ public class TestService {
     }
 
     public void testStopWatch() throws InterruptedException {
-        StopWatch stopWatch = new StopWatch("testStopWatch_" + TraceManager.getTraceId());
+        StopWatch stopWatch = new StopWatch("testStopWatch_" + TraceContext.getTraceId());
 
         stopWatch.start("task1");
         log.info("taskName: {}", stopWatch.currentTaskName());
@@ -51,5 +52,12 @@ public class TestService {
     public static void main(String[] args) {
         String[] split = "1".split(",");
         System.out.println(split);
+    }
+
+    private final CommonMapper commonMapper;
+
+    public void query() {
+        Object o = commonMapper.selectById(1L);
+        System.out.println(o);
     }
 }
