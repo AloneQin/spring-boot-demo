@@ -18,6 +18,7 @@ class SmartCollectionUtilsTest {
         List<String> list2 = Collections.singletonList("1");
         List<String> list3 = Arrays.asList("1", "2");
         List<String> list4 = List.of("1", "2");
+
         // 允许修改元素
         List<String> list5 = Stream.of("b", "a").collect(Collectors.toList());
         list5.add("k");
@@ -63,6 +64,14 @@ class SmartCollectionUtilsTest {
         // 分组
         List<Demo> list11 = Stream.of(new Demo(2, "a"), new Demo(1, "c")).collect(Collectors.toList());
         Map<Integer, List<Demo>> map7 = list11.stream().collect(Collectors.groupingBy(Demo::getId, LinkedHashMap::new, Collectors.toList()));
+
+
+        List<Integer> initList = SmartCollectionUtils.initList(1, 2, 3);
+        initList.add(4);
+        Set<Integer> initSet = SmartCollectionUtils.initSet(1, 2, 3);
+        initSet.add(4);
+        Map<String,  String> initMap = SmartCollectionUtils.initMap(entry("1", "1"), entry("2", "2"));
+        initMap.put("3", "3");
 
         System.out.println();
     }

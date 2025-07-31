@@ -1,10 +1,15 @@
 package com.example.demo.dao.mysql.mapper;
 
-import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import org.apache.ibatis.annotations.Param;
 
-public interface CommonMapper<T> extends BaseMapper<T> {
+import java.util.LinkedHashMap;
 
+/**
+ * 通用 Mapper 接口
+ */
+public interface CommonMapper {
 
+    LinkedHashMap<String, Object> findByTableNameAndId(@Param("tableName") String tableName, @Param("id") Integer id);
 
 
 }

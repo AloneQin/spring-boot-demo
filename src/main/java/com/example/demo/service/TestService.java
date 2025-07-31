@@ -2,7 +2,6 @@ package com.example.demo.service;
 
 import com.example.demo.common.response.ReturnCodeEnum;
 import com.example.demo.common.trace.TraceContext;
-import com.example.demo.dao.mysql.mapper.CommonMapper;
 import com.example.demo.utils.AssertUtils;
 import com.example.demo.utils.SmartStringUtils;
 import lombok.RequiredArgsConstructor;
@@ -54,10 +53,4 @@ public class TestService {
         System.out.println(split);
     }
 
-    private final CommonMapper commonMapper;
-
-    public void query() {
-        Object o = commonMapper.selectById(1L);
-        System.out.println(o);
-    }
 }

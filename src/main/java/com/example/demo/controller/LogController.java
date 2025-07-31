@@ -1,7 +1,6 @@
 package com.example.demo.controller;
 
 import com.example.demo.common.response.DefaultResponse;
-import com.example.demo.dao.mysql.wrapper.SysUserDAO;
 import com.example.demo.model.dto.LogDTO;
 import com.example.demo.model.vo.LogVO;
 import com.example.demo.service.LogService;
