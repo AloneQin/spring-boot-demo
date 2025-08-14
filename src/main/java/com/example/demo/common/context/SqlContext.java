@@ -12,7 +12,7 @@ public class SqlContext {
     private static final ThreadLocal<SqlInfo> SQL_CONTEXT = new ThreadLocal<>();
 
     public static void setCurrentSqlContext(SqlInfo sqlInfo) {
-        SqlContext.SQL_CONTEXT.set(sqlInfo);
+        SQL_CONTEXT.set(sqlInfo);
     }
 
     public static SqlInfo getCurrentSqlContext() {
@@ -34,6 +34,8 @@ public class SqlContext {
         private SqlCommandType sqlCommandType;
 
         private String sql;
+
+        private Long timestamp = System.currentTimeMillis();
 
     }
 }

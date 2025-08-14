@@ -23,19 +23,20 @@ public class P6SpyLogFormatConfig implements MessageFormattingStrategy {
             sqlCommandType = Optional.ofNullable(sqlInfo.getSqlCommandType()).map(Enum::name).orElse("");
         }
 
-        return multiLineLog(elapsed, category, prepared, sql, url, sqlId, sqlCommandType);
+        return multiLineLog(elapsed, sqlInfo.getTimestamp() + "", category, prepared, sql, url, sqlId, sqlCommandType);
     }
 
-    private String singleLineLog(long elapsed, String category, String prepared, String sql, String url, String sqlId, String sqlCommandType) {
+    private String singleLineLog(long elapsed, long timestamp, String category, String prepared, String sql, String url, String sqlId, String sqlCommandType) {
         String text = "sqlId: {}, 耗时: {} ms, 执行类型: {}, 操作分类: {}, 预编译语句: {}, 完整语句: {}, 连接信息: {}";
         return SmartStringUtils.format(sqlId, text, elapsed, sqlCommandType, category, SmartStringUtils.formatSql(prepared), SmartStringUtils.formatSql(sql), url);
     }
 
-    private static String multiLineLog(long elapsed, String category, String prepared, String sql, String url, String sqlId, String sqlCommandType) {
+    private static String multiLineLog(long elapsed, String timestamp, String category, String prepared, String sql, String url, String sqlId, String sqlCommandType) {
         int maxLength = 6;
         Map<String, String> paramMap = new LinkedHashMap<>();
         paramMap.put(alignChineseLabel("路径", maxLength), sqlId);
         paramMap.put(alignChineseLabel("耗时", maxLength), elapsed + " ms");
+        paramMap.put(alignChineseLabel("时间戳", maxLength), timestamp);
         paramMap.put(alignChineseLabel("执行类型", maxLength), sqlCommandType);
         paramMap.put(alignChineseLabel("操作分类", maxLength), category);
         paramMap.put(alignChineseLabel("预编译语句", maxLength), SmartStringUtils.formatSql(prepared));

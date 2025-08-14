@@ -1,6 +1,6 @@
 package com.example.demo.common.exception;
 
-import com.example.demo.common.context.DebugContext;
+import com.example.demo.common.context.SystemContext;
 import com.example.demo.common.response.DefaultResponse;
 import com.example.demo.common.response.ReturnCodeEnum;
 import com.example.demo.common.trace.TraceContext;
@@ -142,7 +142,7 @@ public class GlobalErrorController implements ErrorController {
             return defaultResponse;
         } finally {
             TraceContext.clear();
-            DebugContext.clear();
+            SystemContext.clear();
         }
     }
 

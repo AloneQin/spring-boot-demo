@@ -1,6 +1,6 @@
 package com.example.demo.common.filter;
 
-import com.example.demo.common.context.DebugContext;
+import com.example.demo.common.context.SystemContext;
 import com.example.demo.common.trace.TraceContext;
 import lombok.extern.slf4j.Slf4j;
 
@@ -28,8 +28,8 @@ public class TraceIdFilter implements Filter {
         String traceId = request.getHeader(TraceContext.TRACE_ID);
         TraceContext.putTraceId(traceId);
         // 调试模式
-        boolean debugMode = Boolean.parseBoolean(request.getHeader(DebugContext.S_DEBUG_MODE));
-        DebugContext.setDebugContext(debugMode);
+        boolean debugMode = Boolean.parseBoolean(request.getHeader(SystemContext.SystemContextKVEnum.DEBUG_MODE.key));
+        SystemContext.set(SystemContext.SystemContextKVEnum.DEBUG_MODE, debugMode);
         try {
             filterChain.doFilter(servletRequest, servletResponse);
         } finally {
@@ -37,7 +37,7 @@ public class TraceIdFilter implements Filter {
             Throwable throwable = (Throwable) request.getAttribute(ERROR_ATTRIBUTE);
             if (Objects.isNull(throwable)) {
                 TraceContext.clear();
-                DebugContext.clear();
+                SystemContext.clear();
             }
         }
     }

@@ -2,7 +2,9 @@ package com.example.demo.common.context;
 
 /**
  * 调试上下文
+ * @deprecated 使用 {@link SystemContext} 替换
  */
+@Deprecated
 public class DebugContext {
 
     /**

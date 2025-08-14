@@ -1,17 +1,21 @@
 package com.example.demo.controller;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.example.demo.common.context.SystemContext;
 import com.example.demo.common.metadata.constant.MsgConst;
 import com.example.demo.common.response.ResponseFormat;
+import com.example.demo.common.trace.TraceContext;
 import com.example.demo.model.dto.PhoneDTO;
 import com.example.demo.model.vo.PhoneVO;
 import com.example.demo.service.PhoneService;
+import com.example.demo.utils.FastjsonUtils;
 import com.example.demo.utils.SmartBeanUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -28,11 +32,14 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * 手机控制器
  */
+@Slf4j
 @Validated
 @ResponseFormat
 @RestController
@@ -114,5 +121,28 @@ public class PhoneController {
     @GetMapping("/testLocalCache")
     public void testLocalCache() {
         phoneService.testLocalCache();
+    }
+
+    @GetMapping("/testAsyncHandleDb")
+    public Page<PhoneVO> testAsyncHandleDb() {
+        Page<PhoneDTO> phoneDTOPage = phoneService.getPhoneList(10, 1, null, null, null);
+
+        // 在不同线程中传递上下文
+        Map<String, String> map = TraceContext.getCopyOfContextMap();
+        ConcurrentHashMap<String, Object> contextMap = SystemContext.getDeepCopyOfContextMap();
+
+        new Thread(() -> {
+            try {
+                TraceContext.setContextMap(map);
+                SystemContext.setContextMap(contextMap);
+                Thread.sleep(1L);
+                PhoneDTO phoneDTO = phoneService.getPhoneById(1);
+                log.info("phoneDTO: {}", FastjsonUtils.toString(phoneDTO));
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }).start();
+
+        return SmartBeanUtils.copyPropertiesPage(phoneDTOPage, PhoneVO::new);
     }
 }
