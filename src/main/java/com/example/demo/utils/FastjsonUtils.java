@@ -2,6 +2,7 @@ package com.example.demo.utils;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.TypeReference;
+import com.alibaba.fastjson.parser.Feature;
 import com.alibaba.fastjson.serializer.SerializerFeature;
 
 import java.util.List;
@@ -72,6 +73,18 @@ public class FastjsonUtils {
     }
 
     /**
+     * 字符串转对象
+     * @param str 输入字符串
+     * @param clazz 对象类型
+     * @param features 特征参数
+     * @param <T> 对象泛型
+     * @return 输出对象
+     */
+    public static <T> T toObject(String str, Class<T> clazz, Feature... features) {
+        return JSON.parseObject(str, clazz, features);
+    }
+
+    /**
      * 字符串转对象数组，数组元素对象中不允许泛型嵌套
      * @param str 输入字符串
      * @param clazz 元素对象类型
@@ -91,5 +104,17 @@ public class FastjsonUtils {
      */
     public static <T> T toObject(String str, TypeReference<T> typeReference) {
         return JSON.parseObject(str, typeReference);
+    }
+
+    /**
+     * 字符串转对象，支持复杂泛型嵌套
+     * @param str 输入字符串
+     * @param typeReference 类型引用
+     * @param features 特征参数
+     * @param <T> 对象泛型
+     * @return 输出对象
+     */
+    public static <T> T toObject(String str, TypeReference<T> typeReference, Feature... features) {
+        return JSON.parseObject(str, typeReference, features);
     }
 }

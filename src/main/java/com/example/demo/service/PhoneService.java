@@ -2,6 +2,7 @@ package com.example.demo.service;
 
 import com.alicp.jetcache.Cache;
 import com.alicp.jetcache.anno.CacheType;
+import com.alicp.jetcache.anno.Cached;
 import com.alicp.jetcache.anno.CreateCache;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.demo.common.exception.ParamError;
@@ -25,6 +26,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 
 @Slf4j
 @Service
@@ -33,7 +35,7 @@ public class PhoneService {
 
     private final PhoneDAO phoneDAO;
 
-    @CreateCache(name = "phoneCache", expire = 3600, cacheType = CacheType.LOCAL)
+    @CreateCache(name = "CreateCache", expire = 10, timeUnit = TimeUnit.SECONDS, cacheType = CacheType.LOCAL)
     private Cache<String, PhonePO> phoneDTOCache;
 
     public Page<PhoneDTO> getPhoneList(Integer pageSize, Integer pageNum, String name, String brand, String remark) {
@@ -118,6 +120,9 @@ public class PhoneService {
         List.of().get(100);
     }
 
+    /**
+     * 编程式缓存：灵活但操作麻烦，不推荐使用
+     */
     public void testLocalCache() {
         PhonePO phonePO = phoneDTOCache.get("one");
         if (Objects.isNull(phonePO)) {
@@ -125,5 +130,65 @@ public class PhoneService {
             phoneDTOCache.put("one", phonePO);
         }
         System.out.println(FastjsonUtils.toString(phonePO));
+    }
+
+    /**
+     * 声明式缓存：缓存操作简单，推荐使用
+     * 1.name（命名空间，全局唯一），key（数据标识，全局唯一），最终的缓存键为 name:key
+     * 2.方法参数会作为缓存键，支持 SpEL 表达式，当没有入参时，需要指定不可变的 key，最终的缓存键为 localPhoneCache_:findOne，代表缓存固定的键
+     * 3.方法必须有返回值，才能作为缓存值被缓存
+     * 4.一旦指定了 expire，则全局配置里的 expireAfterWriteInMillis 和 expireAfterAccessInMillis 都会失效，会以 expire 作为 expireAfterWriteInMillis 进行缓存配置
+     */
+    @Cached(name = "localPhoneCache", key = "'-findOne'", expire = 10, timeUnit = TimeUnit.SECONDS, cacheType = CacheType.LOCAL)
+    public PhonePO testLocalCache2() {
+        return phoneDAO.findOne();
+    }
+
+    /**
+     * 声明式缓存：缓存操作简单，推荐使用
+     * #id：代表以入参作为数据标识，最终的缓存键为 phoneCache-${id}，每一个不同的 id 都会缓存一条数据
+     * #phonePO.id：如果入参是一个对象(PhonePO phonePO)，此时则代表取对象的id属性为数据标识，最终的缓存键为 phoneCache-${id}
+     */
+    @Cached(name = "localPhoneCache", key = "'-' + #id", cacheType = CacheType.LOCAL)
+    public PhonePO testLocalCache3(Integer id) {
+        return phoneDAO.getById(id);
+    }
+
+    /**
+     * 声明式缓存：缓存操作简单，推荐使用
+     * 名称冲突：当使用 @Cached 注解时，确保 name 没有被 @CreateCache 注解所创建的缓存占用，如果名称冲突，会优先使用已存在的缓存实例， @Cached 注解所创建的缓存将不会生效
+     */
+    @Cached(name = "remotePhoneCache", key = "'-' + #phonePO.id", cacheType = CacheType.REMOTE)
+    public PhonePO testRemoteCache(PhonePO phonePO) {
+        phonePO = phoneDAO.getById(phonePO.getId());
+        return phonePO;
+    }
+
+    @Cached(name = "bothPhoneCache", key = "'-' + #phonePO.id", cacheType = CacheType.BOTH)
+    public PhonePO testBothCache(PhonePO phonePO) {
+        phonePO = phoneDAO.getById(phonePO.getId());
+        return phonePO;
+    }
+
+    @Cached(name = "remotePhoneListCache", key = "'-name'", cacheType = CacheType.REMOTE)
+    public List<PhonePO> testRemoteListCache(String name) {
+        List<PhonePO> list = phoneDAO.findByName(name);
+        return list;
+    }
+
+    @Cached(name = "remotePhoneCache-enabled", key = "'-' + #phonePO.id", cacheType = CacheType.REMOTE, enabled = false)
+    public PhonePO testRemoteCacheEnabled(PhonePO phonePO) {
+        phonePO = phoneDAO.getById(phonePO.getId());
+        return phonePO;
+    }
+
+    /**
+     * 缓存条件：当 condition 为 true 时，缓存生效，否则不缓存
+     * 实现比较麻烦，推荐使用 enabled 控制
+     */
+    @Cached(name = "remotePhoneCache-condition", key = "'-' + #phonePO.id", cacheType = CacheType.REMOTE, condition = "#useCache != null || #useCache == true")
+    public PhonePO testRemoteCacheCondition(PhonePO phonePO, Boolean useCache) {
+        phonePO = phoneDAO.getById(phonePO.getId());
+        return phonePO;
     }
 }

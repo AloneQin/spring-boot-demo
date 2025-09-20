@@ -1,6 +1,7 @@
 package com.example.demo;
 
 import com.alicp.jetcache.anno.config.EnableCreateCacheAnnotation;
+import com.alicp.jetcache.anno.config.EnableMethodCache;
 import lombok.extern.slf4j.Slf4j;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
@@ -26,6 +27,7 @@ import java.util.Optional;
 @EnableCreateCacheAnnotation
 @EnableAspectJAutoProxy(exposeProxy = true)
 @MapperScan({"com.example.demo.dao.mysql.mapper"})
+@EnableMethodCache(basePackages = "com.example.demo.service")
 public class SpringBootDemoApplication {
 
     public static void main(String[] args) {

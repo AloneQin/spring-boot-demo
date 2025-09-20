@@ -1,11 +1,13 @@
 package com.example.demo.controller;
 
+import com.alicp.jetcache.anno.support.CacheContext;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.demo.common.context.SystemContext;
 import com.example.demo.common.metadata.constant.MsgConst;
 import com.example.demo.common.response.ResponseFormat;
 import com.example.demo.common.trace.TraceContext;
 import com.example.demo.model.dto.PhoneDTO;
+import com.example.demo.model.po.PhonePO;
 import com.example.demo.model.vo.PhoneVO;
 import com.example.demo.service.PhoneService;
 import com.example.demo.utils.FastjsonUtils;
@@ -121,6 +123,57 @@ public class PhoneController {
     @GetMapping("/testLocalCache")
     public void testLocalCache() {
         phoneService.testLocalCache();
+
+    }
+
+    @GetMapping("/testLocalCache2")
+    public void testLocalCache2() {
+        PhonePO phonePO = phoneService.testLocalCache2();
+        System.out.println(FastjsonUtils.toString(phonePO));
+    }
+
+    @GetMapping("/testLocalCache3")
+    public void testLocalCache3() {
+        PhonePO phonePO = phoneService.testLocalCache3(1);
+        System.out.println(FastjsonUtils.toString(phonePO));
+    }
+
+    @GetMapping("/testRemoteCache")
+    public void testRemoteCache() {
+        PhonePO phonePO = phoneService.testRemoteCache(new PhonePO().setId(2));
+        System.out.println("testRemoteCache: " + FastjsonUtils.toString(phonePO));
+    }
+
+    @GetMapping("/testRemoteCache2")
+    public void testBothCache2() {
+        List<PhonePO> list = phoneService.testRemoteListCache("iphone");
+        System.out.println("testRemoteListCache-class: " + list.get(0).getClass());
+        System.out.println("testRemoteListCache: " + FastjsonUtils.toString(list));
+    }
+
+    @GetMapping("/testRemoteCache3")
+    public void testBothCache3(Integer i) {
+        PhonePO phonePO = null;
+        if (i % 2 == 1) {
+            // 不启用缓存
+            phonePO = phoneService.testRemoteCacheEnabled(new PhonePO().setId(3));
+        } else {
+            // 通过 enableCache 启用传参
+            phonePO = CacheContext.enableCache(() -> phoneService.testRemoteCacheEnabled(new PhonePO().setId(3)));
+        }
+        System.out.println("testRemoteCache3: " + FastjsonUtils.toString(phonePO));
+    }
+
+    @GetMapping("/testRemoteCache4")
+    public void testBothCache4(Integer i) {
+        PhonePO phonePO = phoneService.testRemoteCacheCondition(new PhonePO().setId(3), i % 2 == 1);;
+        System.out.println("testBothCache4: " + FastjsonUtils.toString(phonePO));
+    }
+
+    @GetMapping("/testBothCache")
+    public void testBothCache() {
+        PhonePO phonePO = phoneService.testBothCache(new PhonePO().setId(2));
+        System.out.println("testBothCache: " + FastjsonUtils.toString(phonePO));
     }
 
     @GetMapping("/testAsyncHandleDb")

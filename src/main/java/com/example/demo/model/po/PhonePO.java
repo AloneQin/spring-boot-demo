@@ -6,7 +6,9 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.experimental.Accessors;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -22,7 +24,10 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @TableName("phone")
-public class PhonePO {
+@Accessors(chain = true)
+public class PhonePO implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     /**
      * 主键

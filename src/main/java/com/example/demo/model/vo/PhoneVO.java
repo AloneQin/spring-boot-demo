@@ -83,5 +83,4 @@ public class PhoneVO {
     @ApiModelProperty(name = "updatedTime", value = "修改时间", required = false, example = "2020-11-20 15:32:11")
     private LocalDateTime updatedTime;
 
-    private BigDecimal ddddddd;
 }
