@@ -2,6 +2,7 @@ package com.example.demo.common.config;
 
 import com.example.demo.common.context.SqlContext;
 import com.example.demo.utils.SmartStringUtils;
+import com.example.demo.utils.SqlUtils;
 import com.p6spy.engine.spy.appender.MessageFormattingStrategy;
 import org.apache.commons.lang3.StringUtils;
 
@@ -28,7 +29,7 @@ public class P6SpyLogFormatConfig implements MessageFormattingStrategy {
 
     private String singleLineLog(long elapsed, long timestamp, String category, String prepared, String sql, String url, String sqlId, String sqlCommandType) {
         String text = "sqlId: {}, 耗时: {} ms, 执行类型: {}, 操作分类: {}, 预编译语句: {}, 完整语句: {}, 连接信息: {}";
-        return SmartStringUtils.format(sqlId, text, elapsed, sqlCommandType, category, SmartStringUtils.formatSql(prepared), SmartStringUtils.formatSql(sql), url);
+        return SmartStringUtils.format(sqlId, text, elapsed, sqlCommandType, category, SqlUtils.compress(prepared), SqlUtils.compress(sql), url);
     }
 
     private static String multiLineLog(long elapsed, String timestamp, String category, String prepared, String sql, String url, String sqlId, String sqlCommandType) {
@@ -39,9 +40,9 @@ public class P6SpyLogFormatConfig implements MessageFormattingStrategy {
         paramMap.put(alignChineseLabel("时间戳", maxLength), timestamp);
         paramMap.put(alignChineseLabel("执行类型", maxLength), sqlCommandType);
         paramMap.put(alignChineseLabel("操作分类", maxLength), category);
-        paramMap.put(alignChineseLabel("预编译语句", maxLength), SmartStringUtils.formatSql(prepared));
-        paramMap.put(alignChineseLabel("完整语句", maxLength), SmartStringUtils.formatSql(sql));
-        paramMap.put(alignChineseLabel("连接信息",maxLength), url);
+        paramMap.put(alignChineseLabel("预编译语句", maxLength), SqlUtils.compress(prepared));
+        paramMap.put(alignChineseLabel("完整语句", maxLength), SqlUtils.compress(sql));
+        paramMap.put(alignChineseLabel("连接信息", maxLength), url);
 
         StringBuilder sb = new StringBuilder();
         sb.append("\n--------------------------------------------------------------[p6spy]--------------------------------------------------------------");

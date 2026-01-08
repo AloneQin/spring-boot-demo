@@ -128,16 +128,6 @@ public class SmartStringUtils extends StringUtils {
 	}
 
 	/**
-	 * 格式化sql，去除模板引擎中的换行符、制表符、多空格
-	 */
-	public static String formatSql(String sql) {
-		return sql.replaceAll("\n", "")
-				.replaceAll("\r", "")
-				.replaceAll("\t", "")
-				.replaceAll("\\s+", " ");
-	}
-
-	/**
 	 * 字符串格式化填充
 	 * @param str 需要填充的字符串，格式：xxx{}xxx{}xxx
 	 * @param params 需要填充的参数

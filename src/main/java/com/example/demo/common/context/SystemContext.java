@@ -1,7 +1,6 @@
 package com.example.demo.common.context;
 
 import com.alibaba.fastjson.TypeReference;
-import com.example.demo.utils.FastjsonUtils;
 import com.example.demo.utils.SmartBeanUtils;
 import com.example.demo.utils.SmartStringUtils;
 import lombok.AllArgsConstructor;

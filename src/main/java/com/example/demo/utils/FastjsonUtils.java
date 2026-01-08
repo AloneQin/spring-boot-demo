@@ -14,7 +14,7 @@ import java.util.List;
 public class FastjsonUtils {
 
     /**
-     * 对象转字符串，省略为<code>null<code/>的属性
+     * 对象转字符串，省略为{@code null}的属性
      * @param obj 输入对象
      * @return 输出字符串
      */
@@ -23,7 +23,7 @@ public class FastjsonUtils {
     }
 
     /**
-     * 对象转格式化字符串，省略为<code>null<code/>的属性
+     * 对象转格式化字符串，省略为{@code null}的属性
      * @param obj 输入对象
      * @return 格式化字符串
      */
@@ -32,16 +32,7 @@ public class FastjsonUtils {
     }
 
     /**
-     * 对象转格式化字符串，保留为<code>null<code/>的属性
-     * @param obj 输入对象
-     * @return 输出字符串
-     */
-    public static String toStringFormatKeepNull(Object obj) {
-        return toString(obj, SerializerFeature.PrettyFormat, SerializerFeature.WriteMapNullValue);
-    }
-
-    /**
-     * 对象转字符串，保留为<code>null<code/>的属性
+     * 对象转字符串，保留为{@code null}的属性
      * @param obj 输入对象
      * @return 输出字符串
      */
@@ -50,10 +41,19 @@ public class FastjsonUtils {
     }
 
     /**
+     * 对象转格式化字符串，保留为{@code null}的属性
+     * @param obj 输入对象
+     * @return 输出字符串
+     */
+    public static String toStringFormatKeepNull(Object obj) {
+        return toString(obj, SerializerFeature.PrettyFormat, SerializerFeature.WriteMapNullValue);
+    }
+
+    /**
      * 对象转字符串
      * @param obj 输入对象
      * @param features 序列化参数<br/>
-     *                 {@link SerializerFeature#WriteMapNullValue} 是否输出值为 null 字段，默认不输出<br/>
+     *                 {@link SerializerFeature#WriteMapNullValue} 是否输出值为 {@code null} 字段，默认不输出<br/>
      *                 {@link SerializerFeature#PrettyFormat} 格式输出字符串，默认不格式化<br/>
      * @return 输出字符串
      */
@@ -85,17 +85,6 @@ public class FastjsonUtils {
     }
 
     /**
-     * 字符串转对象数组，数组元素对象中不允许泛型嵌套
-     * @param str 输入字符串
-     * @param clazz 元素对象类型
-     * @param <T> 元素对象泛型
-     * @return 输出对象数组
-     */
-    public static <T> List<T> toArray(String str, Class<T> clazz) {
-        return JSON.parseArray(str, clazz);
-    }
-
-    /**
      * 字符串转对象，支持复杂泛型嵌套
      * @param str 输入字符串
      * @param typeReference 类型引用
@@ -116,5 +105,16 @@ public class FastjsonUtils {
      */
     public static <T> T toObject(String str, TypeReference<T> typeReference, Feature... features) {
         return JSON.parseObject(str, typeReference, features);
+    }
+
+    /**
+     * 字符串转对象数组，数组元素对象中不允许泛型嵌套
+     * @param str 输入字符串
+     * @param clazz 元素对象类型
+     * @param <T> 元素对象泛型
+     * @return 输出对象数组
+     */
+    public static <T> List<T> toArray(String str, Class<T> clazz) {
+        return JSON.parseArray(str, clazz);
     }
 }

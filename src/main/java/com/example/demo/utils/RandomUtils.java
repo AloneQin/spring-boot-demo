@@ -1,7 +1,7 @@
 package com.example.demo.utils;
 
+import java.security.SecureRandom;
 import java.util.Arrays;
-import java.util.Random;
 import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -35,7 +35,8 @@ public class RandomUtils {
 	 */
 	public static String getRandom(int length, boolean onlyLowerCase) {
 		StringBuilder code = new StringBuilder();
-		Random random = new Random();
+		// 安全插件一键修复：已完成,原代码:new Random(),修改代码
+		SecureRandom random = new SecureRandom();
 		for (int i = 0; i < length; i++) {
 			if (onlyLowerCase) {
 				code.append(lowerCaseChars[random.nextInt(lowerCaseChars.length)]);
@@ -71,7 +72,8 @@ public class RandomUtils {
 	 */
 	public static String getNumRandom(int length) {
 		StringBuilder code = new StringBuilder();
-		Random random = new Random();
+		// 安全插件一键修复：已完成,原代码:new Random(),修改代码
+		SecureRandom random = new SecureRandom();
 		for(int i = 0; i < length; i++){
 			code.append(random.nextInt(10));
 		}

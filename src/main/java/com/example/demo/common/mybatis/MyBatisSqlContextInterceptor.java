@@ -2,6 +2,9 @@ package com.example.demo.common.mybatis;
 
 import com.example.demo.common.context.SqlContext;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.ibatis.cache.CacheKey;
+import org.apache.ibatis.cache.impl.PerpetualCache;
+import org.apache.ibatis.executor.BaseExecutor;
 import org.apache.ibatis.executor.Executor;
 import org.apache.ibatis.mapping.BoundSql;
 import org.apache.ibatis.mapping.MappedStatement;
@@ -13,22 +16,21 @@ import org.apache.ibatis.plugin.Signature;
 import org.apache.ibatis.session.ResultHandler;
 import org.apache.ibatis.session.RowBounds;
 
+@Slf4j
 @Intercepts({
         @Signature(type = Executor.class, method = "query", args = { MappedStatement.class, Object.class, RowBounds.class, ResultHandler.class }),
         @Signature(type = Executor.class, method = "update", args = { MappedStatement.class, Object.class })
 })
-@Slf4j
 public class MyBatisSqlContextInterceptor implements Interceptor {
 
     @Override
     public Object intercept(Invocation invocation) throws Throwable {
-        String methodName = invocation.getMethod().getName();
-
         Object[] args = invocation.getArgs();
         MappedStatement ms = (MappedStatement) args[0];
+
+        String methodName = invocation.getMethod().getName();
         String sqlId = ms.getId();
         SqlCommandType sqlCommandType = ms.getSqlCommandType();
-
         BoundSql boundSql = ms.getBoundSql(args[1]);
         String sql = boundSql.getSql();
 
@@ -45,4 +47,5 @@ public class MyBatisSqlContextInterceptor implements Interceptor {
             SqlContext.clear();
         }
     }
+
 }

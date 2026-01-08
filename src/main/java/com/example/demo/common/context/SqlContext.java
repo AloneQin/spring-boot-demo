@@ -37,5 +37,11 @@ public class SqlContext {
 
         private Long timestamp = System.currentTimeMillis();
 
+        @Deprecated
+        private Boolean cacheHit;
+
+        @Deprecated
+        private String cacheLevel;
+
     }
 }

@@ -66,6 +66,11 @@ public class MD5Utils {
     }
 
 
+	/**
+	 * 获取输入流的 md5 值
+	 * @param inputStream 输入流
+	 * @return md5
+	 */
 	public static String md5OfInputStream(InputStream inputStream) {
 		try {
 			return DigestUtils.md5Hex(inputStream);

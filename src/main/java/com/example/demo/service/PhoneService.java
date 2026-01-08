@@ -1,9 +1,7 @@
 package com.example.demo.service;
 
 import com.alicp.jetcache.Cache;
-import com.alicp.jetcache.anno.CacheType;
-import com.alicp.jetcache.anno.Cached;
-import com.alicp.jetcache.anno.CreateCache;
+import com.alicp.jetcache.anno.*;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.demo.common.exception.ParamError;
 import com.example.demo.common.exception.ParamValidatedException;
@@ -50,6 +48,7 @@ public class PhoneService {
 
     public List<PhoneDTO> getPhoneByName(String name) {
         List<PhonePO> phonePOList = phoneDAO.findByName(name);
+        phonePOList = phoneDAO.findByName(name);
         return SmartBeanUtils.copyPropertiesList(phonePOList, PhoneDTO::new);
     }
 
@@ -190,5 +189,33 @@ public class PhoneService {
     public PhonePO testRemoteCacheCondition(PhonePO phonePO, Boolean useCache) {
         phonePO = phoneDAO.getById(phonePO.getId());
         return phonePO;
+    }
+
+    /**
+     * 缓存更新：当缓存数据被更新时，会触发缓存更新，此时会先删除缓存，再重新缓存数据
+     * 注意：此时更新的缓存数据永远是入参的 phonePO
+     */
+    @CacheUpdate(name = "remotePhoneCache", key = "'-' + #phonePO.id", value = "#phonePO")
+    public void testRemoteCacheUpdate(PhonePO phonePO) {
+        phoneDAO.updateById(phonePO);
+    }
+
+    /**
+     * 缓存更新：当缓存数据被更新时，会触发缓存更新，此时会先删除缓存，再重新缓存数据
+     * 注意：此时更新的缓存数据是方法的返回值，即是从数据库里查询的最新数据（#result 是 SpEL 表达式的固定变量，代表方法返回值）
+     */
+    @CacheUpdate(name = "remotePhoneCache", key = "'-' + #phonePO.id", value = "#result")
+    public PhonePO testRemoteCacheUpdate2(PhonePO phonePO) {
+        phoneDAO.updateById(phonePO);
+        return phoneDAO.getById(phonePO.getId());
+    }
+
+    /**
+     * 缓存删除：最好的方法是更新后直接删除缓存，查询时重新会重新加载缓存
+     * 所以推荐使用 @CacheInvalidate 注解代替 @CacheUpdate
+     */
+    @CacheInvalidate(name = "remotePhoneCache", key = "'-' + #phonePO.id")
+    public void testRemoteCacheUpdate3(PhonePO phonePO) {
+        phoneDAO.updateById(phonePO);
     }
 }

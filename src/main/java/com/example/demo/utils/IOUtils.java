@@ -5,6 +5,9 @@ import lombok.SneakyThrows;
 
 import java.io.*;
 import java.nio.charset.Charset;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -17,7 +20,7 @@ public class IOUtils {
      */
     @SneakyThrows
     public static byte[] toByteArray(InputStream input) {
-        ByteArrayOutputStream output = new ByteArrayOutputStream();
+        @Cleanup ByteArrayOutputStream output = new ByteArrayOutputStream();
         byte[] buffer = new byte[1024 * 4];
         int len;
         while ((len = input.read(buffer)) != -1) {
@@ -40,6 +43,52 @@ public class IOUtils {
         while ((len = is.read(buff, 0, buff.length)) != -1) {
             fos.write(buff, 0, len);
         }
+    }
+
+    /**
+     * 使用实现多线程文件拷贝
+     * @param inputStream 输入流
+     * @param path 目标路径
+     * @param threadCount 线程数量，默认为 CPU 核心数
+     */
+    @SneakyThrows
+    public static void copyFileMultiThread(InputStream inputStream, String path, Integer threadCount) {
+        // 确定线程数量
+        int threads = (threadCount != null && threadCount > 0) ? threadCount : Runtime.getRuntime().availableProcessors();
+        // 转换输入流为字节数组
+        byte[] data = toByteArray(inputStream);
+        int fileSize = data.length;
+
+        // 预先创建完整大小的文件
+        @Cleanup RandomAccessFile tempRaf = new RandomAccessFile(path, "rw");
+        tempRaf.setLength(fileSize);
+
+        // 计算每个线程处理的数据范围
+        int chunkSize = (int) Math.ceil((double) fileSize / threads);
+        // 创建线程池
+        ExecutorService executor = Executors.newFixedThreadPool(threads);
+        // 创建CompletableFuture任务列表
+        CompletableFuture<?>[] futures = new CompletableFuture[threads];
+
+        // 分配任务给各个线程
+        for (int i = 0; i < threads; i++) {
+            final int startIndex = i * chunkSize;
+            final int endIndex = Math.min(startIndex + chunkSize, fileSize);
+            if (startIndex >= fileSize) break;
+            futures[i] = CompletableFuture.runAsync(() -> {
+                try (RandomAccessFile raf = new RandomAccessFile(path, "rw")) {
+                    // 在指定位置写入数据
+                    raf.seek(startIndex);
+                    raf.write(data, startIndex, endIndex - startIndex);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }, executor);
+        }
+        // 等待所有任务完成
+        CompletableFuture.allOf(futures).join();
+        // 关闭线程池
+        executor.shutdown();
     }
 
     /**
@@ -138,9 +187,10 @@ public class IOUtils {
     }
 
     public static void main(String[] args) throws IOException {
-        String path = "/Users/alone/work/test/test.txt";
-        writeStrToFile("天外飞仙", path, "GBK");
-        System.out.println(readStrFromFile(path));
-        extractZip("/Users/alone/work/test/HardRock.zip", "/Users/alone/work/test/", "GBK");
+//        String path = "/Users/alone/work/test/test.txt";
+//        writeStrToFile("天外飞仙", path, "GBK");
+//        System.out.println(readStrFromFile(path));
+//        extractZip("/Users/alone/work/test/HardRock.zip", "/Users/alone/work/test/", "GBK");
+        copyFileMultiThread(new FileInputStream("C:/Users/757342/Pictures/【哲风壁纸】护眼草地-绿色山丘.png"), "D:/work/test/a.png", null);
     }
 }

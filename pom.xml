@@ -59,6 +59,13 @@
       <version>1.2.83</version> 
     </dependency>
 
+    <!--fastjson2-->
+    <dependency>
+      <groupId>com.alibaba.fastjson2</groupId>
+      <artifactId>fastjson2</artifactId>
+      <version>2.0.60</version>
+    </dependency>
+
     <!--swagger2-->  
     <dependency> 
       <groupId>io.springfox</groupId>  
@@ -218,7 +225,28 @@
       <groupId>com.alibaba.cloud</groupId>  
       <artifactId>spring-cloud-starter-alibaba-sentinel</artifactId>  
       <version>2.2.9.RELEASE</version> 
-    </dependency>  
+    </dependency>
+
+    <!--sql formatter-->
+    <dependency>
+      <groupId>com.github.vertical-blank</groupId>
+      <artifactId>sql-formatter</artifactId>
+      <version>2.0.5</version>
+    </dependency>
+
+    <!--jsqlparser-->
+    <dependency>
+      <groupId>com.github.jsqlparser</groupId>
+      <artifactId>jsqlparser</artifactId>
+      <version>4.9</version>
+    </dependency>
+
+    <!--java-jwt-->
+    <dependency>
+      <groupId>com.auth0</groupId>
+      <artifactId>java-jwt</artifactId>
+      <version>4.5.0</version>
+    </dependency>
   </dependencies>
 
   <build> 
@@ -248,9 +276,9 @@
         <groupId>org.apache.maven.plugins</groupId>  
         <artifactId>maven-dependency-plugin</artifactId>  
         <!--
-                    将项目依赖全部拷贝到 jar 包同级目录 lib 目录下
-                    执行时，通过指定依赖路径引入外部相关依赖：java "-Dloader.path=./lib" -jar spring-boot-demo.jar
-                -->  
+            将项目依赖全部拷贝到 jar 包同级目录 lib 目录下
+            执行时，通过指定依赖路径引入外部相关依赖：java "-Dloader.path=./lib" -jar spring-boot-demo.jar
+        -->
         <executions> 
           <execution> 
             <id>copy</id>  

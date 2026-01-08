@@ -140,7 +140,7 @@ public class PhoneController {
 
     @GetMapping("/testRemoteCache")
     public void testRemoteCache() {
-        PhonePO phonePO = phoneService.testRemoteCache(new PhonePO().setId(2));
+        PhonePO phonePO = phoneService.testRemoteCache(new PhonePO().setId(6));
         System.out.println("testRemoteCache: " + FastjsonUtils.toString(phonePO));
     }
 
@@ -168,6 +168,11 @@ public class PhoneController {
     public void testBothCache4(Integer i) {
         PhonePO phonePO = phoneService.testRemoteCacheCondition(new PhonePO().setId(3), i % 2 == 1);;
         System.out.println("testBothCache4: " + FastjsonUtils.toString(phonePO));
+    }
+
+    @GetMapping("/testRemoteCache5")
+    public void testRemoteCache5(String phoneCode) {
+        phoneService.testRemoteCacheUpdate(new PhonePO().setId(6).setPhoneCode(phoneCode));
     }
 
     @GetMapping("/testBothCache")

@@ -4,8 +4,7 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 import lombok.experimental.Accessors;
 
 import java.io.Serializable;
@@ -21,8 +20,7 @@ import java.time.LocalDateTime;
  * @author alone
  * @since 2021-12-06
  */
-@Getter
-@Setter
+@Data
 @TableName("phone")
 @Accessors(chain = true)
 public class PhonePO implements Serializable {
