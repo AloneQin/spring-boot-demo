@@ -12,12 +12,12 @@ import java.util.concurrent.TimeoutException;
 public class CompletableFutureTest {
 
     public static void main(String[] args) throws ExecutionException, InterruptedException, TimeoutException {
-        simpleAsync();
+//        simpleAsync();
 //        stageAsync();
 //        andAsync();
 //        andAllOfAsync();
 //        orAsync();
-//        orAnyOfAsync();
+        orAnyOfAsync();
 //        exceptionallyAsync();
     }
 
@@ -30,9 +30,20 @@ public class CompletableFutureTest {
      */
     public static void simpleAsync() throws ExecutionException, InterruptedException, TimeoutException {
         System.out.println(System.currentTimeMillis());
-        CompletableFuture<String> future = CompletableFuture.supplyAsync(() -> {
+        // 无返回值，创建后启动
+        CompletableFuture<Void>  future1 = CompletableFuture.runAsync(() -> {
             try {
                 Thread.sleep(1000);
+                System.out.println("future1执行完成");
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        });
+        // 有返回值，创建后启动
+        CompletableFuture<String> future2 = CompletableFuture.supplyAsync(() -> {
+            try {
+                Thread.sleep(1000);
+                System.out.println("future2执行完成");
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -40,12 +51,13 @@ public class CompletableFutureTest {
         });
         String result = null;
         try {
-            result = future.get(500L, TimeUnit.MILLISECONDS);
+            result = future2.get(500L, TimeUnit.MILLISECONDS);
         } catch (Exception e) {
-            result = future.getNow("给定默认值");
+            result = future2.getNow("给定默认值");
         }
         System.out.println("主线程执行");
         System.out.println("获取结果：" + result);
+        Thread.sleep(1500L);
         System.out.println(System.currentTimeMillis());
     }
 
@@ -66,13 +78,14 @@ public class CompletableFutureTest {
             System.out.println("异步1执行完成");
             return "1";
         }).thenApply(s -> {
+            // s  为上一个任务的结果
             try {
                 Thread.sleep(500);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
             System.out.println("异步2执行完成");
-            return "2";
+            return s + "2";
         });
         System.out.println("主线程执行");
         System.out.println("获取结果：" + future.get());
@@ -105,9 +118,10 @@ public class CompletableFutureTest {
             System.out.println("异步2执行完成");
             return "2";
         });
+        // f1 为 future1 的结果，f2 为 future2 的结果
         CompletableFuture<String> future3 = future1.thenCombineAsync(future2, (f1, f2) -> {
             System.out.println("异步3执行完成");
-            return "3";
+            return f1 + f2 + "3";
         });
         System.out.println("主线程执行");
         System.out.println("获取结果：" + future3.get());
@@ -151,6 +165,7 @@ public class CompletableFutureTest {
         });
         CompletableFuture<Void> allOfFuture = CompletableFuture.allOf(future1, future2, future3);
         System.out.println("主线程执行");
+        // allOf 只是将所有任务打包成一个组合，这个组合本身并没有结果，可以用 CompletableFuture.allOf(future1, future2, future3).join() 代替
         System.out.println("获取结果：" + allOfFuture.get());
         System.out.println(System.currentTimeMillis());
     }
@@ -165,7 +180,7 @@ public class CompletableFutureTest {
         System.out.println(System.currentTimeMillis());
         CompletableFuture<String> future1 = CompletableFuture.supplyAsync(() -> {
             try {
-                Thread.sleep(1000);
+                Thread.sleep(501);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -182,8 +197,9 @@ public class CompletableFutureTest {
             return "2";
         });
         CompletableFuture<String> future3 = future1.applyToEitherAsync(future2, s -> {
+            // s  为 future1、future2 任意一个任务的结果
             System.out.println("异步3执行完成");
-            return "3";
+            return s + "3";
         });
         System.out.println("主线程执行");
         System.out.println("获取结果：" + future3.get());
@@ -191,7 +207,7 @@ public class CompletableFutureTest {
     }
 
     /**
-     * 异步-OR ANY
+     * 异步-OR ANY <br/>
      * A || B || C 任何一个完成即可
      * @throws ExecutionException
      * @throws InterruptedException
@@ -218,7 +234,7 @@ public class CompletableFutureTest {
         });
         CompletableFuture<String> future3 = CompletableFuture.supplyAsync(() -> {
             try {
-                Thread.sleep(2000);
+                Thread.sleep(1500);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -227,7 +243,9 @@ public class CompletableFutureTest {
         });
         CompletableFuture<Object> anyOfFuture = CompletableFuture.anyOf(future1, future2, future3);
         System.out.println("主线程执行");
+        // 获取到的是最先完成任务的结果，其他任务并不会中断执行
         System.out.println("获取结果：" + anyOfFuture.get());
+        Thread.sleep(2000);
         System.out.println(System.currentTimeMillis());
     }
 

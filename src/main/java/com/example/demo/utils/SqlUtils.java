@@ -51,8 +51,9 @@ public class SqlUtils {
         try {
             Statement statement = CCJSqlParserUtil.parse(sql);
             TablesNamesFinder tablesNamesFinder = new TablesNamesFinder();
-            Set<String> tableNames = tablesNamesFinder.getTables(statement);
-            return new ArrayList<>(tableNames);
+//            Set<String> tableNames = tablesNamesFinder.getTables(statement);
+//            return new ArrayList<>(tableNames);
+            return tablesNamesFinder.getTableList(statement);
         } catch (Exception e) {
             throw new RuntimeException("解析SQL语句失败: " + sql, e);
         }

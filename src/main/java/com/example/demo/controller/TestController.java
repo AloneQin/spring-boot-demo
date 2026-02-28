@@ -1,6 +1,8 @@
 package com.example.demo.controller;
 
 import com.example.demo.common.lisenser.event.MyEvent;
+import com.example.demo.common.mq.kafka.producer.ClusterAKafkaProducer;
+import com.example.demo.common.mq.kafka.producer.ClusterBKafkaProducer;
 import com.example.demo.common.mq.rabbit.RabbitProducer;
 import com.example.demo.common.prop.CustomProperties;
 import com.example.demo.common.retry.RetryTestService;
@@ -58,6 +60,10 @@ public class TestController {
     private final RequestMappingHandlerMapping requestMappingHandlerMapping;
 
     private final CustomProperties customProperties;
+
+    private final ClusterAKafkaProducer clusterAKafkaProducer;
+
+    private final ClusterBKafkaProducer clusterBKafkaProducer;
 
     @GetMapping("/index")
     public String index() {
@@ -286,5 +292,15 @@ public class TestController {
     public DemoVO testValueSerializer() {
         DemoVO demo = new DemoVO();
         return demo;
+    }
+
+    @GetMapping("/testSendKafka")
+    public String testSendKafka(String topic) {
+        if ("a".equals(topic)) {
+            clusterAKafkaProducer.send();
+        } else if ("b".equals(topic)) {
+            clusterBKafkaProducer.send();
+        }
+        return "SUCCESS";
     }
 }
